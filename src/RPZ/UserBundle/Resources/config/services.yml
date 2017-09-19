@@ -1,0 +1,4 @@
+services:
+#    rpz_user.example:
+#        class: RPZ\UserBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]

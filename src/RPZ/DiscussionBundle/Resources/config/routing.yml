@@ -1,0 +1,18 @@
+rpz_discussion_article:
+    path:     /
+    defaults: { _controller: RPZDiscussionBundle:Article:index }
+rpz_discussion_article_show:
+    path:     /show/{id}
+    defaults: { _controller: RPZDiscussionBundle:Article:show }
+rpz_discussion_article_add:
+    path:     /write/{id}
+    defaults: { _controller: RPZDiscussionBundle:Article:add, id: 0 }
+rpz_discussion_article_remove:
+    path:     /remove/{id}
+    defaults: { _controller: RPZDiscussionBundle:Article:remove, id: 0 }
+rpz_discussion_comment_add:
+    path:     /article/{article_id}/comment/{id}
+    defaults: { _controller: RPZDiscussionBundle:Comment:add, id: 0 }
+rpz_discussion_comment_remove:
+    path:     /comment/remove/{id}
+    defaults: { _controller: RPZDiscussionBundle:Comment:remove, id: 0 }

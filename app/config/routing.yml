@@ -1,0 +1,13 @@
+
+login:
+    path: /login
+    defaults:
+        _controller: RPZUserBundle:Security:login
+login_check:
+    path: /login_check
+logout:
+    path: /logout
+
+rpz_discussion:
+    resource: "@RPZDiscussionBundle/Resources/config/routing.yml"
+    prefix:   /

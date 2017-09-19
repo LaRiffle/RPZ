@@ -1,0 +1,16 @@
+{% extends "RPZDiscussionBundle::layout.html.twig" %}
+
+{% block body %}
+<h1>See article</h1>
+<article>
+<div>
+  <a href="{{ path('rpz_discussion_article_add', {'id': article.id}) }}">Modifier</a>
+  <a href="{{ path('rpz_discussion_article_remove', {'id': article.id}) }}">Supprimer</a>
+</div>
+<h2>{{ article.title }}</h2>
+<h3>{{ article.author }}</h3>
+<p>
+  {{ article.content }}
+</p>
+</article>
+{% endblock %}
