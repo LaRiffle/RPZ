@@ -3,21 +3,27 @@
 {% extends "RPZDiscussionBundle::layout.html.twig" %}
 
 {% block body %}
-  <h3>Carnets de déroute</h3>
+  <h3 style="color:white; text-align: center; font-weight: lighter; font-size: 2.5em;">Carnets de déroute</h3>
   {# S'il y a une erreur, on l'affiche dans un joli cadre #}
   {% if error %}
     <div class="alert alert-danger">{{ error.message }}</div>
   {% endif %}
 
   {# Le formulaire, avec URL de soumission vers la route « login_check » comme on l'a vu #}
-  <form action="{{ path('login_check') }}" method="post">
-    <label for="username">Login :</label>
-    <input type="text" id="username" name="_username" value="{{ last_username }}" class="form-control" placeholder="Login"/>
+  <form action="{{ path('login_check') }}" method="post" style="text-align: center;">
+    <label for="username"> </label>
+    <input type="text" id="username" name="_username" value="{{ last_username }}" class="form-control" placeholder="Identifiant"/>
 
-    <label for="password">Mot de passe :</label>
+    <label for="password"> </label>
     <input type="password" id="password" name="_password" class="form-control" placeholder="Mot de passe"/>
     <br />
-    <input type="submit" value="Connexion" class="btn btn-primary"/>
+    <input type="submit" value="Entrer dans la déroute" class="btn btn-default"/>
   </form>
+  <script>
+    var path = "url({{ asset('img/background.jpg') }})"
+    $('body').css('height', '100vh');
+    $('body').css('background', path + ' no-repeat');
+    $('body').css('background-size', 'cover');
+  </script>
 
 {% endblock %}
