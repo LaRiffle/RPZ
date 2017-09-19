@@ -1,7 +1,5 @@
-<div class="form-group">
-  {{ form_label(element, name, {'label_attr' : {'class': 'col-sm-4 control-label '}}) }}
+<div style="margin-top: 10px;">
+  {{ form_label(element, name, {'label_attr' : {'class': 'sr-only'}}) }}
   {{ form_errors(element) }}
-  <div class="col-sm-8">
-    {{ form_widget(element, {'attr': {'class': 'form-control', 'placeholder': name}}) }}
-  </div>
+  {{ form_widget(element, {'attr': {'class': 'form-control', 'placeholder': name}}) }}
 </div>

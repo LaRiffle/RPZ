@@ -73,7 +73,7 @@ class ArticleController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($article);
             $em->flush();
-            $request->getSession()->getFlashBag()->add('notice', 'Article bien publié.');
+            $request->getSession()->getFlashBag()->add('sucess', 'Article bien publié.');
             return $this->redirect($this->generateUrl('rpz_discussion_article'));
         }
         return $this->render($this->entityNameSpace.':add.html.twig', array(
@@ -97,7 +97,7 @@ class ArticleController extends Controller
         }
         $em->remove($entity);
         $em->flush();
-        $request->getSession()->getFlashBag()->add('notice', 'Article supprimé.');
+        $request->getSession()->getFlashBag()->add('danger', 'Article supprimé.');
         return $this->redirect($this->generateUrl('rpz_discussion_article'));
     }
 }

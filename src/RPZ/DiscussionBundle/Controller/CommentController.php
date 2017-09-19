@@ -69,7 +69,7 @@ class CommentController extends Controller
 
             $em->persist($comment);
             $em->flush();
-            $request->getSession()->getFlashBag()->add('notice', 'Commentaire bien publié.');
+            $request->getSession()->getFlashBag()->add('success', 'Commentaire bien publié.');
             return $this->redirect($this->generateUrl('rpz_discussion_article'));
         }
         return $this->render($this->entityNameSpace.':add.html.twig', array(
@@ -87,7 +87,7 @@ class CommentController extends Controller
         $entity = $em->getRepository($this->entityNameSpace)->find($id);
         $em->remove($entity);
         $em->flush();
-        $request->getSession()->getFlashBag()->add('notice', 'Comment supprimé.');
+        $request->getSession()->getFlashBag()->add('danger', 'Comment supprimé.');
         return $this->redirect($this->generateUrl('rpz_discussion_article'));
     }
 }

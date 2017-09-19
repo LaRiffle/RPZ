@@ -1,12 +1,9 @@
-<h2>Ajouter une déroute</h2>
-<div class="col-sm-12">
-<br /><br />
-  <form name="form" method="post" action="{{ path('rpz_discussion_article_add',{'id': articleId}) }}" class="form-horizontal">
-    {% set input_form="RPZDiscussionBundle:Utils:form_input.html.twig" %}
-    {% set save_form="RPZDiscussionBundle:Utils:form_save.html.twig" %}
-    {{ include(input_form, {'element': form.title, 'name':"Titre"}) }}
-    {{ include(input_form, {'element': form.content, 'name':"Contenu"}) }}
-    {{ include(save_form, {'element': form.save, 'name':"Publier"}) }}
-    {{ form_rest(form) }}
-  </form>
-</div>
+<form name="form" class="form-signin" method="post" action="{{ path('rpz_discussion_article_add',{'id': articleId}) }}">
+  <h3 class="form-signin-heading">Ajouter une déroute</h3>
+  {% set input_form="RPZDiscussionBundle:Utils:form_input.html.twig" %}
+  {% set save_form="RPZDiscussionBundle:Utils:form_save.html.twig" %}
+  {{ include(input_form, {'element': form.title, 'name':"Titre"}) }}
+  {{ include(input_form, {'element': form.content, 'name':"Contenu"}) }}
+  {{ include(save_form, {'element': form.save, 'name':"Publier"}) }}
+  {{ form_rest(form) }}
+</form>

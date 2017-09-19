@@ -1,60 +1,90 @@
 {% extends "RPZDiscussionBundle::layout.html.twig" %}
-
+{% set edition_buttons="RPZDiscussionBundle:Utils:edition.html.twig" %}
 {% block body %}
-<h1>Carnets de déroute ({{ articles|length }})</h1>
-<div>
-{{ render(controller("RPZDiscussionBundle:Article:add")) }}
+<div class="card card-body" style="padding: 30px; margin-bottom: 15px; margin-top: 10px;">
+  {{ render(controller("RPZDiscussionBundle:Article:add")) }}
 </div>
+
 {% for article in articles %}
-    <article style="clear:both" class="rpz_article">
-    <div class="rpz_edit_btn">
-      <a href="{{ path('rpz_discussion_article_remove', {'id': article.id}) }}" class="remove">Supprimer</a>
-      <a href="{{ path('rpz_discussion_article_add', {'id': article.id}) }}">Modifier &nbsp; </a>
+  <div class="card card-body" style="padding: 30px; margin-bottom: 15px;">
+    <div class="rpz_box_icon">
+      <h4 class="card-title">{{ article.title }}</h4>
+      {{ include(edition_buttons, {'edit': path('rpz_discussion_article_add', {'id': article.id}), 'remove': path('rpz_discussion_article_remove', {'id': article.id}) }) }}
     </div>
-    <h2>{{ article.title }}</h2>
-    <h3 class="date">{{ article.author }}, {{ article.date|date("d/m/Y H:i") }}</h3>
-    <p>
-      {{ article.content }}
-      <br />
-      <!--<a href="{{ path('rpz_discussion_article_show', {'id': article.id}) }}">Voir plus</a>-->
-    </p>
-    <div>
-      {% for comment in article.comments %}
-        <div class="rpz_comment">
-        <div class="rpz_edit_btn">
-          <a href="{{ path('rpz_discussion_comment_remove', {'id': comment.id}) }}" class="remove">Supprimer</a>
-          <a href="{{ path('rpz_discussion_comment_add', {'article_id': article.id, 'id': comment.id}) }}">Modifier &nbsp; </a>
-        </div>
-        <h4><span class="date">{{ comment.author }}, {{ comment.date|date("d/m/Y h:i") }}</span></h4>
-        <p>
-          {{ comment.text }}
-        </p>
-        </div>
-      {% endfor %}
-    </div>
+    <h5><span style="font-weight: bold;">{{ article.author }}</span>, <span class="date">{{ article.date|date("d/m/Y H:i") }}</span></h5>
+    <p class="card-text">{{ article.content|nl2br }}</p>
+    {% for comment in article.comments %}
+      <div class="hr"></div>
+      <div class="rpz_box_icon">
+        <h6><span style="font-weight: bold;">{{ comment.author }}</span>, <span class="date">{{ comment.date|date("d/m/Y h:i") }}</span></h6>
+        {{ include(edition_buttons, {'edit': path('rpz_discussion_comment_add', {'article_id': article.id, 'id': comment.id}), 'remove': path('rpz_discussion_comment_remove', {'id': comment.id})}) }}
+      </div>
+      <p class="card-text" style="font-size: 0.95em;">{{ comment.text|nl2br }}</p>
+    {% endfor %}
+    <div class="hr"></div>
     <div>
       {{ render(controller("RPZDiscussionBundle:Comment:add", {'article_id': article.id})) }}
       <div style="clear:both"></div>
     </div>
-    </article>
+  </div>
 {% endfor %}
 <style>
+body {
+  background-color: #e9ebee;
+}
+#rpz_write_article_box {
+  border-radius: 3px;
+  border: 1px #dfe0e4 solid;
+  background-color: white;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-bottom: 10px;
+}
 .rpz_article {
   border: 1px #333333 solid;
   border-radius: 10px;
   margin-bottom: 20px;
   padding: 20px;
 }
-h3.date {
+.hr {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  border: 0;
+  border-top: 1px solid rgba(0,0,0,.1);
+}
+.date {
   color: #777777;
-  font-size: 1.3em;
-  margin-top: 8px;
+  font-weight: 200;
 }
 .rpz_comment {
   border-top: 1px #333333 solid;
 }
+.rpz_edit_btn {
+  text-align: right;
+  height: 0px;
+}
 .rpz_edit_btn a {
+  padding-left: 10px;
+}
+.rpz_box_icon {
+  width: 100%;
+}
+.rpz_box_icon h4, h5, h6 {
+  display: inline-block;
+}
+ul.rpz_icons {
+  list-style: none;
   float: right;
+  margin-bottom: 0px;
+}
+ul.rpz_icons li {
+  display: inline-block;
+}
+ul.rpz_icons a {
+  padding-left: 10px;
+}
+ul.rpz_icons li:after {
+  content: ' ';
 }
 </style>
 {% endblock %}

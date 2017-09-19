@@ -1,11 +1,10 @@
-<h3>Commentez</h3>
-<div class="col-sm-12">
-<br /><br />
-  <form name="form" method="post" action="{{ path('rpz_discussion_comment_add',{'article_id': articleId, 'id': commentId}) }}" class="form-horizontal">
-    {% set input_form="RPZDiscussionBundle:Utils:form_input.html.twig" %}
-    {% set save_form="RPZDiscussionBundle:Utils:form_save.html.twig" %}
-    {{ include(input_form, {'element': form.text, 'name':"Contenu"}) }}
-    {{ include(save_form, {'element': form.save, 'name':"Enregistrer"}) }}
-    {{ form_rest(form) }}
-  </form>
-</div>
+
+
+<form class="form-signin" name="form" method="post" action="{{ path('rpz_discussion_comment_add',{'article_id': articleId, 'id': commentId}) }}">
+  {% set input_form="RPZDiscussionBundle:Utils:form_input.html.twig" %}
+  {% set save_form="RPZDiscussionBundle:Utils:form_save.html.twig" %}
+  <h6 class="form-signin-heading">Commentez</h6>
+  {{ include(input_form, {'element': form.text, 'name':"Contenu"}) }}
+  {{ include(save_form, {'element': form.save, 'name':"Publier"}) }}
+  {{ form_rest(form) }}
+</form>

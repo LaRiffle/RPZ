@@ -2,8 +2,11 @@
 
 {% extends "RPZDiscussionBundle::layout.html.twig" %}
 
+{% block nav %}
+{% endblock %}
+
 {% block body %}
-  <h3 style="color:white; text-align: center; font-weight: lighter; font-size: 2.5em;">Carnets de déroute</h3>
+  <h3 style="color:white; text-align: center; font-weight: lighter; font-size: 2.5em; margin-top: 50px;">Carnets de déroute</h3>
   {# S'il y a une erreur, on l'affiche dans un joli cadre #}
   {% if error %}
     <div class="alert alert-danger">{{ error.message }}</div>
@@ -19,11 +22,14 @@
     <br />
     <input type="submit" value="Entrer dans la déroute" class="btn btn-default"/>
   </form>
-  <script>
-    var path = "url({{ asset('img/background.jpg') }})"
-    $('body').css('height', '100vh');
-    $('body').css('background', path + ' no-repeat');
-    $('body').css('background-size', 'cover');
-  </script>
 
+{% endblock %}
+
+{% block script %}
+<script>
+  var path = "url({{ asset('img/background.jpg') }})"
+  $('body').css('height', '100vh');
+  $('body').css('background', path + ' no-repeat');
+  $('body').css('background-size', 'cover');
+</script>
 {% endblock %}
