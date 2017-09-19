@@ -88,6 +88,6 @@ class CommentController extends Controller
         $em->remove($entity);
         $em->flush();
         $request->getSession()->getFlashBag()->add('notice', 'Comment supprimé.');
-        return $this->redirect($this->generateUrl('rpz_discussion_comment'));
+        return $this->redirect($this->generateUrl('rpz_discussion_article'));
     }
 }

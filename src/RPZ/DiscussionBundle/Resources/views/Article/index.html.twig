@@ -8,8 +8,7 @@
 {% for article in articles %}
     <article style="clear:both" class="rpz_article">
     <div class="rpz_edit_btn">
-
-    <a href="{{ path('rpz_discussion_article_remove', {'id': article.id}) }}" class="remove">Supprimer</a>
+      <a href="{{ path('rpz_discussion_article_remove', {'id': article.id}) }}" class="remove">Supprimer</a>
       <a href="{{ path('rpz_discussion_article_add', {'id': article.id}) }}">Modifier &nbsp; </a>
     </div>
     <h2>{{ article.title }}</h2>
@@ -22,6 +21,10 @@
     <div>
       {% for comment in article.comments %}
         <div class="rpz_comment">
+        <div class="rpz_edit_btn">
+          <a href="{{ path('rpz_discussion_comment_remove', {'id': comment.id}) }}" class="remove">Supprimer</a>
+          <a href="{{ path('rpz_discussion_comment_add', {'article_id': article.id, 'id': comment.id}) }}">Modifier &nbsp; </a>
+        </div>
         <h4><span class="date">{{ comment.author }}, {{ comment.date|date("d/m/Y h:i") }}</span></h4>
         <p>
           {{ comment.text }}

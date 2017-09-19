@@ -87,7 +87,14 @@ class ArticleController extends Controller
           return $this->redirect($this->generateUrl('login'));
         }
         $em = $this->getDoctrine()->getManager();
+
+        $commentRepository = $em->getRepository('RPZDiscussionBundle:Comment');
+        $comments = $commentRepository->whereArticle($id);
         $entity = $em->getRepository($this->entityNameSpace)->find($id);
+
+        foreach ($comments as $comment) {
+            $em->remove($comment);
+        }
         $em->remove($entity);
         $em->flush();
         $request->getSession()->getFlashBag()->add('notice', 'Article supprimé.');
