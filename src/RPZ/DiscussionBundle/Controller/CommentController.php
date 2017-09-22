@@ -40,6 +40,12 @@ class CommentController extends Controller
                 'comment' => $comment
         ));
     }
+    public function editAction($article_id, $id) {
+      return $this->render($this->entityNameSpace.':edit.html.twig', array(
+          'articleId' => $id,
+          'commentId' => $article_id,
+      ));
+    }
     public function addAction(Request $request, $article_id, $id = 0) {
         if (!$this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
           return $this->redirect($this->generateUrl('login'));

@@ -3,8 +3,8 @@
 <form class="form-signin" name="form" method="post" action="{{ path('rpz_discussion_comment_add',{'article_id': articleId, 'id': commentId}) }}">
   {% set input_form="RPZDiscussionBundle:Utils:form_input.html.twig" %}
   {% set save_form="RPZDiscussionBundle:Utils:form_save.html.twig" %}
-  <h6 class="form-signin-heading">Commentez</h6>
-  {{ include(input_form, {'element': form.text, 'name':"Contenu"}) }}
+  <h6 class="form-signin-heading">{% if articleId == 0 %}Commentez{% else %}Modifier un commentaire{% endif %}</h6>
+  {{ include(input_form, {'element': form.text, 'name':"Lâche ton commentaire"}) }}
   {{ include(save_form, {'element': form.save, 'name':"Publier"}) }}
   {{ form_rest(form) }}
 </form>

@@ -18,3 +18,4 @@
 .DS_Store
 /web/.DS_Store
 /src/.DS_Store
+web/uploads/*

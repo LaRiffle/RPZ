@@ -1,9 +1,14 @@
-<form name="form" class="form-signin" method="post" action="{{ path('rpz_discussion_article_add',{'id': articleId}) }}">
-  <h3 class="form-signin-heading">Ajouter une déroute</h3>
+<form name="form" class="form-signin" method="post" enctype="multipart/form-data" action="{{ path('rpz_discussion_article_add',{'id': articleId}) }}">
+  <h3 class="form-signin-heading">{% if articleId == 0 %}Ajouter{% else %}Modifier{% endif %} une déroute</h3>
   {% set input_form="RPZDiscussionBundle:Utils:form_input.html.twig" %}
   {% set save_form="RPZDiscussionBundle:Utils:form_save.html.twig" %}
   {{ include(input_form, {'element': form.title, 'name':"Titre"}) }}
-  {{ include(input_form, {'element': form.content, 'name':"Contenu"}) }}
+  {{ include(input_form, {'element': form.content, 'name':"Lâche ta déroute"}) }}
+  {% if articleId != 0 and img != '' %}
+  <div style="margin-top: 1rem; font-weight: bold;">Modifier l'image</div>
+  <img src="{{ asset('uploads/img/' ~ img) }}" class="img-thumbnail" width="300">
+  {% endif %}
+  {{ include(input_form, {'element': form.image, 'name':"Ajouter une image"}) }}
   {{ include(save_form, {'element': form.save, 'name':"Publier"}) }}
   {{ form_rest(form) }}
 </form>

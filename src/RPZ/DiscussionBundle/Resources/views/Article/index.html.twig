@@ -6,10 +6,16 @@
 </div>
 
 {% for article in articles %}
+  {% set has_image = (article.image is not empty) %}
   <div class="card card-body" style="padding: 30px; margin-bottom: 15px;">
+    {% if has_image %}
+    <div class="" style="margin: -30px;">
+      <img class="card-img-top" style="width: 100%;" src="{{ asset('uploads/img/' ~ article.image) }}" alt="Photo indisponible">
+    </div>
+    {% endif %}
     <div class="rpz_box_icon">
-      <h4 class="card-title">{{ article.title }}</h4>
-      {{ include(edition_buttons, {'edit': path('rpz_discussion_article_add', {'id': article.id}), 'remove': path('rpz_discussion_article_remove', {'id': article.id}) }) }}
+      <h4 class="card-title" {% if has_image %}style="color: white; position: relative; bottom: 20px;"{% endif %}>{{ article.title }}</h4>
+      {{ include(edition_buttons, {'edit': path('rpz_discussion_article_edit', {'id': article.id}), 'remove': path('rpz_discussion_article_remove', {'id': article.id}) }) }}
     </div>
     <h5><span style="font-weight: bold;">{{ article.author }}</span>, <span class="date">{{ article.date|date("d/m/Y H:i") }}</span></h5>
     <p class="card-text">{{ article.content|nl2br }}</p>
@@ -17,7 +23,7 @@
       <div class="hr"></div>
       <div class="rpz_box_icon">
         <h6><span style="font-weight: bold;">{{ comment.author }}</span>, <span class="date">{{ comment.date|date("d/m/Y h:i") }}</span></h6>
-        {{ include(edition_buttons, {'edit': path('rpz_discussion_comment_add', {'article_id': article.id, 'id': comment.id}), 'remove': path('rpz_discussion_comment_remove', {'id': comment.id})}) }}
+        {{ include(edition_buttons, {'edit': path('rpz_discussion_comment_edit', {'article_id': article.id, 'id': comment.id}), 'remove': path('rpz_discussion_comment_remove', {'id': comment.id})}) }}
       </div>
       <p class="card-text" style="font-size: 0.95em;">{{ comment.text|nl2br }}</p>
     {% endfor %}
@@ -31,6 +37,9 @@
 <style>
 body {
   background-color: #e9ebee;
+}
+button:hover {
+  cursor: pointer;
 }
 #rpz_write_article_box {
   border-radius: 3px;

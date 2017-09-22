@@ -3,6 +3,7 @@
 namespace RPZ\DiscussionBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Article
@@ -53,6 +54,14 @@ class Article
      * @ORM\Column(name="content", type="text", nullable=true)
      */
     private $content;
+
+    /**
+     * @ORM\Column(type="string")
+     *
+     * @Assert\File(mimeTypes={ "image/*" })
+     */
+    private $image;
+    //      * @Assert\NotBlank(message="Mets une photo !")
 
 
     /**
@@ -159,5 +168,18 @@ class Article
     public function getContent()
     {
         return $this->content;
+    }
+
+
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    public function setImage($image)
+    {
+        $this->image = $image;
+
+        return $this;
     }
 }
