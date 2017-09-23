@@ -16,7 +16,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 class CommentController extends Controller
 {
     public $entityNameSpace = 'RPZDiscussionBundle:Comment';
-
     public function indexAction() {
         if (!$this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
           return $this->redirect($this->generateUrl('login'));

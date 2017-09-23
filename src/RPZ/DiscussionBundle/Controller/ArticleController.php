@@ -18,6 +18,18 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 class ArticleController extends Controller
 {
     public $entityNameSpace = 'RPZDiscussionBundle:Article';
+    public function getAuthorName($username) {
+      $em = $this->getDoctrine()->getManager();
+      $repository = $em->getRepository('RPZUserBundle:User');
+      $users = $repository->findBy(array('username' => $username));
+      if($users != null){
+        $user = $users[0];
+        $authorName = $user->getFirstname();
+      } else {
+        $authorName = $username;
+      }
+      return $authorName;
+    }
     public function indexAction() {
         if (!$this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
           return $this->redirect($this->generateUrl('login'));
@@ -31,7 +43,11 @@ class ArticleController extends Controller
 
         foreach ($articles as $article) {
             $id = $article->getId();
+            $article->user = $this->getAuthorName($article->getAuthor());
             $article->comments = $commentRepository->whereArticle($id);
+            foreach ($article->comments as $comment) {
+              $comment->user = $this->getAuthorName($comment->getAuthor());
+            }
         }
 
         return $this->render($this->entityNameSpace.':index.html.twig', array(

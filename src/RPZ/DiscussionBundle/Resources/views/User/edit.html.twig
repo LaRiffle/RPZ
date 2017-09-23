@@ -1,0 +1,15 @@
+{% extends "RPZDiscussionBundle::layout.html.twig" %}
+
+{% block body %}
+<div class="card card-body" style="padding: 30px; margin-bottom: 15px; margin-top: 10px;">
+  <form class="form-signin" name="form" method="post" action="{{ path('rpz_profile_edit') }}">
+    {% set input_form="RPZDiscussionBundle:Utils:form_input.html.twig" %}
+    {% set save_form="RPZDiscussionBundle:Utils:form_save.html.twig" %}
+    <h6 class="form-signin-heading">Votre profil</h6>
+    {{ include(input_form, {'element': form.firstname, 'name':"Prénom"}) }}
+    {{ include(input_form, {'element': form.surname, 'name':"Nom de mifa"}) }}
+    {{ include(save_form, {'element': form.save, 'name':"Mettre à jour le profil"}) }}
+    {{ form_rest(form) }}
+  </form>
+</div>
+{% endblock %}

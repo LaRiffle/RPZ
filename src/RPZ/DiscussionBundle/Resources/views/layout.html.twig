@@ -3,6 +3,9 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="/skin/logo_xforum.png">
     <title>{% block title %}Carnets de déroute{% endblock %}</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -13,15 +16,15 @@
       <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <a class="navbar-brand" href="#">Carnets de déroute</a>
+      <a class="navbar-brand" href="{{ path('rpz_discussion_article') }}">Carnets de déroute</a>
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            <a class="nav-link" href="/logout">Déconnexion <span class="sr-only">(current)</span></a>
+            <a class="nav-link" href="{{ path('rpz_profile_edit')}}">Profil</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link disabled" href="#">Profil</a>
+            <a class="nav-link" href="{{ path('logout') }}">Déconnexion <span class="sr-only">(current)</span></a>
           </li>
         </ul>
       </div>

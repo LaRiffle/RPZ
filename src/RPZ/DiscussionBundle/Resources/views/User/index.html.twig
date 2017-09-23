@@ -1,0 +1,14 @@
+{% extends "RPZDiscussionBundle::layout.html.twig" %}
+
+{% block body %}
+<h1>All Users ({{ users|length }})</h1>
+{% for user in users %}
+    <article>
+    <h2>{{ user.username }}</h2>
+    <h3>{{ user.firstname }} {{ user.surname }}</h3>
+    <p>
+    </p>
+    </article>
+{% endfor %}
+
+{% endblock %}

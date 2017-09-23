@@ -22,3 +22,9 @@ rpz_discussion_comment_edit:
 rpz_discussion_comment_remove:
     path:     /comment/remove/{id}
     defaults: { _controller: RPZDiscussionBundle:Comment:remove, id: 0 }
+rpz_profile:
+    path:     /user/all
+    defaults: { _controller: RPZDiscussionBundle:User:index}
+rpz_profile_edit:
+    path:     /profile
+    defaults: { _controller: RPZDiscussionBundle:User:edit}
