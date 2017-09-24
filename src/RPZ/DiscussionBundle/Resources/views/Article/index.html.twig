@@ -1,7 +1,10 @@
 {% extends "RPZDiscussionBundle::layout.html.twig" %}
 {% set edition_buttons="RPZDiscussionBundle:Utils:edition.html.twig" %}
+{% block left_panel %}
+{{ render(controller("RPZDiscussionBundle:Log:show")) }}
+{% endblock %}
 {% block body %}
-<div class="card card-body" style="padding: 30px; margin-bottom: 15px; margin-top: 10px;">
+<div class="card card-body" style="padding: 30px; margin-bottom: 15px;">
   {{ render(controller("RPZDiscussionBundle:Article:add")) }}
 </div>
 
@@ -96,4 +99,30 @@ ul.rpz_icons li:after {
   content: ' ';
 }
 </style>
+{% endblock %}
+{% block script %}
+<script>
+  var MIN_SIZE = 768;
+  var windowSize = $(window).width();
+  if(windowSize >= MIN_SIZE) {
+    $('#menu').collapse('show');
+    $('#activity_down').hide();
+  }
+  $('.collapse-toggle').on('click', function () {
+    var windowSize = $(window).width();
+    if(windowSize < MIN_SIZE) {
+      $('#menu').collapse('toggle');
+    }
+  });
+  $(window).on('resize', function(){
+    var windowSize = $(window).width();
+    if(windowSize < MIN_SIZE) {
+        $('#menu').collapse('hide');
+        $('#activity_down').show();
+    } else {
+        $('#menu').collapse('show');
+        $('#activity_down').hide();
+    }
+  });
+</script>
 {% endblock %}

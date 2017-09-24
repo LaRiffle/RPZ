@@ -1,0 +1,13 @@
+<ul class="list-group" style="margin-bottom: 10px;">
+  <li class="list-group-item collapse-toggle head1 justify-content-between">
+    <h5 style="margin-bottom: 0px;">
+      Dernière activité
+      <span id="activity_down"><i class="fa fa-angle-down" aria-hidden="true"></i></span>
+    </h5>
+  </li>
+  <div id="menu" class="collapse">
+  {% for log in lastActivity %}
+      <li class="list-group-item justify-content-between"><span style="font-weight: bold;">{{ log.username }}</span><span class="badge badge-default badge-pill">{{ log.when }}</span></li>
+  {% endfor %}
+  </div>
+</ul>

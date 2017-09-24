@@ -28,3 +28,9 @@ rpz_profile:
 rpz_profile_edit:
     path:     /profile
     defaults: { _controller: RPZDiscussionBundle:User:edit}
+rpz_log:
+    path:     /logs
+    defaults: { _controller: RPZDiscussionBundle:Log:index}
+rpz_log_show:
+    path:     /logs/activity
+    defaults: { _controller: RPZDiscussionBundle:Log:show}

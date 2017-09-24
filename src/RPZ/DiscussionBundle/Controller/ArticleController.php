@@ -3,6 +3,7 @@
 namespace RPZ\DiscussionBundle\Controller;
 
 use RPZ\DiscussionBundle\Entity\Article;
+use RPZ\DiscussionBundle\Entity\Log;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\File\File;
@@ -35,12 +36,20 @@ class ArticleController extends Controller
           return $this->redirect($this->generateUrl('login'));
         }
         $em = $this->getDoctrine()->getManager();
+        // We save user activity
+        $log = new Log();
+        $username = $this->getUser()->getUsername();
+        $log->setUsername($username);
+        $em->persist($log);
+        $em->flush();
+
+
+        // Load articles
         $repository = $em->getRepository($this->entityNameSpace);
         $articles = $repository->findBy(array(), array('date'=>'desc'));
 
+        // And the comments
         $commentRepository = $em->getRepository('RPZDiscussionBundle:Comment');
-        //$comments = $commentRepository->findBy(array(), array('date'=>'desc'));
-
         foreach ($articles as $article) {
             $id = $article->getId();
             $article->user = $this->getAuthorName($article->getAuthor());

@@ -1,0 +1,11 @@
+{% extends "RPZDiscussionBundle::layout.html.twig" %}
+
+{% block body %}
+<h1>All logs ({{ logs|length }})</h1>
+<ul>
+{% for log in logs %}
+    <li>{{ log.date|date("d/m/Y H:i") }} : {{ log.username }}</li>
+{% endfor %}
+</ul>
+
+{% endblock %}
