@@ -31,7 +31,7 @@ class ArticleController extends Controller
       }
       return $authorName;
     }
-    public function indexAction() {
+    public function indexAction($page = 1) {
         if (!$this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
           return $this->redirect($this->generateUrl('login'));
         }
@@ -46,7 +46,15 @@ class ArticleController extends Controller
 
         // Load articles
         $repository = $em->getRepository($this->entityNameSpace);
-        $articles = $repository->findBy(array(), array('date'=>'desc'));
+        $nbPerPage = 5;
+        $nbArticles = count($repository->findAll());
+        $nbPages = ceil($nbArticles / $nbPerPage);
+        $articles = $repository->findBy(
+            array(),
+            array('date'=>'desc'),
+            $limit = $nbPerPage,
+            $offset = $nbPerPage * ($page - 1)
+        );
 
         // And the comments
         $commentRepository = $em->getRepository('RPZDiscussionBundle:Comment');
@@ -60,7 +68,9 @@ class ArticleController extends Controller
         }
 
         return $this->render($this->entityNameSpace.':index.html.twig', array(
-                'articles' => $articles
+                'articles' => $articles,
+                'page' => $page,
+                'nbPages' => $nbPages
         ));
     }
     public function showAction($id) {

@@ -37,6 +37,9 @@
     </div>
   </div>
 {% endfor %}
+
+{{ include("RPZDiscussionBundle:Utils:pagination.html.twig", {'url': 'rpz_discussion_article', 'nbPages': nbPages, 'page': page}) }}
+
 <style>
 body {
   background-color: #e9ebee;

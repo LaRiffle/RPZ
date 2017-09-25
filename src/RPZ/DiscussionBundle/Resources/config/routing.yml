@@ -1,6 +1,6 @@
 rpz_discussion_article:
-    path:     /
-    defaults: { _controller: RPZDiscussionBundle:Article:index }
+    path:     /{page}
+    defaults: { _controller: RPZDiscussionBundle:Article:index, page: 1 }
 rpz_discussion_article_show:
     path:     /show/{id}
     defaults: { _controller: RPZDiscussionBundle:Article:show }
