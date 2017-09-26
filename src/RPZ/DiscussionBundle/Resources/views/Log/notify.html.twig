@@ -1,0 +1,21 @@
+<ul id="notify" class="list-group" style="margin-bottom: 10px;">
+  <li class="list-group-item collapse-toggle justify-content-between">
+    <h5 style="margin-bottom: 0px;">
+      Récemment
+      <span id="notif_down"><i class="fa fa-angle-down" aria-hidden="true"></i></span>
+    </h5>
+    {% if notifications|length > 0 %}
+    <span class="badge badge-primary badge-pill" style="font-size: 1rem;">{{ notifications|length }}</span>
+    {% endif %}
+  </li>
+  <div id="menu2" class="collapse">
+  {% for notif in notifications %}
+      <li class="list-group-item justify-content-between">
+        <a href="#article{{ notif.article_id  }}" class="sober_link">
+        <span class="badge badge-primary badge-pill">{{ notif.time_since }}</span><br />
+        {{ notif.text }}
+        </a>
+      </li>
+  {% endfor %}
+  </div>
+</ul>
