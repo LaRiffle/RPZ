@@ -94,6 +94,7 @@ class LogController extends Controller
         $em = $this->getDoctrine()->getManager();
         $repository = $em->getRepository($this->entityNameSpace);
         $username = $this->getUser()->getUsername();
+        $date_now = new DateTime();
 
         // Compute the last time the user realy was active (min. 30 minutes)
         $lastConnexionDate = $repository->lastConnexionDate($username);
@@ -167,7 +168,6 @@ class LogController extends Controller
               $text = $text.' l\'article de '.$this->getAuthorName($article->getAuthor()).'.';
           }
           // Transform date to lapse
-          $date_now = new DateTime();
           $diff = $date_now->getTimestamp() - $notif_date->getTimestamp();
           $time_since = $this->time_since($diff);
           $notifications[] = [
