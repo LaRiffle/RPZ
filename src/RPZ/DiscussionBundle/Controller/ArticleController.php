@@ -16,6 +16,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 
+use \Datetime;
+
 class ArticleController extends Controller
 {
     public $entityNameSpace = 'RPZDiscussionBundle:Article';
@@ -30,6 +32,28 @@ class ArticleController extends Controller
         $authorName = $username;
       }
       return $authorName;
+    }
+    public function time_since($since) {
+        $chunks = array(
+            array(60 * 60 * 24 * 365 , 'an'),
+            array(60 * 60 * 24 * 30 , 'mois'),
+            array(60 * 60 * 24 * 7, 'semaine'),
+            array(60 * 60 * 24 , 'jour'),
+            array(60 * 60 , 'heure'),
+            array(60 , 'minute'),
+            array(1 , 'seconde')
+        );
+
+        for ($i = 0, $j = count($chunks); $i < $j; $i++) {
+            $seconds = $chunks[$i][0];
+            $name = $chunks[$i][1];
+            if (($count = floor($since / $seconds)) != 0) {
+                break;
+            }
+        }
+
+        $print = ($count <= 1) ? $count.' '.$name : "$count {$name}s";
+        return $print;
     }
     public function indexAction($page = 1) {
         if (!$this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
@@ -58,12 +82,17 @@ class ArticleController extends Controller
 
         // And the comments
         $commentRepository = $em->getRepository('RPZDiscussionBundle:Comment');
+        $date_now = new DateTime();
         foreach ($articles as $article) {
             $id = $article->getId();
+            $diff = $date_now->getTimestamp() - $article->getDate()->getTimestamp();
+            $article->time_since = $this->time_since($diff);
             $article->user = $this->getAuthorName($article->getAuthor());
             $article->comments = $commentRepository->whereArticle($id);
             foreach ($article->comments as $comment) {
               $comment->user = $this->getAuthorName($comment->getAuthor());
+              $diff = $date_now->getTimestamp() - $comment->getDate()->getTimestamp();
+              $comment->time_since = $this->time_since($diff);
             }
         }
 
@@ -152,7 +181,7 @@ class ArticleController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($article);
             $em->flush();
-            $request->getSession()->getFlashBag()->add('sucess', 'Article bien publié.');
+            $request->getSession()->getFlashBag()->add('success', 'Article bien publié.');
             return $this->redirect($this->generateUrl('rpz_discussion_article'));
         }
         return $this->render($this->entityNameSpace.':add.html.twig', array(

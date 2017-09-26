@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 use \Datetime;
 
+
 class LogController extends Controller
 {
     public $entityNameSpace = 'RPZDiscussionBundle:Log';
@@ -83,6 +84,123 @@ class LogController extends Controller
 
         return $this->render($this->entityNameSpace.':show.html.twig', array(
                 'lastActivity' => $lastActivity,
+        ));
+    }
+    public function notifyAction() {
+        /* Show who was recently active */
+        if (!$this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
+          return $this->redirect($this->generateUrl('login'));
+        }
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository($this->entityNameSpace);
+        $username = $this->getUser()->getUsername();
+
+        // Compute the last time the user realy was active (min. 30 minutes)
+        $lastConnexionDate = $repository->lastConnexionDate($username);
+
+        // Load the updated data (comments and articles)
+        $commentRepository = $em->getRepository('RPZDiscussionBundle:Comment');
+        $lastComments = $commentRepository->getLastComments($lastConnexionDate, $username);
+        $articleRepository = $em->getRepository('RPZDiscussionBundle:Article');
+        $lastArticles = $articleRepository->getLastArticles($lastConnexionDate, $username);
+
+        // See all the articles involved in updates
+        $commentedArticlesId = $commentRepository->getArticleIdFromComments($lastComments);
+        $lastArticlesId = [];
+        foreach ($lastArticles as $article) {
+          $lastArticlesId[] = $article->getId();
+        }
+        $updatedArticlesId = array_unique(array_merge($commentedArticlesId, $lastArticlesId));
+
+        $updatedArticles = $articleRepository->findBy( array('id' => $updatedArticlesId) );
+
+        // Look for every article if some comments are attached
+        foreach ($updatedArticles as $article_key => $article) {
+          $updatedArticles[$article_key]->new_comments = [];
+          $selected_index = [];
+          // Attach some comments if necessary
+          foreach ($lastComments as $comment_key => $comment) {
+            if($comment->getArticle()->getId() == $article->getId()){
+              $updatedArticles[$article_key]->new_comments[] = $comment;
+              $selected_index[] = $comment_key;
+            }
+          }
+        }
+        // Create the notifications : three cases
+        $notifications = [];
+        foreach ($updatedArticles as $article_key => $article) {
+          // Case : New article no new comments
+          if(count($article->new_comments) == 0){
+              $text = $this->getAuthorName($article->getAuthor()). ' a publié un article';
+              $notif_date = $article->getDate();
+          // Case : New article and new comments
+          } else if(in_array($article->getId(), $lastArticlesId)){
+              $text = $this->getAuthorName($article->getAuthor()). ' a publié un article. ';
+              $notif_date = $article->getDate();
+              $users = [];
+              foreach($article->new_comments as $comment){
+                $users[] = $this->getAuthorName($comment->getAuthor());
+                $notif_date = max($notif_date, $comment->getDate());
+              }
+              $users = array_unique($users);
+              if(count($users) == 1){
+                $text = $text.$users[0].' l\'a commenté.';
+              } else {
+                $list_users = join(' et ', array_filter(array_merge(array(join(', ', array_slice($users, 0, -1))), array_slice($users, -1)), 'strlen'));
+                $text = $text.$list_users.' l\'ont commenté.';
+              }
+          // Case : Old article with new comments
+          } else {
+              $notif_date = $article->getDate(); // just a init for the max function
+              $users = [];
+              foreach($article->new_comments as $comment){
+                $users[] = $this->getAuthorName($comment->getAuthor());
+                $notif_date = max($notif_date, $comment->getDate());
+              }
+              $users = array_unique($users);
+              if(count($users) == 1){
+                $text = $users[0].' a commenté';
+              } else {
+                $list_users = join(' et ', array_filter(array_merge(array(join(', ', array_slice($users, 0, -1))), array_slice($users, -1)), 'strlen'));
+                $text = $list_users.' ont commenté';
+              }
+              $text = $text.' l\'article de '.$this->getAuthorName($article->getAuthor()).'.';
+          }
+          // Transform date to lapse
+          $date_now = new DateTime();
+          $diff = $date_now->getTimestamp() - $notif_date->getTimestamp();
+          $time_since = $this->time_since($diff);
+          $notifications[] = [
+            'time_since' => $time_since,
+            'date' => $notif_date,
+            'text' => $text,
+            'article_id' => $article->getId(),
+          ];
+        }
+
+        $expiration_date = new DateTime('2017-09-27 20:00:00');
+        if($date_now < $expiration_date){
+          $notifications[] = [
+            'time_since' => 'Nouveau !',
+            'date' => $expiration_date,
+            'text' => 'Pfiou toujours plus de fun, voilà les notifications !',
+            'article_id' => '',
+          ];
+        }
+
+        // Sort notifications by date
+        usort($notifications, function ($n1, $n2)
+        {
+            $d1 = $n1['date'];
+            $d2 = $n2['date'];
+            if ($d1 == $d2) {
+                return 0;
+            }
+            return ($d1 > $d2) ? -1 : 1;
+        });
+
+        return $this->render($this->entityNameSpace.':notify.html.twig', array(
+                'notifications' => $notifications,
         ));
     }
 }

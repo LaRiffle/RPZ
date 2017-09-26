@@ -1,16 +1,16 @@
 {% extends "RPZDiscussionBundle::layout.html.twig" %}
 {% set edition_buttons="RPZDiscussionBundle:Utils:edition.html.twig" %}
 {% block left_panel %}
+{{ render(controller("RPZDiscussionBundle:Log:notify")) }}
 {{ render(controller("RPZDiscussionBundle:Log:show")) }}
 {% endblock %}
 {% block body %}
 <div class="card card-body" style="padding: 30px; margin-bottom: 15px;">
   {{ render(controller("RPZDiscussionBundle:Article:add")) }}
 </div>
-
 {% for article in articles %}
   {% set has_image = (article.image is not empty) %}
-  <div class="card card-body" style="padding: 30px; margin-bottom: 15px;">
+  <div id="article{{ article.id }}" class="card card-body" style="padding: 30px; margin-bottom: 15px;">
     {% if has_image %}
     <div class="" style="margin: -30px;">
       <img class="card-img-top" style="width: 100%;" src="{{ asset('uploads/img/' ~ article.image) }}" alt="Photo indisponible">
@@ -20,12 +20,12 @@
       <h4 class="card-title" {% if has_image %}style="color: white; position: relative; bottom: 20px;"{% endif %}>{{ article.title }}</h4>
       {{ include(edition_buttons, {'edit': path('rpz_discussion_article_edit', {'id': article.id}), 'remove': path('rpz_discussion_article_remove', {'id': article.id}) }) }}
     </div>
-    <h5><span style="font-weight: bold;">{{ article.user }}</span>, <span class="date">{{ article.date|date("d/m/Y H:i") }}</span></h5>
+    <h5><span class="author">{{ article.user }}</span>, <span class="date">il y a {{ article.time_since }}</span></h5>
     <p class="card-text">{{ article.content|nl2br }}</p>
     {% for comment in article.comments %}
       <div class="hr"></div>
       <div class="rpz_box_icon">
-        <h6><span style="font-weight: bold;">{{ comment.user }}</span>, <span class="date">{{ comment.date|date("d/m/Y h:i") }}</span></h6>
+        <h6><span class="author">{{ comment.user }}</span>, <span class="date">il y a {{ comment.time_since }}</span></h6>
         {{ include(edition_buttons, {'edit': path('rpz_discussion_comment_edit', {'article_id': article.id, 'id': comment.id}), 'remove': path('rpz_discussion_comment_remove', {'id': comment.id})}) }}
       </div>
       <p class="card-text" style="font-size: 0.95em;">{{ comment.text|nl2br }}</p>
@@ -71,6 +71,15 @@ button:hover {
   color: #777777;
   font-weight: 200;
 }
+.author {
+  font-weight: bold;
+}
+.sober_link {
+  color: inherit;
+}
+.sober_link:hover {
+  text-decoration: none;
+}
 .rpz_comment {
   border-top: 1px #333333 solid;
 }
@@ -110,11 +119,19 @@ ul.rpz_icons li:after {
   if(windowSize >= MIN_SIZE) {
     $('#menu').collapse('show');
     $('#activity_down').hide();
+    $('#menu2').collapse('show');
+    $('#notif_down').hide();
   }
-  $('.collapse-toggle').on('click', function () {
+  $('#activity li.collapse-toggle').on('click', function () {
     var windowSize = $(window).width();
     if(windowSize < MIN_SIZE) {
       $('#menu').collapse('toggle');
+    }
+  });
+  $('#notify li.collapse-toggle').on('click', function () {
+    var windowSize = $(window).width();
+    if(windowSize < MIN_SIZE) {
+      $('#menu2').collapse('toggle');
     }
   });
   $(window).on('resize', function(){
@@ -122,9 +139,13 @@ ul.rpz_icons li:after {
     if(windowSize < MIN_SIZE) {
         $('#menu').collapse('hide');
         $('#activity_down').show();
+        $('#menu2').collapse('hide');
+        $('#notif_down').show();
     } else {
         $('#menu').collapse('show');
         $('#activity_down').hide();
+        $('#menu2').collapse('show');
+        $('#notif_down').hide();
     }
   });
 </script>

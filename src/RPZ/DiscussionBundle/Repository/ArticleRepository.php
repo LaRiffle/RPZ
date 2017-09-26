@@ -10,4 +10,16 @@ namespace RPZ\DiscussionBundle\Repository;
  */
 class ArticleRepository extends \Doctrine\ORM\EntityRepository
 {
+  public function getLastArticles($date_from, $username) {
+    $results = $this
+      ->createQueryBuilder('article')
+      ->where('article.date >= :date_from')
+      ->setParameter('date_from', $date_from)
+      ->andWhere('article.author != :username')
+      ->setParameter('username', $username)
+      ->getQuery()
+      ->getResult()
+    ;
+    return $results;
+  }
 }

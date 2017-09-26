@@ -19,4 +19,25 @@ class CommentRepository extends \Doctrine\ORM\EntityRepository
         ->getResult()
     ;
   }
+  public function getLastComments($date_from, $username) {
+    $results = $this
+      ->createQueryBuilder('comment')
+      ->leftJoin('comment.article', 'article')
+      ->addSelect('article')
+      ->where('comment.date >= :date_from')
+      ->setParameter('date_from', $date_from)
+      ->andWhere('comment.author != :username')
+      ->setParameter('username', $username)
+      ->getQuery()
+      ->getResult()
+    ;
+    return $results;
+  }
+  public function getArticleIdFromComments($comments){
+    $articleIds = [];
+    foreach($comments as $comment){
+      $articleIds[] = $comment->getArticle()->getId();
+    }
+    return array_unique($articleIds);
+  }
 }

@@ -19,4 +19,18 @@ class LogRepository extends \Doctrine\ORM\EntityRepository
         ->getResult()
     ;
   }
+  public function lastConnexionDate($username) {
+    $current_date = new \DateTime();
+    $current_date->modify('-30 minutes');
+    $results =  $this->createQueryBuilder('log')
+        ->select('MAX(log.date) as date')
+        ->where('log.username = :username')
+        ->andWhere('log.date < :current_date')
+        ->setParameter('username', $username)
+        ->setParameter('current_date', $current_date)
+        ->getQuery()
+        ->getResult()
+    ;
+    return $results[0]['date'];
+  }
 }
