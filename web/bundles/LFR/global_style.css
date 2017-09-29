@@ -1,0 +1,191 @@
+@font-face {
+    font-family: "Antro_Vectra";
+    src: url('fonts/Antro_Vectra.otf');
+}
+@font-face {
+    font-family: "HaloHandletter";
+    src: url('fonts/HaloHandletter.otf');
+}
+@font-face {
+    font-family: "NellaSue";
+    src: url('fonts/NellaSue.ttf');
+}
+@font-face {
+    font-family: "Notera";
+    src: url('fonts/Notera.ttf');
+}
+@font-face {
+    font-family: "Run_Wild";
+    src: url('fonts/Run_Wild.ttf');
+}
+body {
+
+}
+#front-page {
+  height: 100vh;
+  width: 100%;
+  display: inline-flex;
+  /* background-color: rgb(154, 61, 96); */
+}
+#home-page {
+  height: 100vh;
+  width: 100%;
+}
+#title {
+  margin: auto;
+}
+h1 {
+  color: #AA1111;/*rgb(215, 116, 154);*/
+  white-space: nowrap;
+}
+#front-page h1 {
+  text-align: center;
+  font-size: 10rem;
+}
+h2.signature {
+  text-align: center;
+  color: #AA1111;
+  font-weight: lighter;
+  position: relative;
+  bottom: 3.5rem;
+  left: 0.5rem;
+  transition:opacity 1s linear;
+}
+.special-font {
+  font-family: "HaloHandletter";
+}
+.special-font span {
+  transition:opacity 1s linear;
+}
+.special-font1 {
+  font-family: "Antro_Vectra";
+}
+.special-font2 {
+  font-family: "HaloHandletter";
+}
+.special-font3 {
+  font-family: "NellaSue";
+}
+.special-font4 {
+  font-family: "Notera";
+}
+.special-font5 {
+  font-family: "Run_Wild";
+}
+.fil, .hidden-fil, .sprinter  {
+  position: relative;
+  bottom: 0.9rem;
+}
+.fil-cadre {
+  height: 5.5px;
+  width: 1000px;
+}
+.fil-snake {
+  height: inherit;
+  visibility: hidden;
+  background-color: #AA1111;
+  -webkit-transform: translateX(0px);
+  -webkit-transition: -webkit-transform 2s ease;
+  -moz-transform: translateX(0px);
+  -moz-transition: -webkit-transform 2s ease;
+  transform: translateX(0px);
+  transition: -webkit-transform 2s ease;
+  position: relative;
+}
+#scroll {
+  position: absolute;
+  font-weight: lighter;
+  top: calc(100vh - 80px);
+  left: calc(50% - 20px);
+  display: none;
+}
+#scroll a {
+  color: #AA1111;
+}
+#home-page h1.special-font {
+  text-align: center;
+  font-size: 6rem;
+}
+#home-page h2 {
+  text-align: center;
+  color: #AA1111;
+  font-weight: lighter;
+  position: relative;
+  bottom: 2.5rem;
+  left: 0.3rem;
+  font-size: 1.3rem;
+}
+#home-page nav {
+  margin-top: -50px;
+}
+#navbar ul {
+  width: 100%;
+  text-align: center;
+}
+#navbar li {
+  width: 20%;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: lighter;
+}
+#navbar li:first-of-type {
+  margin-left: 20%;
+}
+.large-icon {
+  margin-top: 30px;
+}
+.large-icon-left {
+  margin-left: 140px;
+  margin-right: 40px;
+}
+.large-icon-right {
+  margin-left: 40px;
+  margin-right: 140px;
+}
+.large-icon h3 {
+  font-size: 2.5em;
+  font-weight: lighter;
+  color: white;
+  text-align: center;
+}
+.large-icon img {
+  width: 100%;
+  border-radius: 10px;
+}
+.large-icon a:hover img {
+  transform: scale(1.05); -webkit-transform: scale(1.05); -o-transform: scale(1.05); -moz-transform: scale(1.05);
+  border: 1px #777777 solid;
+}
+.large-icon a img {
+    transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    -webkit-transition: all 0.5s;
+    -o-transition: all 0.5s;
+}
+.icon-container {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+}
+.icon-dummy {
+    margin-top: 100%;
+}
+.icon-element {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+.thumbnail {
+    position: relative;
+}
+.thumbnail img {
+  border: 1px #CCCCCC solid;
+}
+.caption {
+    position: absolute;
+    top: 56%;
+    left: 0;
+    width: 100%;
+}
