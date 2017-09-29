@@ -114,6 +114,12 @@ ul.rpz_icons li:after {
 {% endblock %}
 {% block script %}
 <script>
+  $('textarea').on('keyup', function(e){
+    this.style.height = "1px";
+    this.style.height = (22+this.scrollHeight)+"px";
+  });
+</script>
+<script>
   var MIN_SIZE = 768;
   var windowSize = $(window).width();
   if(windowSize >= MIN_SIZE) {

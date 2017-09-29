@@ -1,0 +1,6 @@
+lfr_store_homepage:
+    path:     /
+    defaults: { _controller: LFRStoreBundle:Default:index }
+lfr_store_homepage:
+    path:     /accueil
+    defaults: { _controller: LFRStoreBundle:Home:index }

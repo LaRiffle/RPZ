@@ -1,0 +1,63 @@
+{% extends "LFRStoreBundle::layout.html.twig" %}
+{% block body %}
+<div id="title">
+<h1 class="special-font">
+  {% for i in 0..16
+    %}<span class="fil hidden-fil visible-fil" style="left: {{ 2.5*(16 - i) }}rem; opacity: 0;">_</span>{%
+    endfor %}{%
+    set letters = ['l','e','f','i','l','r','o','u','g','e'] %}{%
+    for letter in letters %}<span style="opacity: 0;" class="hidden">{{ letter }}</span>{% endfor %}
+  <span style="visibility: hidden;">{% for i in 0..16 %}_{% endfor %}</span>
+</h1>
+<h2 class="signature" style="opacity: 0;">Aliénor Dubé</h2>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+$(document).ready(function(){
+  var title_size = $('#title').width();
+  var window_size = $('body').width();
+  console.log(title_size);
+  console.log(window_size);
+  var decalage = (title_size-window_size)/2;
+  console.log(decalage);
+  if(title_size > window_size){
+      $('#title').css('position', 'relative');
+      $('#title').css('right', decalage+'px');
+  }
+  var next_show = function(){
+    var letter = $(".special-font span.hidden:first");
+    letter.removeClass('hidden');
+    letter.css('opacity', '1');
+    if(letter.length > 0){
+      setTimeout(next_show, 160);
+    } else {
+      setTimeout(function(){
+        signature = $('.signature');
+        signature.css('opacity', '1');
+      }, 800);
+    }
+  };
+  var next_fil = function(){
+    var letter = $(".special-font span.hidden-fil:first");
+    letter.removeClass('hidden-fil');
+    letter.css('opacity', '1');
+    if(letter.length > 0){
+      setTimeout(next_fil, 80);
+    } else {
+      next_show();
+      remove_fil();
+    }
+  };
+  var remove_fil = function(){
+    var letter = $(".special-font span.visible-fil:first");
+    letter.removeClass('visible-fil');
+    letter.css('opacity', '0');
+    if(letter.length > 0){
+      setTimeout(remove_fil, 80);
+    }
+  };
+  setTimeout(next_fil, 200);
+});
+</script>
+{% endblock %}
