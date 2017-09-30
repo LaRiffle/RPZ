@@ -42,7 +42,7 @@ body {
   height: 100vh;
   width: 100%;
   display: inline-flex;
-  background-color: #AA1111;
+  background-color: #BA0020 ;
   /* background-color: rgb(154, 61, 96); */
 }
 #home-page {
@@ -53,7 +53,7 @@ body {
   margin: auto;
 }
 h1.special-font {
-  color: #AA1111;/*rgb(215, 116, 154);*/
+  color: #BA0020 ;/*rgb(215, 116, 154);*/
   white-space: nowrap;
   text-align: center;
   font-size: 6rem;
@@ -62,15 +62,20 @@ h1.special-font {
   color: white;
   font-size: 10rem;
 }
+#explore-page, #history-page, #home-page {
+  overflow: hidden;
+  padding-bottom: 30px;
+  min-height: 100vh;
+}
 
 h2 {
   text-align: center;
-  color: #AA1111;
+  color: #BA0020 ;
   font-weight: lighter;
   position: relative;
   bottom: 2.5rem;
   left: 0.3rem;
-  font-size: 1.2rem;
+  font-size: 1.15rem;
 }
 h2.signature {
   color: white;
@@ -78,6 +83,9 @@ h2.signature {
   left: 0.5rem;
   transition:opacity 1s linear;
   font-size: 1.9rem;
+}
+h3 {
+  font-size: 2.5rem;
 }
 .special-font {
   font-family: "HaloHandletter";
@@ -120,6 +128,9 @@ h2.signature {
   transition: -webkit-transform 2s ease;
   position: relative;
 }
+a.sober_link:hover {
+  text-decoration: none;
+}
 #scroll {
   position: absolute;
   font-weight: lighter;
@@ -146,6 +157,18 @@ nav.top-navbar {
 }
 #navbar li:first-of-type {
   margin-left: 20%;
+}
+#fb-icon {
+  text-align: center;
+  position: fixed;
+  width: 50px;
+  height: 50px;
+  color: #3B5B98;
+  border: 2px #3B5B98 solid;
+  border-radius: 25px;
+  bottom: 20px;
+  right: 20px;
+  padding-top: 7px;
 }
 .large-icon {
   margin-top: 30px;
@@ -224,11 +247,71 @@ nav.top-navbar {
   float: left;
   margin-right: 15px;
 }
-.under {
-  position: absolute;
+.double-large-icon img:hover {
+  cursor: grab;
 }
 .over {
   position: absolute;
+}
+.under {
+  position: absolute;
   top: 70px;
   left: 90px;
+}
+.carousel img {
+  border-radius: 5px;
+}
+#carousel .carousel-item:hover {
+  cursor: grab;
+}
+#carousel .carousel-item:focus {
+  cursor: grabbing;
+}
+.carousel-control-prev {
+  background-image: -webkit-linear-gradient(left,rgba(0,0,0,.2) 0,rgba(0,0,0,.0001) 100%);
+  background-image: -o-linear-gradient(left,rgba(0,0,0,.2) 0,rgba(0,0,0,.0001) 100%);
+  background-image: -webkit-gradient(linear,left top,right top,from(rgba(0,0,0,.2)),to(rgba(0,0,0,.0001)));
+  background-image: linear-gradient(to right,rgba(0,0,0,.2) 0,rgba(0,0,0,.0001) 100%);
+}
+.carousel-control-next {
+  background-image: -webkit-linear-gradient(left,rgba(0,0,0,.0001) 0,rgba(0,0,0,.2) 100%);
+  background-image: -o-linear-gradient(left,rgba(0,0,0,.0001) 0,rgba(0,0,0,.2) 100%);
+  background-image: -webkit-gradient(linear,left top,right top,from(rgba(0,0,0,.0001)),to(rgba(0,0,0,.2)));
+  background-image: linear-gradient(to right,rgba(0,0,0,.0001) 0,rgba(0,0,0,.2) 100%);
+}
+.carousel-indicators li {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin: 1px;
+  text-indent: -999px;
+  cursor: pointer;
+  background-color: #000\9;
+  background-color: rgba(0,0,0,0);
+
+  border-radius: 10px;
+}
+.carousel-indicators li {
+  background-color: rgba(0,0,0,0.3);
+  margin-right: 10px;
+  max-width: 10px;
+}
+.carousel-indicators .active {
+  background-color: #000;
+}
+.carousel-icons {
+  margin-top: 10px;
+}
+.carousel-icons img:hover {
+  cursor: pointer;
+}
+.carousel-icons .col {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+.carousel-icons .col:first-of-type {
+  padding-left: 0;
+}
+.carousel-icons .col:last-of-type {
+  padding-right: 0;
 }

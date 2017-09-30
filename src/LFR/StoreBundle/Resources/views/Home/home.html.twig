@@ -1,0 +1,46 @@
+<div id="home-page">
+  {% set navbar = "LFRStoreBundle:Utils:nav.html.twig" %}
+  {{ include(navbar, {'active': "none"}) }}
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <div class="large-icon large-icon-left">
+          <div class="icon-container">
+            <div class="icon-dummy"></div>
+            <div class="icon-element">
+              <div class="row" id="box-search">
+                  <div class="thumbnail text-center">
+                      <a href="{{ path('lfr_store_explore', {'type': 'vetement'}) }}">
+                      <img src="{{ asset('bundles/LFR/img/cloth.png') }}" alt="" class="img-responsive">
+                      <div class="caption">
+                          <h3>Vêtements</h3>
+                      </div>
+                      </a>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="large-icon large-icon-right">
+          <div class="icon-container">
+            <div class="icon-dummy"></div>
+            <div class="icon-element">
+              <div class="row" id="box-search">
+                  <div class="thumbnail text-center">
+                      <a href="#">
+                      <img src="{{ asset('bundles/LFR/img/accessoire.png') }}" alt="" class="img-responsive">
+                      <div class="caption">
+                          <h3>Accessoires</h3>
+                      </div>
+                      </a>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

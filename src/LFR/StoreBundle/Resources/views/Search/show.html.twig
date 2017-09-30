@@ -3,7 +3,7 @@
 
 <div id="explore-page">
   {% set navbar = "LFRStoreBundle:Utils:nav.html.twig" %}
-  {{ include(navbar, {'active': "Collection"}) }}
+  {{ include(navbar, {'active': 'collection'}) }}
   <div class="container">
     <div class="row">
       <div class="col-sm-3">
@@ -49,6 +49,9 @@
         </ul>
       </div>
       <div class="col-sm-6">
+        {% set carousel = "LFRStoreBundle:Search:carousel.html.twig" %}
+        {{ include(carousel, {'url': ''}) }}
+        <!--
         <div style="width: 100%;">
           <div class="img-thumbnail">
             <img src="{{ asset('bundles/LFR/img/icons/6.png') }}" alt="" style="width:100%; margin-bottom: -28px;">
@@ -58,6 +61,7 @@
             </a>
           </div>
         </div>
+        -->
       </div>
       <div class="col-sm-3">
         <h3>Description</h3>
@@ -83,5 +87,12 @@
 </div>
 {% endblock %}
 {% block script %}
-
+<script>
+  //$("#carousel .carousel-item").zoom({ on:'grab' });
+  $('#carousel img')
+    .wrap('<span style="display:inline-block"></span>')
+    .css('display', 'block')
+    .parent()
+    .zoom({ on:'grab' });
+</script>
 {% endblock %}

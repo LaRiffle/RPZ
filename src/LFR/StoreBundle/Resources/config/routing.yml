@@ -1,9 +1,9 @@
-lfr_store_homepage:
+lfr_store_start:
     path:     /
-    defaults: { _controller: LFRStoreBundle:Default:index }
+    defaults: { _controller: LFRStoreBundle:Home:animation }
 lfr_store_homepage:
     path:     /accueil
-    defaults: { _controller: LFRStoreBundle:Home:index }
+    defaults: { _controller: LFRStoreBundle:Home:homepage }
 lfr_store_explore:
     path:     /explore/{type}
     defaults: { _controller: LFRStoreBundle:Search:start, type:"vetement" }

@@ -1,6 +1,5 @@
 {% extends "LFRStoreBundle::layout.html.twig" %}
 {% block body %}
-
 <div id="front-page">
   <div style="width: 0">
     <div class="fil-cadre" style="position: relative; top: calc(50vh - 6px);">
@@ -8,7 +7,7 @@
       </div>
     </div>
   </div>
-  <div id="title" style="background-color: #AA1111; z-index: 10;">
+  <div id="title" style="background-color: #BA0020; z-index: 10;">
     <h1 class="special-font">
       {%
         set letters = ['l','e','f','i','l','r','o','u','g','e'] %}{%
@@ -17,62 +16,21 @@
     <h2 class="signature" style="opacity: 0;">Aliénor Dubé</h2>
   </div>
   <div id="scroll">
-    <a href="#"><i class="fa fa-angle-down fa-5x" aria-hidden="true"></i></a>
+    <a href="#"><i class="fa fa-angle-down fa-3x" aria-hidden="true"></i></a>
   </div>
 </div>
 
-<div id="home-page">
-  {% set navbar = "LFRStoreBundle:Utils:nav.html.twig" %}
-  {{ include(navbar, {'active': "Collection"}) }}
-  <div class="container">
-    <div class="row">
-      <div class="col">
-        <div class="large-icon large-icon-left">
-          <div class="icon-container">
-            <div class="icon-dummy"></div>
-            <div class="icon-element">
-              <div class="row" id="box-search">
-                  <div class="thumbnail text-center">
-                      <a href="{{ path('lfr_store_explore', {'type': 'vetement'}) }}">
-                      <img src="{{ asset('bundles/LFR/img/cloth.png') }}" alt="" class="img-responsive">
-                      <div class="caption">
-                          <h3>Vêtements</h3>
-                      </div>
-                      </a>
-                  </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="large-icon large-icon-right">
-          <div class="icon-container">
-            <div class="icon-dummy"></div>
-            <div class="icon-element">
-              <div class="row" id="box-search">
-                  <div class="thumbnail text-center">
-                      <a href="#">
-                      <img src="{{ asset('bundles/LFR/img/accessoire.png') }}" alt="" class="img-responsive">
-                      <div class="caption">
-                          <h3>Accessoires</h3>
-                      </div>
-                      </a>
-                  </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+{{ render(controller('LFRStoreBundle:Home:home')) }}
 {% endblock %}
 {% block script %}
+<script> document.getElementById('fb-icon').style.visibility='hidden'; </script>
 <script>
 $(document).ready(function(){
+  var scrolled = false;
+  $('#scroll').fadeIn();
   $('#scroll a').on('click', function(e){
     e.preventDefault();
+    scrolled = true;
     $('html,body').animate({
         scrollTop: $("#home-page").offset().top
     },'slow');
@@ -112,7 +70,14 @@ $(document).ready(function(){
       setTimeout(function(){
         signature = $('.signature');
         signature.css('opacity', '1');
-        $('#scroll').fadeIn();
+        setTimeout(function(){
+          if(!scrolled){
+            $('html,body').animate({
+                scrollTop: $("#home-page").offset().top
+            },'slow');
+          }
+          $('#front-page').slideUp(1000);
+        }, 1500);
       }, 800);
     }
   };

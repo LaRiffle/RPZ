@@ -3,18 +3,20 @@
 
 <div id="history-page">
   {% set navbar = "LFRStoreBundle:Utils:nav.html.twig" %}
-  {{ include(navbar, {'active': "Collection"}) }}
+  {{ include(navbar, {'active': 'history'}) }}
   <div class="container">
-    <div class="row">
+    <div class="row" style="margin-top: 25px;">
       <div class="col-sm-6">
-        <div class="over" style="width: 75%;">
-          <div class="img-thumbnail">
-            <img src="{{ asset('bundles/LFR/img/dior2.png') }}" alt="" style="width:100%;">
+        <div class="double-large-icon">
+          <div class="under" style="width: 75%;">
+            <div class="img-thumbnail">
+              <img src="{{ asset('bundles/LFR/img/dior2.png') }}" alt="" style="width:100%;">
+            </div>
           </div>
-        </div>
-        <div class="under" style="width: 75%;">
-          <div class="img-thumbnail">
-            <img src="{{ asset('bundles/LFR/img/dior1.png') }}" alt="" style="width:100%;">
+          <div class="over" style="width: 75%;">
+            <div class="img-thumbnail">
+              <img src="{{ asset('bundles/LFR/img/dior1.png') }}" alt="" style="width:100%;">
+            </div>
           </div>
         </div>
       </div>
@@ -52,5 +54,29 @@
 </div>
 {% endblock %}
 {% block script %}
-
+<script>
+  var icon_inversed = false;
+  $('.double-large-icon .over').hover(function(){
+    setTimeout(function(){
+      if(icon_inversed && $('.double-large-icon .over').is(':hover')){
+        $('.double-large-icon .over').fadeOut(function() {
+            $('.double-large-icon .under').css('z-index', '0');
+            $('.double-large-icon .over').css('z-index', '1').fadeIn();
+        })
+        icon_inversed = !icon_inversed;
+      }
+    }, 300);
+  });
+  $('.double-large-icon .under').hover(function(){
+    setTimeout(function(){
+      if(!icon_inversed && $('.double-large-icon .under').is(':hover')){
+        $('.double-large-icon .under').fadeOut(function() {
+            $('.double-large-icon .over').css('z-index', '0');
+            $('.double-large-icon .under').css('z-index', '1').fadeIn();
+        })
+        icon_inversed = !icon_inversed;
+      }
+    }, 300);
+  });
+</script>
 {% endblock %}
