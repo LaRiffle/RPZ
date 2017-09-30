@@ -8,7 +8,7 @@
       </div>
     </div>
   </div>
-  <div id="title" style="background-color: white; z-index: 10;">
+  <div id="title" style="background-color: #AA1111; z-index: 10;">
     <h1 class="special-font">
       {%
         set letters = ['l','e','f','i','l','r','o','u','g','e'] %}{%
@@ -22,27 +22,8 @@
 </div>
 
 <div id="home-page">
-  <h1 class="special-font">lefilrouge</h1>
-  <h2>Aliénor Dubé</h2>
-  <nav class="navbar navbar-toggleable-md navbar-light">
-  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <a class="navbar-brand" href="#"></a>
-  <div class="collapse navbar-collapse" id="navbar">
-    <ul class="navbar-nav">
-      <li class="nav-item">
-        <a class="nav-link" href="#">Histoire<span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Collection</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Contact</a>
-      </li>
-    </ul>
-  </div>
-  </nav>
+  {% set navbar = "LFRStoreBundle:Utils:nav.html.twig" %}
+  {{ include(navbar, {'active': "Collection"}) }}
   <div class="container">
     <div class="row">
       <div class="col">
@@ -52,7 +33,7 @@
             <div class="icon-element">
               <div class="row" id="box-search">
                   <div class="thumbnail text-center">
-                      <a href="#">
+                      <a href="{{ path('lfr_store_explore', {'type': 'vetement'}) }}">
                       <img src="{{ asset('bundles/LFR/img/cloth.png') }}" alt="" class="img-responsive">
                       <div class="caption">
                           <h3>Vêtements</h3>

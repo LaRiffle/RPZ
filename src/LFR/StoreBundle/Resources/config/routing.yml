@@ -4,3 +4,12 @@ lfr_store_homepage:
 lfr_store_homepage:
     path:     /accueil
     defaults: { _controller: LFRStoreBundle:Home:index }
+lfr_store_explore:
+    path:     /explore/{type}
+    defaults: { _controller: LFRStoreBundle:Search:start, type:"vetement" }
+lfr_store_show:
+    path:     /show/{id}
+    defaults: { _controller: LFRStoreBundle:Search:show, id:0 }
+lfr_store_history:
+    path:     /histoire
+    defaults: { _controller: LFRStoreBundle:Information:history }

@@ -18,13 +18,31 @@
     font-family: "Run_Wild";
     src: url('fonts/Run_Wild.ttf');
 }
-body {
-
+@font-face {
+    font-family: "Calibri";
+    src: url('fonts/Calibri.ttf');
 }
+@font-face {
+    font-family: "Candara";
+    src: url('fonts/Candara.ttf');
+}
+@font-face {
+    font-family: "Avenir-Book";
+    src: url('fonts/Avenir-Book.ttf');
+}
+@font-face {
+    font-family: "Avenir-Light";
+    src: url('fonts/Avenir-Light.ttf');
+}
+body {
+  font-family: "Avenir-Light";
+}
+
 #front-page {
   height: 100vh;
   width: 100%;
   display: inline-flex;
+  background-color: #AA1111;
   /* background-color: rgb(154, 61, 96); */
 }
 #home-page {
@@ -34,22 +52,32 @@ body {
 #title {
   margin: auto;
 }
-h1 {
+h1.special-font {
   color: #AA1111;/*rgb(215, 116, 154);*/
   white-space: nowrap;
+  text-align: center;
+  font-size: 6rem;
 }
 #front-page h1 {
-  text-align: center;
+  color: white;
   font-size: 10rem;
 }
-h2.signature {
+
+h2 {
   text-align: center;
   color: #AA1111;
   font-weight: lighter;
   position: relative;
+  bottom: 2.5rem;
+  left: 0.3rem;
+  font-size: 1.2rem;
+}
+h2.signature {
+  color: white;
   bottom: 3.5rem;
   left: 0.5rem;
   transition:opacity 1s linear;
+  font-size: 1.9rem;
 }
 .special-font {
   font-family: "HaloHandletter";
@@ -83,7 +111,7 @@ h2.signature {
 .fil-snake {
   height: inherit;
   visibility: hidden;
-  background-color: #AA1111;
+  background-color: white;
   -webkit-transform: translateX(0px);
   -webkit-transition: -webkit-transform 2s ease;
   -moz-transform: translateX(0px);
@@ -100,22 +128,10 @@ h2.signature {
   display: none;
 }
 #scroll a {
-  color: #AA1111;
+  color: white;
 }
-#home-page h1.special-font {
-  text-align: center;
-  font-size: 6rem;
-}
-#home-page h2 {
-  text-align: center;
-  color: #AA1111;
-  font-weight: lighter;
-  position: relative;
-  bottom: 2.5rem;
-  left: 0.3rem;
-  font-size: 1.3rem;
-}
-#home-page nav {
+
+nav.top-navbar {
   margin-top: -50px;
 }
 #navbar ul {
@@ -177,15 +193,42 @@ h2.signature {
     left: 0;
     right: 0;
 }
-.thumbnail {
+.large-icon .thumbnail {
     position: relative;
 }
-.thumbnail img {
+.large-icon .thumbnail img {
   border: 1px #CCCCCC solid;
 }
-.caption {
+.large-icon .caption {
     position: absolute;
     top: 56%;
     left: 0;
     width: 100%;
+}
+/* EXPLORE */
+
+.list-gender h5 {
+  width: 100%;
+}
+.list-gender li {
+  padding: 0;
+  border: none;
+  padding-bottom: 5px;
+  padding-left: 13px;
+}
+.color-choice {
+  width: 30px;
+  height: 30px;
+  display: block;
+  border-radius: 15px;
+  float: left;
+  margin-right: 15px;
+}
+.under {
+  position: absolute;
+}
+.over {
+  position: absolute;
+  top: 70px;
+  left: 90px;
 }
