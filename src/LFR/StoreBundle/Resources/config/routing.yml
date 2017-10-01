@@ -13,3 +13,10 @@ lfr_store_show:
 lfr_store_history:
     path:     /histoire
     defaults: { _controller: LFRStoreBundle:Information:history }
+
+lfr_admin_text_add:
+    path:     /admin/text/add/{id}
+    defaults: { _controller: LFRStoreBundle:Information:textAdd, id:0 }
+lfr_admin_image_add:
+    path:     /admin/image/add/{id}
+    defaults: { _controller: LFRStoreBundle:Information:imageAdd, id:0 }

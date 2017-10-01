@@ -1,4 +1,6 @@
 <div id="home-page">
+  {% set text = "LFRStoreBundle:Utils:text.html.twig" %}
+  {% set image = "LFRStoreBundle:Utils:image.html.twig" %}
   {% set navbar = "LFRStoreBundle:Utils:nav.html.twig" %}
   {{ include(navbar, {'active': "none"}) }}
   <div class="container">
@@ -11,9 +13,9 @@
               <div class="row" id="box-search">
                   <div class="thumbnail text-center">
                       <a href="{{ path('lfr_store_explore', {'type': 'vetement'}) }}">
-                      <img src="{{ asset('bundles/LFR/img/cloth.png') }}" alt="" class="img-responsive">
+                      {{ include(image, {'element': data.home.left_img, 'style': ''}) }}
                       <div class="caption">
-                          <h3>Vêtements</h3>
+                          <h3>{{ include(text, {'element': data.home.title.left }) }}</h3>
                       </div>
                       </a>
                   </div>
@@ -30,9 +32,9 @@
               <div class="row" id="box-search">
                   <div class="thumbnail text-center">
                       <a href="#">
-                      <img src="{{ asset('bundles/LFR/img/accessoire.png') }}" alt="" class="img-responsive">
+                      {{ include(image, {'element': data.home.right_img, 'style': ''}) }}
                       <div class="caption">
-                          <h3>Accessoires</h3>
+                          <h3>{{ include(text, {'element': data.home.title.right }) }}</h3>
                       </div>
                       </a>
                   </div>

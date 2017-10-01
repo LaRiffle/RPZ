@@ -3,6 +3,8 @@
 
 <div id="history-page">
   {% set navbar = "LFRStoreBundle:Utils:nav.html.twig" %}
+  {% set text = "LFRStoreBundle:Utils:text.html.twig" %}
+  {% set image = "LFRStoreBundle:Utils:image.html.twig" %}
   {{ include(navbar, {'active': 'history'}) }}
   <div class="container">
     <div class="row" style="margin-top: 25px;">
@@ -10,42 +12,32 @@
         <div class="double-large-icon">
           <div class="under" style="width: 75%;">
             <div class="img-thumbnail">
-              <img src="{{ asset('bundles/LFR/img/dior2.png') }}" alt="" style="width:100%;">
+              {{ include(image, {'element': data.history.under, 'style': 'width:100%;'}) }}
             </div>
           </div>
           <div class="over" style="width: 75%;">
             <div class="img-thumbnail">
-              <img src="{{ asset('bundles/LFR/img/dior1.png') }}" alt="" style="width:100%;">
+              {{ include(image, {'element': data.history.over, 'style': 'width:100%;'}) }}
             </div>
           </div>
         </div>
       </div>
       <div class="col-sm-6">
-        <h3>Histoire</h3>
-        <p>Quelques heures avant que Maria Grazia Chiuri dévoile sa collection de prêt-à-porter
-         automne-hiver 2017-2018. Le décor qui fait écho à toutes les nuances de bleus
-         des silhouettes, a été peint de couleur monochrome à l'aide de pinceaux.</p>
-         <p>La notion de propriétaire et d'inverse est abstraite mais importante à comprendre. Dans une relation entre deux entités, il y a toujours une entité dite propriétaire, et une dite inverse. Pour comprendre cette notion, il faut revenir à la vieille époque, lorsque l'on faisait nos bases de données à la main. L'entité propriétaire est celle qui contient la référence à l'autre entité. Attention, cette notion — à avoir en tête lors de la création des entités — n'est pas liée à votre logique métier, elle est purement technique.</p>
-          <p>Prenons un exemple simple, les commentaires de nos annonces. En SQL pur, vous disposez de la tablecomment et de la tableadvert. Pour créer une relation entre ces deux tables, vous allez mettre naturellement une colonneadvert_iddans la tablecomment. La tablecomment est donc propriétaire de la relation, car c'est elle qui contient la colonne de liaisonadvert_id. Assez simple au final !
-          </p>
+        <h3>{{ include(text, {'element': data.history.title }) }}</h3>
+          <p>{{ include(text, {'element': data.history.content }) }}</p>
       </div>
     </div>
     <div class="row" style="margin-top: 15px;">
       <div class="col-sm-8">
-        <h3>La main dans le sac</h3>
-        <p>Gros plan sur les accessoires de la saison. Les escarpins et les bottes mariées aux
-        robes ou au denim de toutes les nuances de bleu mettent en relief l’allure chic et active
-         de la femme Dior d’aujourd’hui. Avec des bagues parées de pierres colorées, des colliers
-         pendants et des ras de cou iconiques, les bijoux de la collection se portent avec
-         générosité, pour créer un ensemble à l’effet unique. Les sacs, délicats comme une
-         minaudière brodée ou tendance comme un sac D-Fence avec lanière Oblique, sont un
-         mélange de genres et d’inspirations. Et, pour parfaire chacun des looks, un béret,
-          que le chapelier Stephen Jones qualifie de « t-shit des chapeaux. ».</p>
+        <h3>{{ include(text, {'element': data.author.title }) }}</h3>
+        <p>
+          {{ include(text, {'element': data.author.content}) }}
+        </p>
       </div>
       <div class="col-sm-4">
         <div style="width: 100%;">
           <div class="img-thumbnail" style="border-radius: 50%;">
-            <img src="{{ asset('bundles/LFR/img/dior3.png') }}" alt="" style="width:100%; border-radius: 50%;">
+            {{ include(image, {'element': data.author.img, 'style': 'width:100%; border-radius: 50%;'}) }}
           </div>
         </div>
       </div>
@@ -54,6 +46,10 @@
 </div>
 {% endblock %}
 {% block script %}
+{% if is_granted('ROLE_USER') %}
+  {% set edit_script = "LFRStoreBundle:Utils:edit-handler.html.twig" %}
+  {{ include(edit_script) }}
+{% endif %}
 <script>
   var icon_inversed = false;
   $('.double-large-icon .over').hover(function(){

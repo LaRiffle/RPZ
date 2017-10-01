@@ -2,3 +2,9 @@
 {% block body %}
   {{ render(controller('LFRStoreBundle:Home:home')) }}
 {% endblock %}
+{% block script %}
+{% if is_granted('ROLE_USER') %}
+  {% set edit_script = "LFRStoreBundle:Utils:edit-handler.html.twig" %}
+  {{ include(edit_script) }}
+{% endif %}
+{% endblock %}

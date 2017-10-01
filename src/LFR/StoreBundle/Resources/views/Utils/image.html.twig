@@ -1,0 +1,4 @@
+<img id="img-{{ element.id }}" src="{{ asset('uploads/img/' ~ element.image) }}" alt="" style="{{ style }}">
+{% if is_granted('ROLE_USER') %}
+<a  style="" class="edit-img" id="{{ element.id }}" href="{{ path('lfr_admin_image_add', {'id': element.id }) }}"><i class="fa fa-pencil-square-o"></i></a>
+{% endif %}
