@@ -10,7 +10,7 @@
       <div class="col-sm-3">
         {{ include(lateral_navbar) }}
       </div>
-      <div class="col-sm-9">
+      <div id="display_icons" class="col-sm-9">
         <div>
           {{ render(controller('LFRStoreBundle:Creation:index')) }}
         </div>
@@ -31,14 +31,70 @@
 {% endblock %}
 {% block script %}
 <script>
+  function Icon(x, y) {
+    var icon = {};
+    icon.x = x-50;
+    icon.y = y-50;
+    icon.width = 300;
+    icon.height = 300;
+    icon.contains = function (x, y) {
+        x += this.width/2
+        y += this.height/2
+        console.log(x, this.x, this.x + this.width);
+        return this.x <= x && x <= this.x + this.width &&
+               this.y <= y && y <= this.y + this.height;
+    }
+    return icon;
+  }
+  function icon_overlap(icon){
+    console.log(icons);
+    console.log(icons.length);
+    var overlap = false
+    for(index in icons){
+      var in_it = icons[index].contains(icon.x, icon.y);
+      if(in_it){
+        overlap =  true;
+      }
+    }
+    console.log('Overlap', overlap)
+    return overlap;
+  }
+  var width = $('#display_icons').width() - 200;
+  var height = 280;
+  icons = [];
+  console.log(width);
+  $('.creation-icon').slice(0,10).each(function(){
+      $(this).css('position', 'absolute').fadeIn();
+      x = Math.random() * width;
+      y = Math.random() * height;
+      var icon = Icon(x, y);
+      var i = 10;
+      while(icon_overlap(icon) && i > 0){
+        i--;
+        x = Math.random() * width;
+        y = Math.random() * height;
+        icon = Icon(x, y);
+        console.log('try'+i);
+      }
+      theta = (Math.random() - 0.5)*30;
+      $(this).css('left', x);
+      $(this).css('top', y);
+      $(this).css('transform', 'rotate('+theta+'deg)');
+      icons.push(icon);
+  })
+</script>
+<script>
   var selected_type_ids = []
   function filter(){
     var selected_items = 0;
     if(selected_type_ids.length == 0){
+      {% if is_granted('ROLE_USER') %}
+      // remove the add icon in the counter
       selected_items--;
+      {% endif %}
       $('.creation-icon').each(function(){
-            $(this).show();
-            selected_items++;
+        $(this).show();
+        selected_items++;
       });
     } else {
       $('.creation-icon').each(function(){
@@ -66,8 +122,16 @@
       $('#number_results').html('');
     }
   }
+  var first_click = true;
   $('#menu_lateral a.filter').on('click', function(e){
     e.preventDefault();
+    if(first_click){
+      $('.creation-icon').each(function(){
+        $(this).css('position', 'static');
+        $(this).css('transform', 'none');
+      });
+      first_click = false;
+    }
     var $input = $(this).find("input").first();
     $input.prop("checked", !$input.prop("checked"));
     var type_id = Number(this.href.split('-')[1]);

@@ -28,7 +28,7 @@ class  CreationController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $repository = $em->getRepository($this->entityNameSpace);
-        $creations = $repository->findAll();
+        $creations = $repository->findBy(array(), array('id' => 'desc'));
         return $this->render($this->entityNameSpace.':index.html.twig', array(
           'creations' => $creations,
         ));

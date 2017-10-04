@@ -1,4 +1,5 @@
-<div class="img-thumbnail creation-icon">
+{% if is_granted('ROLE_USER') %}
+<div class="img-thumbnail creation-icon" style="z-index: {{creations|length + 1}}">
   <div class="img-cadre">
     <a href="{{ path('lfr_admin_creation_add') }}">
         <div class="caption" style="bottom: calc(50% - 30px);">
@@ -7,8 +8,12 @@
     </a>
   </div>
 </div>
+{% endif %}
 {% for creation in creations %}
-  <div class="img-thumbnail creation-icon" data-type="{% for type in creation.types %}{% if not loop.first %},{% endif %}{{type.id}}{% endfor %}">
+  <div class="img-thumbnail creation-icon"
+       data-type="{% for type in creation.types %}{% if not loop.first %},{% endif %}{{type.id}}{% endfor %}"
+       style="z-index: {{creations|length - loop.index0}}"
+  >
     <div class="img-cadre">
       <a href="{{ path('lfr_admin_creation_show', {'id': creation.id}) }}">
         <img src="{{ asset('uploads/img/' ~ creation.images[0]) }}" alt="" style="margin-bottom: -65px;">
