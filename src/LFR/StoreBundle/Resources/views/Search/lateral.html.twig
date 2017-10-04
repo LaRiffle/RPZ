@@ -1,7 +1,7 @@
 <ul id="notify" class="list-group" style="margin-bottom: 10px;">
   <li class="list-group-item collapse-toggle justify-content-between">
     <h5 style="margin-bottom: 0px;">
-      Filtre
+      Filtre <span id="number_results"></span>
     </h5>
   </li>
   <div id="menu_lateral" class="collapse show">
@@ -16,7 +16,7 @@
         <ul class="list-group list-gender">
           {% for type in gender.types %}
             <li class="list-group-item justify-content-between">
-              <a href="#" class=""><input id="" type="checkbox"> {{ type.name }}</a>
+              <a href="#type-{{ type.id }}" class="filter"><input id="" type="checkbox"> {{ type.name }}</a>
               {% if is_granted('ROLE_USER') %}
               <a class="remove" href="{{ path('lfr_admin_type_remove', {'id': type.id }) }}"><i class="fa fa-trash-o"></i></a>
               {% endif %}

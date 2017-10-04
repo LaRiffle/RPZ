@@ -31,9 +31,6 @@ class InformationController extends Controller
     public $entityNameSpace = 'LFRStoreBundle:Information';
     public function historyAction()
     {
-      if (!$this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
-        return $this->redirect($this->generateUrl('login'));
-      }
       $text = [];
       $text['history']['title'] = $this->fetchText('history:title');
       $text['history']['content'] = $this->fetchText('history:text');

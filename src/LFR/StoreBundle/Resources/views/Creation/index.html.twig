@@ -8,7 +8,7 @@
   </div>
 </div>
 {% for creation in creations %}
-  <div class="img-thumbnail creation-icon">
+  <div class="img-thumbnail creation-icon" data-type="{% for type in creation.types %}{% if not loop.first %},{% endif %}{{type.id}}{% endfor %}">
     <div class="img-cadre">
       <a href="{{ path('lfr_admin_creation_show', {'id': creation.id}) }}">
         <img src="{{ asset('uploads/img/' ~ creation.images[0]) }}" alt="" style="margin-bottom: -65px;">
