@@ -20,3 +20,29 @@ lfr_admin_text_add:
 lfr_admin_image_add:
     path:     /admin/image/add/{id}
     defaults: { _controller: LFRStoreBundle:Information:imageAdd, id:0 }
+lfr_admin_gender_add:
+    path:     /admin/gender/add/{id}
+    defaults: { _controller: LFRStoreBundle:Search:genderAdd, id:0 }
+lfr_admin_gender_remove:
+    path:     /admin/gender/remove/{id}
+    defaults: { _controller: LFRStoreBundle:Search:genderRemove}
+lfr_admin_type_add:
+    path:     /admin/type/add/{gender_id}/{id}
+    defaults: { _controller: LFRStoreBundle:Search:typeAdd, id:0 }
+lfr_admin_type_remove:
+    path:     /admin/type/remove/{id}
+    defaults: { _controller: LFRStoreBundle:Search:typeRemove}
+lfr_admin_creation:
+    path:     /admin/creation/
+    defaults: { _controller: LFRStoreBundle:Creation:index}
+lfr_admin_creation_add:
+    path:     /admin/creation/add/{id}
+    defaults: { _controller: LFRStoreBundle:Creation:add, id:0 }
+lfr_admin_creation_show:
+    path:     /admin/creation/{id}
+    defaults: { _controller: LFRStoreBundle:Creation:show }
+    requirements:
+        id:   \d+
+lfr_admin_creation_remove:
+    path:     /admin/creation/remove/{id}
+    defaults: { _controller: LFRStoreBundle:Creation:remove}

@@ -108,6 +108,12 @@ h3 {
 .special-font5 {
   font-family: "Run_Wild";
 }
+.h1 input {
+  font-size: 2rem !important;
+}
+.h2 input {
+  font-size: 1.5rem !important;
+}
 .fil, .hidden-fil, .sprinter  {
   position: relative;
   bottom: 0.9rem;
@@ -328,4 +334,60 @@ nav.top-navbar {
 }
 .edit-img:hover {
   background-color: rgba(255,255,255,0.9);
+}
+.creation-icon a:hover {
+  text-decoration: none;
+}
+.creation-icon a {
+  color: black;
+}
+.creation-icon .caption {
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+}
+.creation-icon .caption h4, .creation-icon .caption h5 {
+  text-align: center;
+  color: white;
+}
+.creation-icon {
+  width: calc(202px + 0.5rem);
+  float: left;
+  margin-right: 10px;
+  margin-top: 10px;
+}
+.creation-icon .img-cadre {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  overflow: hidden;
+}
+.creation-icon img {
+  display: none;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  height: 100%;
+  width: auto;
+  -webkit-transform: translate(-50%,-50%);
+      -ms-transform: translate(-50%,-50%);
+          transform: translate(-50%,-50%);
+}
+.creation-icon img.portrait {
+  width: 100%;
+  height: auto;
+}
+ul.edition-btn {
+  list-style: none;
+  float: right;
+  margin-bottom: 0px;
+}
+ul.edition-btn li {
+  display: inline-block;
+}
+ul.edition-btn a {
+  padding-left: 10px;
+}
+ul.edition-btn li:after {
+  content: ' ';
 }

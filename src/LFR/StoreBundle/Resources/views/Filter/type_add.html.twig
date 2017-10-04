@@ -1,0 +1,7 @@
+<form class="form-signin" name="form" method="post" action="{{ path('lfr_admin_type_add',{'gender_id': gender_id, 'id': id}) }}">
+  {% set input_form="RPZDiscussionBundle:Utils:form_input.html.twig" %}
+  {% set save_form="RPZDiscussionBundle:Utils:form_save.html.twig" %}
+  {{ include(input_form, {'element': form.name, 'name':"Type d'habit"}) }}
+  {{ include(save_form, {'element': form.save, 'name':"Ajouter"}) }}
+  {{ form_rest(form) }}
+</form>

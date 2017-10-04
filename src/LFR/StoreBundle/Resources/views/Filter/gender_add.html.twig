@@ -1,0 +1,8 @@
+<form class="form-signin" name="form" method="post" action="{{ path('lfr_admin_gender_add',{'id': id}) }}">
+  {% set input_form="RPZDiscussionBundle:Utils:form_input.html.twig" %}
+  {% set save_form="RPZDiscussionBundle:Utils:form_save.html.twig" %}
+  <h6 class="form-signin-heading">{% if id == 0 %}Ajouter{% else %}Modifier{% endif %} un genre</h6>
+  {{ include(input_form, {'element': form.name, 'name':"Femme, enfant, etc"}) }}
+  {{ include(save_form, {'element': form.save, 'name':"Ajouter"}) }}
+  {{ form_rest(form) }}
+</form>

@@ -5,33 +5,41 @@
     </h5>
   </li>
   <div id="menu_lateral" class="collapse show">
+      {% for gender in genders %}
       <li class="list-group-item justify-content-between">
-        <h5 style="width: 100%;">Homme</h5>
+        <h5 style="width: 100%;">
+          {{ gender.name }}
+          {% if is_granted('ROLE_USER') %}
+          <a class="remove" href="{{ path('lfr_admin_gender_remove', {'id': gender.id }) }}"><i class="fa fa-trash-o"></i></a>
+          {% endif %}
+        </h5>
         <ul class="list-group list-gender">
+          {% for type in gender.types %}
+            <li class="list-group-item justify-content-between">
+              <a href="#" class=""><input id="" type="checkbox"> {{ type.name }}</a>
+              {% if is_granted('ROLE_USER') %}
+              <a class="remove" href="{{ path('lfr_admin_type_remove', {'id': type.id }) }}"><i class="fa fa-trash-o"></i></a>
+              {% endif %}
+            </li>
+          {% endfor %}
+          {% if is_granted('ROLE_USER') %}
           <li class="list-group-item justify-content-between">
-            <a href="#" class=""><input id="checkBox" type="checkbox"> Veste</a>
+            <a href="#" class="internal-link" data-target="#form-type{{ gender.id }}">+ Type d'habit</a>
+            <div id="form-type{{ gender.id }}" style="display:none">
+              {{ render(controller("LFRStoreBundle:Search:typeAdd", {'gender_id': gender.id })) }}
+            </div>
           </li>
-          <li class="list-group-item justify-content-between">
-            <a href="#" class=""><input id="checkBox" type="checkbox"> Chemise</a>
-          </li>
-          <li class="list-group-item justify-content-between">
-            <a href="#" class=""><input id="checkBox" type="checkbox"> Cravatte</a>
-          </li>
+          {% endif %}
         </ul>
       </li>
+      {% endfor %}
+      {% if is_granted('ROLE_USER') %}
       <li class="list-group-item justify-content-between">
-        <h5 style="width: 100%;">Femme</h5>
-        <ul class="list-group list-gender">
-          <li class="list-group-item justify-content-between">
-            <a href="#" class=""><input id="checkBox" type="checkbox"> Veste</a>
-          </li>
-          <li class="list-group-item justify-content-between">
-            <a href="#" class=""><input id="checkBox" type="checkbox"> Robe</a>
-          </li>
-          <li class="list-group-item justify-content-between">
-            <a href="#" class=""><input id="checkBox" type="checkbox"> Juppe</a>
-          </li>
-        </ul>
+        <a href="#" class="internal-link" data-target="#form-gender">Ajouter une catégorie</a>
+        <div id="form-gender" style="display:none">
+          {{ render(controller("LFRStoreBundle:Search:genderAdd")) }}
+        </div>
       </li>
+      {% endif %}
     </div>
 </ul>

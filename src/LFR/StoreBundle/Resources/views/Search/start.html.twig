@@ -11,13 +11,18 @@
         {{ include(lateral_navbar) }}
       </div>
       <div class="col-sm-9">
-        {% set icon = "LFRStoreBundle:Search:icon.html.twig" %}
-        {% for i in 1..8 %}
-          {% set width = 150 + random(100) %}
-          {% set top = random(300) %}
-          {% set left = random(550) %}
-          {{ include(icon, {'img_path' : asset('bundles/LFR/img/icons/' ~ i ~'.png'), 'width': width, 'top': top, 'left': left }) }}
-        {% endfor %}
+        <div>
+          {{ render(controller('LFRStoreBundle:Creation:index')) }}
+        </div>
+        <!--
+          {% set icon = "LFRStoreBundle:Search:new_icon.html.twig" %}
+          {% for i in 1..8 %}
+            {% set width = 150 + random(100) %}
+            {% set top = random(300) %}
+            {% set left = random(550) %}
+            {{ include(icon, {'img_path' : asset('bundles/LFR/img/icons/' ~ i ~'.png'), 'width': width, 'top': top, 'left': left }) }}
+          {% endfor %}
+        -->
 
       </div>
     </div>

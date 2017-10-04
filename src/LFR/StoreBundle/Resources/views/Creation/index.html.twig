@@ -1,0 +1,22 @@
+<div class="img-thumbnail creation-icon">
+  <div class="img-cadre">
+    <a href="{{ path('lfr_admin_creation_add') }}">
+        <div class="caption" style="bottom: calc(50% - 30px);">
+          <h4 style="color: #BA0020;"><i class="fa fa-plus" aria-hidden="true"></i> Ajouter une création</h4>
+      </div>
+    </a>
+  </div>
+</div>
+{% for creation in creations %}
+  <div class="img-thumbnail creation-icon">
+    <div class="img-cadre">
+      <a href="{{ path('lfr_admin_creation_show', {'id': creation.id}) }}">
+        <img src="{{ asset('uploads/img/' ~ creation.images[0]) }}" alt="" style="margin-bottom: -65px;">
+        <div class="caption">
+          <h4>{{ creation.name }}</h4>
+          <h5>{% if creation.onsold %}{{ creation.price }} €{% else %}&nbsp;{% endif %}</h5>
+        </div>
+      </a>
+    </div>
+  </div>
+{% endfor %}

@@ -1,0 +1,157 @@
+{% extends "LFRStoreBundle::layout.html.twig" %}
+{% block body %}
+
+<div id="explore-page">
+  {% set navbar = "LFRStoreBundle:Utils:nav.html.twig" %}
+  {{ include(navbar, {'active': 'collection'}) }}
+  <div class="container">
+    <form name="form" class="form-signin" method="post" enctype="multipart/form-data" action="{{ path('lfr_admin_creation_add',{'id': id}) }}">
+    <div class="row">
+      <div class="col-sm-6 offset-sm-3">
+        <h3 class="form-signin-heading">{% if id == 0 %}Ajouter{% else %}Modifier{% endif %} une création</h3>
+        {% set input_form="RPZDiscussionBundle:Utils:form_input.html.twig" %}
+        {% set save_form="RPZDiscussionBundle:Utils:form_save.html.twig" %}
+        <div class="h1">{{ include(input_form, {'element': form.name, 'name':"Nom de l'article"}) }}</div>
+        <hr />
+        <div class="h2">{{ include(input_form, {'element': form.title1, 'name':"Titre description"}) }}</div>
+        {{ include(input_form, {'element': form.text1, 'name':"Description brève"}) }}
+        <hr />
+        <div class="h2">{{ include(input_form, {'element': form.title2, 'name':"Titre complémentaire"}) }}</div>
+        {{ include(input_form, {'element': form.text2, 'name':"Description étendue"}) }}
+        <hr />
+        <div style="margin-top: 10px; {% if id == 0 %}display: none;{% endif %}">
+          <h5>{{ form_label(form.imgs, "Images existantes") }}</h5>
+          {{ form_errors(form.imgs) }}
+          {% for img in form.imgs %}
+            <div style="visibility: hidden; height:0px;">{{ form_label(img, null, {'label_attr' : {'id': loop.index0 , 'class': 'icon-label'}}) }}</div>
+            <div class="img-thumbnail creation-icon" style="width: calc(102px + 0.5rem);">
+              <div class="img-cadre" style="width: 100px; height: 100px;">
+                <img src="{{ asset('uploads/img/') }}" id="img-{{ loop.index0 }}" style="margin-bottom: -65px;">
+                <div class="caption">
+                  <h4>{{ form_widget(img) }}</h4>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        <div style="clear:both; height: 10px;"></div>
+        {# store the prototype on the data-prototype attribute #}
+        <h5>{{ form_label(form.images, 'Nouvelles images', {'label_attr' : {'class': ''}}) }}</h5>
+        <ul id="image-fields-list"
+            data-prototype="{{ form_widget(form.images.vars.prototype)|e }}">
+        {% for imageField in form.images %}
+            <li>
+                {{ form_errors(imageField) }}
+                {{ form_widget(imageField) }}
+            </li>
+        {% endfor %}
+        </ul>
+        <a href="#" id="add-another-image">+ Ajouter une image</a><br/>
+        <em>Ne pas dépasser 5 à 6 images, de même format (<a target="_blank" href="http://www.fotor.com/features/crop.html">site pour modifier les photos</a>), choisies de bonne qualité (largeur > 600px ou fichier >= 1Mo)</em>
+        <hr />
+        <div style="margin-top: 10px;">
+          {{ form_errors(form.onsold) }}
+          {{ form_widget(form.onsold, {'attr': {'class': 'internal-link keep', 'data-target': '#price'}}) }}
+          {{ form_label(form.onsold, "En vente", {'label_attr' : {'class': 'internal-link keep', 'data-target': '#price'}}) }}
+        </div>
+        <div id="price" style="display:none;">
+        {{ include(input_form, {'element': form.price, 'name':"Prix €"}) }}
+        </div>
+        <hr />
+        <div style="margin-top: 10px;">
+          <h5>{{ form_label(form.types, "Types de vêtements") }}</h5>
+          {{ form_errors(form.types) }}
+          {% for type in form.types %}
+            {% set index = type.vars.value %}
+            {% set entity = form.types.vars.choices[index].data %}
+            {{ form_widget(type) }}
+            {{ entity.gender.name }} >
+            {{ form_label(type) }}<br />
+          {% endfor %}
+        </div>
+        {{ include(save_form, {'element': form.save, 'name':"Publier"}) }}
+        <div style="display:none">
+          {{ form_rest(form) }}
+        </div>
+        <!--
+        <ul id="notify" class="list-group" style="margin-bottom: 10px;">
+           <li class="list-group-item collapse-toggle justify-content-between">
+             <h5 style="margin-bottom: 0px;">
+               Modèles
+             </h5>
+           </li>
+           <div id="menu_lateral" class="collapse show">
+               <li class="list-group-item justify-content-between">
+                 <h5 style="width: 100%;">Coloris</h5>
+                 <ul class="list-group list-gender">
+                   <li class="list-group-item justify-content-between">
+                     <a href="#" class=""><span class="color-choice" style="background-color: #AA1111;"></span>Rouge</a>
+                   </li>
+                   <li class="list-group-item justify-content-between">
+                     <a href="#" class=""><span class="color-choice" style="background-color: #11AAAA;"></span>Vert</a>
+                   </li>
+                   <li class="list-group-item justify-content-between">
+                     <a href="#" class=""><span class="color-choice" style="background-color: #1111AA;"></span>Cyan</a>
+                   </li>
+                 </ul>
+               </li>
+               <li class="list-group-item justify-content-between">
+                 <h5 style="width: 100%;">Taille</h5>
+                 <ul class="list-group list-gender">
+                   <li class="list-group-item justify-content-between">
+                     <a href="#" class="">34</a>
+                   </li>
+                   <li class="list-group-item justify-content-between">
+                     <a href="#" class="">36</a>
+                   </li>
+                   <li class="list-group-item justify-content-between">
+                     <a href="#" class="">38</a>
+                   </li>
+                   <li class="list-group-item justify-content-between">
+                     <a href="#" class="">40</a>
+                   </li>
+                 </ul>
+               </li>
+             </div>
+         </ul>
+        -->
+      </div>
+    </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+  //$("#carousel .carousel-item").zoom({ on:'grab' });
+  $('#carousel img')
+    .wrap('<span style="display:inline-block"></span>')
+    .css('display', 'block')
+    .parent()
+    .zoom({ on:'grab' });
+</script>
+<script>
+  $('.icon-label').each(function(){
+    var id = $(this).attr('id');
+    var full_url = $(this).html().split('/');
+    var url = full_url[full_url.length-1];
+    var src = $('#img-'+id).attr('src');
+    src = src + url;
+    $('#img-'+id).attr('src', src);
+  });
+  $('.creation-icon input').each(function(){
+    $(this).prop("checked", true);
+  });
+</script>
+<script>
+  var onsold = $('#form_onsold').prop("checked");
+  if(onsold){
+    $('#price').show();
+  }
+</script>
+{% endblock %}
+
+
+
+  {% set input_form="RPZDiscussionBundle:Utils:form_input.html.twig" %}
+  {% set save_form="RPZDiscussionBundle:Utils:form_save.html.twig" %}
