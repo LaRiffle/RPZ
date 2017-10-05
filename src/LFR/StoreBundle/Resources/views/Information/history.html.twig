@@ -8,8 +8,8 @@
   {{ include(navbar, {'active': 'history'}) }}
   <div class="container">
     <div class="row" style="margin-top: 25px;">
-      <div class="col-sm-6">
-        <div class="double-large-icon">
+      <div class="col-sm-12">
+        <div id="floating_box_history" class="double-large-icon col-sm-6" style="float:left">
           <div class="under" style="width: 75%;">
             <div class="img-thumbnail">
               {{ include(image, {'element': data.history.under, 'style': 'width:100%;'}) }}
@@ -21,8 +21,6 @@
             </div>
           </div>
         </div>
-      </div>
-      <div class="col-sm-6">
         <h3>{{ include(text, {'element': data.history.title }) }}</h3>
           <p>{{ include(text, {'element': data.history.content }) }}</p>
       </div>
@@ -50,6 +48,12 @@
   {% set edit_script = "LFRStoreBundle:Utils:edit-handler.html.twig" %}
   {{ include(edit_script) }}
 {% endif %}
+<script>
+  $box = $("#floating_box_history");
+  console.log($box.width());
+  $box.css('height', $box.width()+($box.width() < 300 ? 20 : 0)+'px');
+  $box.css('margin-right', Math.max(0.1*$box.width(), 25)+ ($box.width() < 300 ? 20 : 0)+'px');
+</script>
 <script>
   var icon_inversed = false;
   $('.double-large-icon .over').hover(function(){

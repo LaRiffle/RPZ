@@ -157,4 +157,16 @@ class InformationController extends Controller
             'img' => $article_img_url,
         ));
     }
+
+    public function contactAction()
+    {
+        $text = [];
+        $text['mail']['title'] = $this->fetchText('mail:title');
+        $text['mail']['content'] = $this->fetchText('mail:content');
+        $text['follow']['title'] = $this->fetchText('follow:title');
+        $text['follow']['content'] = $this->fetchText('follow:content');
+        return $this->render($this->entityNameSpace.':contact.html.twig', array(
+          'data' => $text
+        ));
+    }
 }

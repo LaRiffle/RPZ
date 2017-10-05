@@ -13,6 +13,9 @@ lfr_store_show:
 lfr_store_history:
     path:     /histoire
     defaults: { _controller: LFRStoreBundle:Information:history }
+lfr_store_contact:
+    path:     /contact
+    defaults: { _controller: LFRStoreBundle:Information:contact }
 
 lfr_admin_text_add:
     path:     /admin/text/add/{id}
