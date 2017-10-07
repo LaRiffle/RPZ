@@ -394,3 +394,65 @@ ul.edition-btn a {
 ul.edition-btn li:after {
   content: ' ';
 }
+
+/* Slick modif */
+.slick-arrow {
+  background-color: #777777 !important;
+  border-radius: 10px;
+  padding-top: 0.5px !important;
+}
+.slick-prev::before, .slick-next::before {
+    opacity: 1 !important;
+}
+
+.collection-item {
+  position: relative;
+  border: 1px solid #333;
+  margin: 2px;
+  overflow: hidden;
+  width: 540px;
+  border: none !important;
+}
+.collection-item img {
+  max-width: 100%;
+  -moz-transition: all 0.3s;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+.collection-item:hover img {
+  -moz-transform: scale(1.1);
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
+}
+
+.collection-description {
+  width: 100%;
+  position: absolute;
+  bottom: 0px;
+  padding: 10px;
+  color: transparent;
+  -moz-transition: all .3s ease-in;
+  -o-transition: all .3s ease-in;
+  -webkit-transition: all .3s ease-in;
+  transition: all .3s ease-in;
+}
+.collection-description h3 {
+  font-size: 2rem;
+}
+.collection-description p {
+  margin-bottom: 0px;
+}
+.collection-item:hover .collection-description {
+  color: white;
+}
+.rpz_icons {
+  list-style: none;
+  float: right;
+  margin-bottom: 0px;
+}
+.rpz_icons li {
+  display: inline-block;
+}
+.rpz_icons li a {
+  color: inherit;
+}

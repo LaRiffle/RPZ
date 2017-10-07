@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="{{ asset('bundles/LFR/global_style.css') }}">
+    {% block head %}{% endblock %}
   </head>
   <body>
     {% block body %}
@@ -84,5 +85,32 @@
     </script>
     {% endif %}{% endif %}
     {% block script %} {% endblock %}
+    <script>
+    {% if is_granted('ROLE_USER') %}
+    var supprItems = $('.remove');
+    for(i=0; i<supprItems.length; i++){
+        $(supprItems[i]).on('click', function(e){
+            e.preventDefault();
+            var url = this.href;
+            var box = bootbox.dialog({
+                  message: "Confirmer la suppression",
+                  title: "Supprimer cet élément ?",
+                  buttons: {
+                      "Oh non.": {
+                          className: "btn-default",
+                      },
+                      main: {
+                          label: "Supprimer",
+                          className: "btn-danger",
+                          callback: function() {
+                              window.location = url;
+                          }
+                      }
+                  }
+              });
+        });
+    }
+    {% endif %}
+    </script>
   </body>
 </html>

@@ -169,4 +169,13 @@ class InformationController extends Controller
           'data' => $text
         ));
     }
+    public function collectionAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository('LFRStoreBundle:Collection');
+        $collections = $repository->findBy(array(), array('id' => 'desc'));
+        return $this->render($this->entityNameSpace.':collection.html.twig', array(
+          'collections' => $collections,
+        ));
+    }
 }

@@ -4,6 +4,9 @@ lfr_store_start:
 lfr_store_homepage:
     path:     /accueil
     defaults: { _controller: LFRStoreBundle:Home:homepage }
+lfr_store_collection:
+    path:     /collection
+    defaults: { _controller: LFRStoreBundle:Information:collection }
 lfr_store_explore:
     path:     /explore/{type}
     defaults: { _controller: LFRStoreBundle:Search:start, type:"vetement" }
@@ -49,3 +52,14 @@ lfr_admin_creation_show:
 lfr_admin_creation_remove:
     path:     /admin/creation/remove/{id}
     defaults: { _controller: LFRStoreBundle:Creation:remove}
+lfr_admin_collection_add:
+    path:     /admin/collection/add/{id}
+    defaults: { _controller: LFRStoreBundle:Collection:add, id:0 }
+lfr_admin_collection_show:
+    path:     /admin/collection/{id}
+    defaults: { _controller: LFRStoreBundle:Collection:show }
+    requirements:
+        id:   \d+
+lfr_admin_collection_remove:
+    path:     /admin/collection/remove/{id}
+    defaults: { _controller: LFRStoreBundle:Collection:remove}
