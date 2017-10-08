@@ -1,11 +1,14 @@
 {% extends "LFRStoreBundle::layout.html.twig" %}
+{% block title %}
+  | Collections
+{% endblock %}
 {% block head %}
 <link rel="stylesheet" type="text/css" href="{{ asset('bundles/LFR/slick/slick.css') }}"/>
 <link rel="stylesheet" type="text/css" href="{{ asset('bundles/LFR/slick/slick-theme.css') }}"/>
 {% endblock %}
 {% block body %}
 
-<div id="history-page">
+<div id="collection-page">
   {% set navbar = "LFRStoreBundle:Utils:nav.html.twig" %}
   {% set text = "LFRStoreBundle:Utils:text.html.twig" %}
   {% set image = "LFRStoreBundle:Utils:image.html.twig" %}
@@ -77,9 +80,17 @@
 <script type="text/javascript" src="{{ asset('bundles/LFR/slick/slick.min.js') }}"></script>
 <script type="text/javascript">
     $(document).ready(function(){
+      var screen_width = $('body').width();
+      if(screen_width >= 768){
+        nb_slides = 3;
+      } else if(screen_width >= 567){
+        nb_slides = 2;
+      } else {
+        nb_slides = 1;
+      }
       $('.collection-carousel').slick({
         infinite: true,
-        slidesToShow: 3,
+        slidesToShow: nb_slides,
         slidesToScroll: 1
       });
       $('.collection-carousel').fadeIn();

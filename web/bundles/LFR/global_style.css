@@ -62,10 +62,16 @@ h1.special-font {
   color: white;
   font-size: 10rem;
 }
-#explore-page, #history-page, #home-page {
-  overflow: hidden;
+#explore-page, #history-page, #collection-page{
   padding-bottom: 30px;
-  min-height: 100vh;
+}
+@media screen and (max-width: 768px) {
+  #explore-page .container {
+    margin-top: 30px;
+  }
+  #collection-page .container {
+    margin-top: 40px;
+  }
 }
 
 h2 {
@@ -74,7 +80,8 @@ h2 {
   font-weight: lighter;
   position: relative;
   bottom: 2.5rem;
-  left: 0.3rem;
+  left: 0.5rem;
+  width: calc(100% - 0.5rem);
   font-size: 1.15rem;
 }
 h2.signature {
@@ -153,16 +160,37 @@ nav.top-navbar {
 }
 #navbar ul {
   width: 100%;
-  text-align: center;
 }
 #navbar li {
   width: 20%;
-  text-align: center;
   font-size: 1.5rem;
   font-weight: lighter;
 }
-#navbar li:first-of-type {
-  margin-left: 20%;
+button.navbar-toggler {
+  transition: border-color 0.3s;
+}
+button.navbar-toggler:hover {
+  cursor: pointer;
+  border-color: #999999;
+}
+@media screen and (max-width: 767px) {
+  #navbar li {
+    border-bottom: 1px #CCCCCC solid;
+    width: 100%;
+    height: 49px;
+  }
+}
+
+@media only screen and (min-width : 768px) {
+  #navbar li:first-of-type {
+    margin-left: 20%;
+  }
+  #navbar ul {
+    text-align: center;
+  }
+  #navbar li {
+    text-align: center;
+  }
 }
 #fb-icon {
   text-align: center;
@@ -175,6 +203,8 @@ nav.top-navbar {
   bottom: 20px;
   right: 20px;
   padding-top: 7px;
+  background-color: rgba(255, 255, 255, 0.5);
+  z-index: 10;
 }
 .large-icon {
   margin-top: 30px;
@@ -192,6 +222,11 @@ nav.top-navbar {
   font-weight: lighter;
   color: white;
   text-align: center;
+}
+@media screen and (max-width: 991px) and (min-width: 576px) {
+  .large-icon h3 {
+    font-size: 2rem;
+  }
 }
 .large-icon img {
   width: 100%;
@@ -236,6 +271,13 @@ nav.top-navbar {
 }
 /* EXPLORE */
 
+#no_results {
+  padding-top: 30px;
+  width: 100%;
+  text-align: center;
+  color: #CCCCCC;
+  display: none;
+}
 .list-gender h5 {
   width: 100%;
 }
@@ -263,6 +305,12 @@ nav.top-navbar {
   position: absolute;
   top: 70px;
   left: 90px;
+}
+@media screen and (max-width: 576px) {
+  .under {
+    top: 18%;
+    left: 18%;
+  }
 }
 .carousel img {
   border-radius: 5px;
@@ -396,6 +444,13 @@ ul.edition-btn li:after {
 }
 
 /* Slick modif */
+
+@media screen and (max-width: 576px) {
+  .collection-carousel {
+    margin-right: 20px;
+    margin-left: 20px;
+  }
+}
 .slick-arrow {
   background-color: #777777 !important;
   border-radius: 10px;

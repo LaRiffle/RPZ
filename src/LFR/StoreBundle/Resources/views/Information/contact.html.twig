@@ -1,10 +1,13 @@
 {% extends "LFRStoreBundle::layout.html.twig" %}
+{% block title %}
+  | Contact
+{% endblock %}
 {% block body %}
 <div id="history-page">
   {% set navbar = "LFRStoreBundle:Utils:nav.html.twig" %}
   {% set text = "LFRStoreBundle:Utils:text.html.twig" %}
   {% set image = "LFRStoreBundle:Utils:image.html.twig" %}
-  {{ include(navbar, {'active': 'history'}) }}
+  {{ include(navbar, {'active': 'contact'}) }}
   <div class="container">
     <div class="row" style="margin-top: 25px;">
       <div class="offset-sm-3 col-sm-6" style="text-align: center;">
