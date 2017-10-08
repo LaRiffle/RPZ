@@ -10,7 +10,7 @@
         <select id="select_collection" class="form-control" placeholder="Collection">
           <option {% if 'all' == collection_id %}selected="selected"{% endif %} value="all">Toutes les collections</option>
           {% for collection in collections %}
-            <option {% if collection.id == collection_id %}selected="selected"{% endif %} value="{{ collection.id }}">{{ collection.description }}</option>
+            <option {% if collection.id == collection_id %}selected="selected"{% endif %} value="{{ collection.id }}">{{ collection.title }}</option>
           {% endfor %}
         </select>
       </li>
