@@ -10,28 +10,30 @@
   {% set text = "LFRStoreBundle:Utils:text.html.twig" %}
   {% set image = "LFRStoreBundle:Utils:image.html.twig" %}
   {{ include(navbar, {'active': 'collection'}) }}
-  {% set edition_buttons="RPZDiscussionBundle:Utils:edition.html.twig" %}
   <div class="container">
     <div class="row" style="margin-top: 25px;">
       <div class="col-sm-12">
         <div class="collection-carousel" style="display:none;">
           {% for collection in collections %}
           <div class="collection-item">
-            <img src="{{ asset('uploads/img/' ~ collection.image) }}">
-            <div class="item-overlay top"></div>
-            <div class="collection-description">
-              {% if is_granted('ROLE_USER') %}
-              {{ include(edition_buttons, {'edit': path('lfr_admin_collection_add', {'id': collection.id}), 'remove': path('lfr_admin_collection_remove', {'id': collection.id}) }) }}
-              {% endif %}
-              <h3>{{ collection.title }}</h3>
-              <p>
-                {{ collection.description }}
-              </p>
-            </div>
+            <a href="{{ path('lfr_store_explore', {'collection': collection.id }) }}">
+              <img class="collection-img" src="{{ asset('uploads/img/' ~ collection.image) }}">
+              <div class="item-overlay top"></div>
+              <div class="collection-description">
+                {% if is_granted('ROLE_USER') %}
+                  {% set edition_buttons="LFRStoreBundle:Utils:edition.html.twig" %}
+                  {{ include(edition_buttons, {'edit': path('lfr_admin_collection_add', {'id': collection.id}), 'remove': path('lfr_admin_collection_remove', {'id': collection.id}) }) }}
+                {% endif %}
+                <h3>{{ collection.title }}</h3>
+                <p>
+                  {{ collection.description }}
+                </p>
+              </div>
+            </a>
           </div>
           {% endfor %}
           <div class="collection-item">
-            <img src="{{ asset('bundles/LFR/img/robe1.jpg') }}">
+            <img class="collection-img" src="{{ asset('bundles/LFR/img/robe1.jpg') }}">
             <div class="item-overlay top"></div>
             <div class="collection-description">
               <h3>Collection été 2018</h3>
@@ -39,7 +41,7 @@
             </div>
           </div>
           <div class="collection-item">
-            <img src="{{ asset('bundles/LFR/img/robe2.jpg') }}">
+            <img class="collection-img" src="{{ asset('bundles/LFR/img/robe2.jpg') }}">
             <div class="item-overlay top"></div>
             <div class="collection-description">
               <h3>Collection été 2018</h3>
@@ -47,7 +49,7 @@
             </div>
           </div>
           <div class="collection-item">
-            <img src="{{ asset('bundles/LFR/img/robe3.jpg') }}">
+            <img class="collection-img" src="{{ asset('bundles/LFR/img/robe3.jpg') }}">
             <div class="item-overlay top"></div>
             <div class="collection-description">
               <h3>Collection été 2018</h3>
@@ -55,7 +57,7 @@
             </div>
           </div>
           <div class="collection-item">
-            <img src="{{ asset('bundles/LFR/img/robe3.jpg') }}">
+            <img class="collection-img" src="{{ asset('bundles/LFR/img/robe3.jpg') }}">
             <div class="item-overlay top"></div>
             <div class="collection-description">
               <h3>Collection été 2018</h3>
@@ -63,6 +65,9 @@
             </div>
           </div>
         </div>
+        {% if is_granted('ROLE_USER') %}
+          <a class="btn btn-primary" style="margin-top: 5px;" href="{{ path('lfr_admin_collection_add')}}">+ Créer une nouvelle collection</a>
+        {% endif %}
       </div>
     </div>
   </div>
@@ -78,6 +83,18 @@
         slidesToScroll: 1
       });
       $('.collection-carousel').fadeIn();
+      var min_height = 100000;
+      setTimeout(function(){
+        $('.collection-img').each(function(){
+          min_height = Math.min(min_height, $(this).height());
+        });
+        $('.collection-img').each(function(){
+          var overflow = $(this).height() - min_height;
+          console.log($(this).height());
+          $(this).css('margin-top', -overflow/2+'px');
+          $(this).css('margin-bottom', -overflow/2+'px');
+        });
+      }, 0);
     });
 </script>
 

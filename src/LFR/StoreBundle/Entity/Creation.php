@@ -91,6 +91,12 @@ class Creation
      */
     private $images;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="LFR\StoreBundle\Entity\Collection")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $collection;
+
 
     /**
      * Get id
@@ -343,5 +349,29 @@ class Creation
     public function emptyImages()
     {
         $this->images = [];
+    }
+
+    /**
+     * Set collection
+     *
+     * @param \LFR\StoreBundle\Entity\Collection $collection
+     *
+     * @return Comment
+     */
+    public function setCollection(\LFR\StoreBundle\Entity\Collection $collection)
+    {
+        $this->collection = $collection;
+
+        return $this;
+    }
+
+    /**
+     * Get collection
+     *
+     * @return \LFR\StoreBundle\Entity\Collection
+     */
+    public function getCollection()
+    {
+        return $this->collection;
     }
 }

@@ -8,8 +8,8 @@ lfr_store_collection:
     path:     /collection
     defaults: { _controller: LFRStoreBundle:Information:collection }
 lfr_store_explore:
-    path:     /explore/{type}
-    defaults: { _controller: LFRStoreBundle:Search:start, type:"vetement" }
+    path:     /explore/{collection}
+    defaults: { _controller: LFRStoreBundle:Search:start, collection:"all" }
 lfr_store_show:
     path:     /show/{id}
     defaults: { _controller: LFRStoreBundle:Search:show, id:0 }

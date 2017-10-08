@@ -1,10 +1,19 @@
 <ul id="notify" class="list-group" style="margin-bottom: 10px;">
   <li class="list-group-item collapse-toggle justify-content-between">
     <h5 style="margin-bottom: 0px;">
-      Filtre <span id="number_results"></span>
+      Filtres <span id="number_results"></span>
     </h5>
   </li>
   <div id="menu_lateral" class="collapse show">
+      <li class="list-group-item justify-content-between">
+        <label class="" for="select_collection"><h5>Collection</h5></label>
+        <select id="select_collection" class="form-control" placeholder="Collection">
+          <option {% if 'all' == collection_id %}selected="selected"{% endif %} value="all">Toutes les collections</option>
+          {% for collection in collections %}
+            <option {% if collection.id == collection_id %}selected="selected"{% endif %} value="{{ collection.id }}">{{ collection.description }}</option>
+          {% endfor %}
+        </select>
+      </li>
       {% for gender in genders %}
       <li class="list-group-item justify-content-between">
         <h5 style="width: 100%;">

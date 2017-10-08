@@ -146,5 +146,36 @@
     console.log(selected_type_ids);
     filter();
   });
+  function selection_filter(selected_id){
+    var selected_items = 0;
+    $('.creation-icon').each(function(){
+      if($(this).attr('data-collection') != null){
+        var collection_id = $(this).attr('data-collection');
+        if(collection_id == selected_id || selected_id == 'all'){
+          $(this).show();
+          selected_items++;
+        } else {
+          $(this).hide();
+        }
+      }
+    });
+    if(selected_items > 0){
+      $('#number_results').html('('+selected_items+')');
+    } else {
+      $('#number_results').html('');
+    }
+  }
+  $( "#select_collection" ).change(function() {
+    if(first_click){
+      $('.creation-icon').each(function(){
+        $(this).css('position', 'static');
+        $(this).css('transform', 'none');
+      });
+      first_click = false;
+    }
+    var selected_id = $(this).val();
+    selection_filter(selected_id);
+  });
+  selection_filter("{{ collection_id }}");
 </script>
 {% endblock %}

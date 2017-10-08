@@ -12,6 +12,8 @@
         {% set input_form="RPZDiscussionBundle:Utils:form_input.html.twig" %}
         {% set save_form="RPZDiscussionBundle:Utils:form_save.html.twig" %}
         <div class="h1">{{ include(input_form, {'element': form.name, 'name':"Nom de l'article"}) }}</div>
+        <div class="h1">{{ include(input_form, {'element': form.collection, 'name':"Collection"}) }}</div>
+        <a href="{{ path('lfr_admin_collection_add')}}" target="_blank">Créer une nouvelle collection</a>
         <hr />
         <div class="h2">{{ include(input_form, {'element': form.title1, 'name':"Titre description"}) }}</div>
         {{ include(input_form, {'element': form.text1, 'name':"Description brève"}) }}

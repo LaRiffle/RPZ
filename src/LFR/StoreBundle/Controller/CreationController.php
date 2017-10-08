@@ -67,12 +67,17 @@ class  CreationController extends Controller
             $new_creation->setText2($creation->getText2());
             $new_creation->setOnsold($creation->getOnsold());
             $new_creation->setPrice($creation->getPrice());
+            $new_creation->setCollection($creation->getCollection());
             foreach($creation->getTypes() as $type){
               $new_creation->addType($type);
             }
         }
         $form = $this->get('form.factory')->createBuilder(FormType::class, ($id == 0 ? $creation : $new_creation))
         ->add('name', TextType::class)
+        ->add('collection', EntityType::class, array(
+                'class'        => 'LFRStoreBundle:Collection',
+                'choice_label' => 'title',
+        ))
         ->add('title1', TextType::class)
         ->add('text1', TextareaType::class)
         ->add('title2', TextType::class, array(
@@ -171,6 +176,7 @@ class  CreationController extends Controller
               $creation->setText2($new_creation->getText2());
               $creation->setOnsold($new_creation->getOnsold());
               $creation->setPrice($new_creation->getPrice());
+              $creation->setCollection($new_creation->getCollection());
               $creation->emptyTypes();
               foreach($new_creation->getTypes() as $type){
                 $creation->addType($type);
