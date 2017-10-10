@@ -64,8 +64,8 @@
   icons = [];
   $('.creation-icon').slice(0,10).each(function(){
       $(this).css('position', 'absolute').fadeIn();
-      x = Math.random() * width;
-      y = Math.random() * height;
+      var x = Math.random() * width;
+      var y = Math.random() * height;
       var icon = Icon(x, y);
       var i = 10;
       while(icon_overlap(icon) && i > 0){
@@ -80,9 +80,9 @@
       $(this).css('top', y);
       $(this).css('transform', 'rotate('+theta+'deg)');
       var img = $(this).find('img');
-      var width = img.width();
-      var height = img.height();
-      if(width < height){
+      var img_width = img.width();
+      var img_height = img.height();
+      if(img_width < img_height){
          img.addClass('portrait');
       } else {
          img.removeClass('portrait');
@@ -163,9 +163,9 @@
         if(collection_id == selected_id || selected_id == 'all'){
           $(this).show();
           var img = $(this).find('img');
-          var width = img.width();
-          var height = img.height();
-          if(width < height){
+          var img_width = img.width();
+          var img_height = img.height();
+          if(img_width < img_height){
              img.addClass('portrait');
           } else {
              img.removeClass('portrait');
