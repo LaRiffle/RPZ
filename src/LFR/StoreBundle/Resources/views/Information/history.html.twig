@@ -14,13 +14,17 @@
       <div class="col-sm-12">
         <div id="floating_box_history" class="double-large-icon col-sm-6" style="float:left">
           <div class="under" style="width: 75%;">
-            <div class="img-thumbnail">
+            <div class="img-thumbnail creation-icon history-icon">
+              <div class="img-cadre">
               {{ include(image, {'element': data.history.under, 'style': 'width:100%;'}) }}
+              </div>
             </div>
           </div>
           <div class="over" style="width: 75%;">
-            <div class="img-thumbnail">
-              {{ include(image, {'element': data.history.over, 'style': 'width:100%;'}) }}
+            <div class="img-thumbnail creation-icon history-icon">
+              <div class="img-cadre">
+                {{ include(image, {'element': data.history.over, 'style': 'width:100%;'}) }}
+              </div>
             </div>
           </div>
         </div>
@@ -51,6 +55,27 @@
   {% set edit_script = "LFRStoreBundle:Utils:edit-handler.html.twig" %}
   {{ include(edit_script) }}
 {% endif %}
+<script>
+  var width = $('.under').width();
+  console.log(width);
+  $('.history-icon').each(function(){
+    $(this).css('width', (width) +'px');
+    console.log("done");
+    $(this).find('.img-cadre').css('width', (width - 10) + 'px').css('height', (width - 10) + 'px');
+    $img = $(this).find('img');
+    // remove constraint
+    $img.css('width', 'auto');
+    // check if portait
+    if($img.width() < $img.height()){
+      $img.css('height', 'auto');
+      $img.css('width', '100%');
+    } else {
+      $img.css('height', '100%');
+      $img.css('width', 'auto');
+    }
+  })
+
+</script>
 <script>
   $box = $("#floating_box_history");
   console.log($box.width());
