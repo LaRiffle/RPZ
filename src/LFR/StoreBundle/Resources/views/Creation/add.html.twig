@@ -18,8 +18,8 @@
         <div class="h2">{{ include(input_form, {'element': form.title1, 'name':"Titre description"}) }}</div>
         {{ include(input_form, {'element': form.text1, 'name':"Description brève"}) }}
         <hr />
-        <div class="h2">{{ include(input_form, {'element': form.title2, 'name':"Titre complémentaire"}) }}</div>
-        {{ include(input_form, {'element': form.text2, 'name':"Description étendue"}) }}
+        <div class="h2">{{ include(input_form, {'element': form.title2, 'name':"Titre complémentaire (facultatif)"}) }}</div>
+        {{ include(input_form, {'element': form.text2, 'name':"Description étendue (facultatif)"}) }}
         <hr />
         <div style="margin-top: 10px; {% if id == 0 %}display: none;{% endif %}">
           <h5>{{ form_label(form.imgs, "Images existantes") }}</h5>
@@ -57,7 +57,14 @@
           {{ form_label(form.onsold, "En vente", {'label_attr' : {'class': 'internal-link keep', 'data-target': '#price'}}) }}
         </div>
         <div id="price" style="display:none;">
-        {{ include(input_form, {'element': form.price, 'name':"Prix €"}) }}
+          <div style="margin-top: 10px;">
+            <div class="input-group">
+              {{ form_label(form.price, 'Prix €', {'label_attr' : {'class': 'sr-only'}}) }}
+              {{ form_errors(form.price) }}
+              {{ form_widget(form.price, {'attr': {'class': 'form-control', 'placeholder': 'Prix en € (Mettre que le nombre !)'}}) }}
+              <span class="input-group-addon">€</span>
+            </div>
+          </div>
         </div>
         <hr />
         <div style="margin-top: 10px;">
