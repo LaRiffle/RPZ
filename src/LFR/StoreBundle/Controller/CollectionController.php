@@ -36,31 +36,6 @@ class  CollectionController extends Controller
         ));
     }
 
-    public function image_fix_orientation($path)
-    {
-        $image = imagecreatefromjpeg($path);
-        $exif = exif_read_data($path);
-
-        if (empty($exif['Orientation']))
-        {
-            return false;
-        }
-        switch ($exif['Orientation'])
-        {
-            case 3:
-                $image = imagerotate($image, 180, 0);
-                break;
-            case 6:
-                $image = imagerotate($image, - 90, 0);
-                break;
-            case 8:
-                $image = imagerotate($image, 90, 0);
-                break;
-        }
-        imagejpeg($image, $path);
-        return true;
-    }
-
     public function addAction(Request $request, $id = 0) {
         if (!$this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
           return $this->redirect($this->generateUrl('login'));
@@ -107,7 +82,8 @@ class  CollectionController extends Controller
               );
               // Check orientation
               $path = $this->getParameter('img_dir').'/'.$fileName;
-              $this->image_fix_orientation($path);
+              $imagehandler = $this->container->get('lfr_store.imagehandler');
+              $imagehandler->image_fix_orientation($path);
 
               // Update the 'image' property to store the file name
               // instead of its contents

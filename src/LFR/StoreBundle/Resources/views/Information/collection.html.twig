@@ -20,7 +20,7 @@
           {% for collection in collections %}
           <div class="collection-item">
             <a href="{{ path('lfr_store_explore', {'collection': collection.id }) }}">
-              <img class="collection-img" src="{{ asset('uploads/img/' ~ collection.image) }}">
+              <img class="collection-img" src="{{ asset('uploads/img/' ~ collection.small_image) }}">
               <div class="item-overlay top"></div>
               <div class="collection-description">
                 {% if is_granted('ROLE_USER') %}

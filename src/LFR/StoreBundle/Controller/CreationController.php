@@ -29,6 +29,12 @@ class  CreationController extends Controller
         $em = $this->getDoctrine()->getManager();
         $repository = $em->getRepository($this->entityNameSpace);
         $creations = $repository->findBy(array(), array('id' => 'desc'));
+        $imagehandler = $this->container->get('lfr_store.imagehandler');
+        foreach ($creations as $creation) {
+          $fileNames = $creation->getImages();
+          $path_small_image = $imagehandler->get_image_in_quality($fileNames[0], 'xs');
+          $creation->small_image = $path_small_image;
+        }
         return $this->render($this->entityNameSpace.':index.html.twig', array(
           'creations' => $creations,
         ));
@@ -41,31 +47,6 @@ class  CreationController extends Controller
         return $this->render('LFRStoreBundle:Search:show.html.twig', array(
           'creation' => $creation,
         ));
-    }
-
-    public function image_fix_orientation($path)
-    {
-        $image = imagecreatefromjpeg($path);
-        $exif = exif_read_data($path);
-
-        if (empty($exif['Orientation']))
-        {
-            return false;
-        }
-        switch ($exif['Orientation'])
-        {
-            case 3:
-                $image = imagerotate($image, 180, 0);
-                break;
-            case 6:
-                $image = imagerotate($image, - 90, 0);
-                break;
-            case 8:
-                $image = imagerotate($image, 90, 0);
-                break;
-        }
-        imagejpeg($image, $path);
-        return true;
     }
 
     public function addAction(Request $request, $id = 0) {
@@ -169,7 +150,8 @@ class  CreationController extends Controller
                   );
                   // Check orientation
                   $path = $this->getParameter('img_dir').'/'.$fileName;
-                  $this->image_fix_orientation($path);
+                  $imagehandler = $this->container->get('lfr_store.imagehandler');
+                  $imagehandler->image_fix_orientation($path);
 
                   // Update the 'image' property to store the file name
                   // instead of its contents
@@ -199,7 +181,8 @@ class  CreationController extends Controller
                   );
                   // Check orientation
                   $path = $this->getParameter('img_dir').'/'.$fileName;
-                  $this->image_fix_orientation($path);
+                  $imagehandler = $this->container->get('lfr_store.imagehandler');
+                  $imagehandler->image_fix_orientation($path);
 
                   // Update the 'image' property to store the file name
                   // instead of its contents

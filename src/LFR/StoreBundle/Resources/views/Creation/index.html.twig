@@ -1,6 +1,6 @@
 <div id="no_results"><h4>Pas de résultats</h4></div>
 {% if is_granted('ROLE_USER') %}
-<div class="img-thumbnail creation-icon" style="z-index: {{creations|length + 1}}">
+<div class="img-thumbnail creation-icon add-icon" style="z-index: {{creations|length + 1}}">
   <div class="img-cadre">
     <a href="{{ path('lfr_admin_creation_add') }}">
         <div class="caption" style="bottom: calc(50% - 30px);">
@@ -19,10 +19,10 @@
   >
     <div class="img-cadre">
       <a href="{{ path('lfr_admin_creation_show', {'id': creation.id}) }}">
-        <img src="{{ asset('uploads/img/' ~ creation.images[0]) }}" alt="" style="margin-bottom: -65px;">
+        <img src="{{ asset('uploads/img/' ~ creation.small_image) }}" alt="" style="margin-bottom: -65px;">
         <div class="caption">
           <h4>{{ creation.name }}</h4>
-          <h5>{% if creation.onsold %}{{ creation.price }} €{% else %}&nbsp;{% endif %}</h5>
+          {% if creation.onsold %}<h5>{{ creation.price }} €</h5>{% endif %}
         </div>
       </a>
     </div>

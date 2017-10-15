@@ -80,30 +80,6 @@ class InformationController extends Controller
             'id' => $id
         ));
     }
-    public function image_fix_orientation($path)
-    {
-        $image = imagecreatefromjpeg($path);
-        $exif = exif_read_data($path);
-
-        if (empty($exif['Orientation']))
-        {
-            return false;
-        }
-        switch ($exif['Orientation'])
-        {
-            case 3:
-                $image = imagerotate($image, 180, 0);
-                break;
-            case 6:
-                $image = imagerotate($image, - 90, 0);
-                break;
-            case 8:
-                $image = imagerotate($image, 90, 0);
-                break;
-        }
-        imagejpeg($image, $path);
-        return true;
-    }
 
     public function imageAddAction(Request $request, $id = 0) {
         if (!$this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
@@ -146,7 +122,8 @@ class InformationController extends Controller
               );
               // Check orientation
               $path = $this->getParameter('img_dir').'/'.$fileName;
-              $this->image_fix_orientation($path);
+              $imagehandler = $this->container->get('lfr_store.imagehandler');
+              $imagehandler->image_fix_orientation($path);
               // Update the 'image' property to store the file name instead of its contents
               $image->setImage($fileName);
             } elseif($oldFileName != null) {
@@ -202,6 +179,12 @@ class InformationController extends Controller
         $em = $this->getDoctrine()->getManager();
         $repository = $em->getRepository('LFRStoreBundle:Collection');
         $collections = $repository->findBy(array(), array('id' => 'desc'));
+        $imagehandler = $this->container->get('lfr_store.imagehandler');
+        foreach ($collections as $collection) {
+          $filename = $collection->getImage();
+          $path_small_image = $imagehandler->get_image_in_quality($filename, 'sm');
+          $collection->small_image = $path_small_image;
+        }
         return $this->render($this->entityNameSpace.':collection.html.twig', array(
           'collections' => $collections,
         ));

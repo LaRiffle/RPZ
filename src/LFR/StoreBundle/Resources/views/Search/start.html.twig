@@ -91,128 +91,98 @@
   })
 </script>
 <script>
-  var selected_type_ids = []
-  function filter(){
-    var selected_items = 0;
-    if(selected_type_ids.length == 0){
-      {% if is_granted('ROLE_USER') %}
-      // remove the add icon in the counter
-      selected_items--;
-      {% endif %}
-      $('.creation-icon').each(function(){
-        $(this).show();
-        selected_items++;
-      });
+  function reshape_image(obj){
+    var img = $(obj).find('img');
+    var img_width = img.width();
+    var img_height = img.height();
+    if(img_width < img_height){
+       img.addClass('portrait');
     } else {
-      $('.creation-icon').each(function(){
-        if($(this).attr('data-type') != null){
-          console.log('--');
-          var type_ids = $(this).attr('data-type').split(',').map(Number);
-          var has_one_type = false;
-          for(index in type_ids){
-            var type_id = type_ids[index];
-            has_one_type = has_one_type || selected_type_ids.includes(type_id)
-            console.log(type_id, selected_type_ids, selected_type_ids.includes(type_id));
-          }
-          if(has_one_type){
-            $(this).show();
-            selected_items++;
-          } else {
-            $(this).hide();
-          }
-        }
-      });
+       img.removeClass('portrait');
     }
-    if(selected_items > 0){
-      $('#number_results').html('('+selected_items+')');
+  }
+  var filter = {
+    collection: "{{ collection_id }}",
+    category: "{{ category_id }}",
+    types: []
+  }
+
+  function icon_filter(){
+    var visible_items = 0;
+    $('.creation-icon:not(.add-icon)').each(function(){
+      var collection = $(this).attr('data-collection');
+      var category = $(this).attr('data-category');
+      var types = $(this).attr('data-type').split(',').map(Number);
+      var visible = (collection == filter.collection || filter.collection == 'all')
+      visible = visible && (category == filter.category || filter.category == 'all')
+      if(filter.types.length > 0){
+        var has_one_type = false;
+        for(i in types){
+          var type = types[i];
+          has_one_type = has_one_type || filter.types.includes(type);
+        }
+        visible = visible && has_one_type;
+      }
+      if(visible){
+        $(this).show();
+        reshape_image(this);
+        visible_items++;
+      } else {
+        $(this).hide();
+      }
+    });
+    if(visible_items > 0){
+      $('#number_results').html('('+visible_items+')');
       $('#no_results').hide();
     } else {
       $('#number_results').html('');
       $('#no_results').show();
     }
-  }
-  var first_click = true;
-  $('#menu_lateral a.filter').on('click', function(e){
-    e.preventDefault();
-    if(first_click){
-      $('.creation-icon').each(function(){
-        $(this).css('position', 'static');
-        $(this).css('transform', 'none');
-      });
-      first_click = false;
-    }
-    var $input = $(this).find("input").first();
-    $input.prop("checked", !$input.prop("checked"));
-    var type_id = Number(this.href.split('-')[1]);
-    if($input.prop("checked")){
-      selected_type_ids.push(type_id);
-    } else {
-      var index = selected_type_ids.indexOf(type_id);
-      if (index > -1) {
-          selected_type_ids.splice(index, 1);
-      }
-    }
-    console.log(selected_type_ids);
-    filter();
-  });
-  function selection_filter(selected_id, type){
-    if(type == 'category' && selected_id == 'accessoire'){
+    if(filter.category == 'accessoire'){
       $('.vetement_filter').hide();
     } else {
       $('.vetement_filter').show();
     }
-    console.log(selected_id +' '+type);
-    var selected_items = 0;
-    $('.creation-icon').each(function(){
-      if($(this).attr('data-'+type) != null){
-        var collection_id = $(this).attr('data-'+type);
-        if(collection_id == selected_id || selected_id == 'all'){
-          $(this).show();
-          var img = $(this).find('img');
-          var img_width = img.width();
-          var img_height = img.height();
-          if(img_width < img_height){
-             img.addClass('portrait');
-          } else {
-             img.removeClass('portrait');
-          }
-          selected_items++;
-        } else {
-          $(this).hide();
-        }
-      }
-    });
-    if(selected_items > 0){
-      $('#number_results').html('('+selected_items+')');
-      $('#no_results').hide();
-    } else {
-      $('#number_results').html('');
-      $('#no_results').show();
+  }
+  icon_filter();
+
+  var first_click = true;
+  function reorganize(){
+    if(first_click){
+      $('.creation-icon').each(function(){
+        $(this).css('position', 'static');
+        $(this).css('transform', 'none');
+      });
+      first_click = false;
     }
   }
-  $( "#select_collection" ).change(function() {
-    if(first_click){
-      $('.creation-icon').each(function(){
-        $(this).css('position', 'static');
-        $(this).css('transform', 'none');
-      });
-      first_click = false;
+
+  $('#menu_lateral a.filter').on('click', function(e){
+    e.preventDefault();
+    reorganize();
+    var $input = $(this).find("input").first();
+    $input.prop("checked", !$input.prop("checked"));
+    var type_id = Number(this.href.split('-')[1]);
+    if($input.prop("checked")){
+      filter.types.push(type_id);
+    } else {
+      var index = filter.types.indexOf(type_id);
+      if (index > -1) {
+          filter.types.splice(index, 1);
+      }
     }
-    var selected_id = $(this).val();
-    selection_filter(selected_id, 'collection');
+    icon_filter();
   });
-  selection_filter("{{ collection_id }}", 'collection');
+
+  $("#select_collection").change(function() {
+    reorganize();
+    filter.collection = $(this).val();
+    icon_filter();
+  });
   $("#select_category").change(function() {
-    if(first_click){
-      $('.creation-icon').each(function(){
-        $(this).css('position', 'static');
-        $(this).css('transform', 'none');
-      });
-      first_click = false;
-    }
-    var selected_id = $(this).val();
-    selection_filter(selected_id, 'category');
+    reorganize();
+    filter.category = $(this).val();
+    icon_filter();
   });
-  selection_filter("{{ category_id }}", 'category');
 </script>
 {% endblock %}
