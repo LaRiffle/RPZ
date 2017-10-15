@@ -155,11 +155,17 @@
     console.log(selected_type_ids);
     filter();
   });
-  function selection_filter(selected_id){
+  function selection_filter(selected_id, type){
+    if(type == 'category' && selected_id == 'accessoire'){
+      $('.vetement_filter').hide();
+    } else {
+      $('.vetement_filter').show();
+    }
+    console.log(selected_id +' '+type);
     var selected_items = 0;
     $('.creation-icon').each(function(){
-      if($(this).attr('data-collection') != null){
-        var collection_id = $(this).attr('data-collection');
+      if($(this).attr('data-'+type) != null){
+        var collection_id = $(this).attr('data-'+type);
         if(collection_id == selected_id || selected_id == 'all'){
           $(this).show();
           var img = $(this).find('img');
@@ -193,8 +199,20 @@
       first_click = false;
     }
     var selected_id = $(this).val();
-    selection_filter(selected_id);
+    selection_filter(selected_id, 'collection');
   });
-  selection_filter("{{ collection_id }}");
+  selection_filter("{{ collection_id }}", 'collection');
+  $("#select_category").change(function() {
+    if(first_click){
+      $('.creation-icon').each(function(){
+        $(this).css('position', 'static');
+        $(this).css('transform', 'none');
+      });
+      first_click = false;
+    }
+    var selected_id = $(this).val();
+    selection_filter(selected_id, 'category');
+  });
+  selection_filter("{{ category_id }}", 'category');
 </script>
 {% endblock %}

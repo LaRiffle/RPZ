@@ -94,6 +94,7 @@ class  CreationController extends Controller
             $new_creation->setOnsold($creation->getOnsold());
             $new_creation->setPrice($creation->getPrice());
             $new_creation->setCollection($creation->getCollection());
+            $new_creation->setCategory($creation->getCategory());
             foreach($creation->getTypes() as $type){
               $new_creation->addType($type);
             }
@@ -103,6 +104,10 @@ class  CreationController extends Controller
         ->add('collection', EntityType::class, array(
                 'class'        => 'LFRStoreBundle:Collection',
                 'choice_label' => 'title',
+        ))
+        ->add('category', EntityType::class, array(
+                'class'        => 'LFRStoreBundle:Category',
+                'choice_label' => 'name',
         ))
         ->add('title1', TextType::class)
         ->add('text1', TextareaType::class)
@@ -206,6 +211,7 @@ class  CreationController extends Controller
               $creation->setOnsold($new_creation->getOnsold());
               $creation->setPrice($new_creation->getPrice());
               $creation->setCollection($new_creation->getCollection());
+              $creation->setCategory($new_creation->getCategory());
               $creation->emptyTypes();
               foreach($new_creation->getTypes() as $type){
                 $creation->addType($type);

@@ -13,7 +13,7 @@
             <div class="icon-element">
               <div class="row" id="box-search">
                   <div class="thumbnail text-center">
-                      <a href="{{ path('lfr_store_explore', {'type': 'vetement'}) }}">
+                      <a href="{{ path('lfr_store_explore', {'category': 'vetement'}) }}">
                       {{ include(image, {'element': data.home.left_img, 'style': ''}) }}
                       <div class="caption">
                           <h3>{{ include(text, {'element': data.home.title.left }) }}</h3>
@@ -32,7 +32,7 @@
             <div class="icon-element">
               <div class="row" id="box-search">
                   <div class="thumbnail text-center">
-                      <a href="#">
+                      <a href="{{ path('lfr_store_explore', {'category': 'accessoire'}) }}">
                       {{ include(image, {'element': data.home.right_img, 'style': ''}) }}
                       <div class="caption">
                           <h3>{{ include(text, {'element': data.home.title.right }) }}</h3>

@@ -13,9 +13,15 @@
             <option {% if collection.id == collection_id %}selected="selected"{% endif %} value="{{ collection.id }}">{{ collection.title }}</option>
           {% endfor %}
         </select>
+        <select id="select_category" class="form-control" placeholder="Collection" style="margin-top: 10px;">
+          <option {% if 'all' == category_id %}selected="selected"{% endif %} value="all">Vêtements & accessoires</option>
+          {% for category in categories %}
+            <option {% if category.slug == category_id %}selected="selected"{% endif %} value="{{ category.slug }}">{{ category.name }}</option>
+          {% endfor %}
+        </select>
       </li>
       {% for gender in genders %}
-      <li class="list-group-item justify-content-between">
+      <li class="list-group-item justify-content-between vetement_filter">
         <h5 style="width: 100%;">
           {{ gender.name }}
           {% if is_granted('ROLE_USER') %}
@@ -43,7 +49,7 @@
       </li>
       {% endfor %}
       {% if is_granted('ROLE_USER') %}
-      <li class="list-group-item justify-content-between">
+      <li class="list-group-item justify-content-between vetement_filter">
         <a href="#" class="internal-link" data-target="#form-gender">Ajouter une catégorie</a>
         <div id="form-gender" style="display:none">
           {{ render(controller("LFRStoreBundle:Search:genderAdd")) }}

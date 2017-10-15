@@ -18,7 +18,7 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 class SearchController extends Controller
 {
     public $entityNameSpace = 'LFRStoreBundle:Search';
-    public function startAction($collection = 'all')
+    public function startAction($collection = 'all', $category = 'all')
     {
         $em = $this->getDoctrine()->getManager();
         $repository = $em->getRepository('LFRStoreBundle:Gender');
@@ -29,10 +29,14 @@ class SearchController extends Controller
         }
         $repository = $em->getRepository('LFRStoreBundle:Collection');
         $collections = $repository->findAll();
+        $repository = $em->getRepository('LFRStoreBundle:Category');
+        $categories = $repository->findAll();
         return $this->render($this->entityNameSpace.':start.html.twig', array(
           'genders' => $genders,
           'collections' => $collections,
           'collection_id' => $collection,
+          'categories' => $categories,
+          'category_id' => $category
         ));
     }
     public function showAction()

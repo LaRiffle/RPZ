@@ -14,6 +14,7 @@
   <div class="img-thumbnail creation-icon"
        data-type="{% for type in creation.types %}{% if not loop.first %},{% endif %}{{type.id}}{% endfor %}"
        data-collection="{{ creation.collection.id }}"
+       data-category="{{ creation.category.slug }}"
        style="z-index: {{creations|length - loop.index0}}"
   >
     <div class="img-cadre">

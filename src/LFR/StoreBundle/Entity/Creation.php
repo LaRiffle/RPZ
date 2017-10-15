@@ -97,6 +97,12 @@ class Creation
      */
     private $collection;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="LFR\StoreBundle\Entity\Category")
+     * @ORM\JoinColumn(nullable=false, columnDefinition="INT NOT NULL DEFAULT 1")
+     */
+    private $category;
+
 
     /**
      * Get id
@@ -373,5 +379,43 @@ class Creation
     public function getCollection()
     {
         return $this->collection;
+    }
+
+    /**
+     * Set images
+     *
+     * @param array $images
+     *
+     * @return Creation
+     */
+    public function setImages($images)
+    {
+        $this->images = $images;
+
+        return $this;
+    }
+
+    /**
+     * Set category
+     *
+     * @param \LFR\StoreBundle\Entity\Category $category
+     *
+     * @return Creation
+     */
+    public function setCategory(\LFR\StoreBundle\Entity\Category $category)
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * Get category
+     *
+     * @return \LFR\StoreBundle\Entity\Category
+     */
+    public function getCategory()
+    {
+        return $this->category;
     }
 }
