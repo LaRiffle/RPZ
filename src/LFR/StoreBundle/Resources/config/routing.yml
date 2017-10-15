@@ -8,8 +8,8 @@ lfr_store_collection:
     path:     /collection
     defaults: { _controller: LFRStoreBundle:Information:collection }
 lfr_store_explore:
-    path:     /explore/{collection}
-    defaults: { _controller: LFRStoreBundle:Search:start, collection:"all" }
+    path:     /explore/{collection}/{category}
+    defaults: { _controller: LFRStoreBundle:Search:start, collection:"all", category:"all" }
 lfr_store_show:
     path:     /show/{id}
     defaults: { _controller: LFRStoreBundle:Search:show, id:0 }
@@ -63,3 +63,14 @@ lfr_admin_collection_show:
 lfr_admin_collection_remove:
     path:     /admin/collection/remove/{id}
     defaults: { _controller: LFRStoreBundle:Collection:remove}
+lfr_admin_category_add:
+    path:     /admin/category/add/{id}
+    defaults: { _controller: LFRStoreBundle:Category:add, id:0 }
+lfr_admin_category_show:
+    path:     /admin/category/{id}
+    defaults: { _controller: LFRStoreBundle:Category:show }
+    requirements:
+        id:   \d+
+lfr_admin_category_remove:
+    path:     /admin/category/remove/{id}
+    defaults: { _controller: LFRStoreBundle:Category:remove}
