@@ -197,6 +197,9 @@ class  CreationController extends Controller
                       $this->getParameter('img_dir'),
                       $fileName
                   );
+                  // Check orientation
+                  $path = $this->getParameter('img_dir').'/'.$fileName;
+                  $this->image_fix_orientation($path);
 
                   // Update the 'image' property to store the file name
                   // instead of its contents
