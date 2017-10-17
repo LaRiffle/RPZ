@@ -23,6 +23,26 @@ class LFRImagehandler {
   }
   public function image_fix_orientation($path)
   {
+      $extension = pathinfo($path, PATHINFO_EXTENSION);
+      switch ($extension) {
+          case 'jpg':
+              $image = imagecreatefromjpeg($path);
+              break;
+          case 'jpeg':
+              $image = imagecreatefromjpeg($path);
+              break;
+          case 'JPG':
+              $image = imagecreatefromjpeg($path);
+              break;
+          case 'png':
+              $image = imagecreatefrompng($path);
+              break;
+          case 'gif':
+              $image = imagecreatefromgif($path);
+              break;
+          default:
+              var_dump('File extension '.$extension.' not known.');
+      }
       $image = imagecreatefromjpeg($path);
       $exif = exif_read_data($path);
 
@@ -60,6 +80,9 @@ class LFRImagehandler {
             case 'md':
                 $w = 600;
                 break;
+            case 'lg':
+                $w = 1000;
+                break;
             default:
                 $w = $width;
         }
@@ -84,7 +107,13 @@ class LFRImagehandler {
             default:
                 var_dump('File extension '.$extension.' not known.');
         }
-        $h = $height * $w / $width;
+        if($width <= $height){
+          $h = $height * $w / $width;
+        } else { // if image is more like this : |_______| then the height must be the key factor
+          $h = $w;
+          $w = $width * $h / $height;
+        }
+
         $image_small = imagecreatetruecolor($w, $h);
         imagecopyresampled($image_small, $src, 0, 0, 0, 0, $w, $h, $width, $height);
         switch ($extension) {

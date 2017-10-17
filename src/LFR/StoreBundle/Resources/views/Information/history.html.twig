@@ -41,8 +41,10 @@
       </div>
       <div class="col-sm-4">
         <div style="width: 100%;">
-          <div class="img-thumbnail" style="border-radius: 50%;">
-            {{ include(image, {'element': data.author.img, 'style': 'width:100%; border-radius: 50%;'}) }}
+          <div class="img-thumbnail creation-icon img-round" style="width:100%; border-radius: 50%;">
+            <div style="width:100%; height:100%; border-radius: 50%;" class="img-cadre">
+              {{ include(image, {'element': data.author.img, 'style': 'width:100%; height:100%;'}) }}
+            </div>
           </div>
         </div>
       </div>
@@ -62,7 +64,7 @@
     $(this).css('width', (width) +'px');
     console.log("done");
     $(this).find('.img-cadre').css('width', (width - 10) + 'px').css('height', (width - 10) + 'px');
-    $img = $(this).find('img');
+    var $img = $(this).find('img');
     // remove constraint
     $img.css('width', 'auto');
     // check if portait
@@ -77,10 +79,24 @@
 
 </script>
 <script>
-  $box = $("#floating_box_history");
+  var $box = $("#floating_box_history");
   console.log($box.width());
   $box.css('height', $box.width()+($box.width() < 300 ? 20 : 0)+'px');
   $box.css('margin-right', Math.max(0.1*$box.width(), 25)+ ($box.width() < 300 ? 20 : 0)+'px');
+
+  var $round = $('.img-round');
+  $round.css('height', $round.width()+'px');
+  var $img = $round.find('img');
+  $img.css('width', 'auto');
+  if($img.width() < $img.height()){
+    console.log('1ok');
+    $img.css('height', 'auto');
+    $img.css('width', '100%');
+  } else {
+    console.log('2ok');
+    $img.css('height', '100%');
+    $img.css('width', 'auto');
+  }
 </script>
 <script>
   var icon_inversed = false;

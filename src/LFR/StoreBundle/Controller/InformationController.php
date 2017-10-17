@@ -25,7 +25,12 @@ class InformationController extends Controller
     }
     public function fetchImage($role){
       $textRepository = $this->getDoctrine()->getManager()->getRepository('LFRStoreBundle:Image');
-      return $textRepository->findBy(array('role' => $role))[0];
+      $image = $textRepository->findBy(array('role' => $role))[0];
+      $filename = $image->getImage();
+      $imagehandler = $this->container->get('lfr_store.imagehandler');
+      $path_small_image = $imagehandler->get_image_in_quality($filename, 'md');
+      $image->small_image = $path_small_image;
+      return $image;
     }
 
     public $entityNameSpace = 'LFRStoreBundle:Information';
@@ -145,6 +150,10 @@ class InformationController extends Controller
                   $this->getParameter('img_dir'),
                   $fileName
               );
+              // Check orientation
+              $path = $this->getParameter('img_dir').'/'.$fileName;
+              $imagehandler = $this->container->get('lfr_store.imagehandler');
+              $imagehandler->image_fix_orientation($path);
               // Update the 'image' property to store the file name instead of its contents
               $image->setImage($fileName);
             } elseif($oldFileName != null) {
