@@ -21,49 +21,51 @@ class LFRImagehandler {
       }
       return true;
   }
+  public function make_image($extension, $image_small, $filename_image_small)
+  {
+    switch ($extension) {
+        case 'jpg':
+            imagejpeg($image_small, $filename_image_small);
+            break;
+        case 'jpeg':
+            imagejpeg($image_small, $filename_image_small);
+            break;
+        case 'JPG':
+            imagejpeg($image_small, $filename_image_small);
+            break;
+        case 'png':
+            imagepng($image_small, $filename_image_small);
+            break;
+        case 'gif':
+            imagegif($image_small, $filename_image_small);
+            break;
+    }
+  }
   public function image_fix_orientation($path)
   {
       $extension = pathinfo($path, PATHINFO_EXTENSION);
-      switch ($extension) {
-          case 'jpg':
-              $image = imagecreatefromjpeg($path);
-              break;
-          case 'jpeg':
-              $image = imagecreatefromjpeg($path);
-              break;
-          case 'JPG':
-              $image = imagecreatefromjpeg($path);
-              break;
-          case 'png':
-              $image = imagecreatefrompng($path);
-              break;
-          case 'gif':
-              $image = imagecreatefromgif($path);
-              break;
-          default:
-              var_dump('File extension '.$extension.' not known.');
+      if(in_array($extension, ['jpg', 'jpeg', 'JPG'])){
+        $image = imagecreatefromjpeg($path);
+        $exif = exif_read_data($path);
+        if (empty($exif['Orientation']))
+        {
+            return false;
+        }
+        switch ($exif['Orientation']){
+            case 3:
+                $image = imagerotate($image, 180, 0);
+                break;
+            case 6:
+                $image = imagerotate($image, - 90, 0);
+                break;
+            case 8:
+                $image = imagerotate($image, 90, 0);
+                break;
+        }
+        $this->make_image($extension, $image, $path);
+        return true;
       }
-      $image = imagecreatefromjpeg($path);
-      $exif = exif_read_data($path);
-
-      if (empty($exif['Orientation']))
-      {
-          return false;
-      }
-      switch ($exif['Orientation'])
-      {
-          case 3:
-              $image = imagerotate($image, 180, 0);
-              break;
-          case 6:
-              $image = imagerotate($image, - 90, 0);
-              break;
-          case 8:
-              $image = imagerotate($image, 90, 0);
-              break;
-      }
-      imagejpeg($image, $path);
-      return true;
+      return false;
   }
   public function check_image($filename, $filename_image_small, $size){
       $filename = $this->img_dir.'/'.$filename;
@@ -116,23 +118,7 @@ class LFRImagehandler {
 
         $image_small = imagecreatetruecolor($w, $h);
         imagecopyresampled($image_small, $src, 0, 0, 0, 0, $w, $h, $width, $height);
-        switch ($extension) {
-            case 'jpg':
-                imagejpeg($image_small, $filename_image_small);
-                break;
-            case 'jpeg':
-                imagejpeg($image_small, $filename_image_small);
-                break;
-            case 'JPG':
-                imagejpeg($image_small, $filename_image_small);
-                break;
-            case 'png':
-                imagepng($image_small, $filename_image_small);
-                break;
-            case 'gif':
-                imagegif($image_small, $filename_image_small);
-                break;
-        }
+        $this->make_image($extension, $image_small, $filename_image_small);
       }
       return true;
   }

@@ -12,7 +12,12 @@ class HomeController extends Controller
     }
     public function fetchImage($role){
       $textRepository = $this->getDoctrine()->getManager()->getRepository('LFRStoreBundle:Image');
-      return $textRepository->findBy(array('role' => $role))[0];
+      $image = $textRepository->findBy(array('role' => $role))[0];
+      $filename = $image->getImage();
+      $imagehandler = $this->container->get('lfr_store.imagehandler');
+      $path_small_image = $imagehandler->get_image_in_quality($filename, 'md');
+      $image->small_image = $path_small_image;
+      return $image;
     }
     public function animationAction()
     {

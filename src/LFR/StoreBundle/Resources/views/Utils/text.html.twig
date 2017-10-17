@@ -1,4 +1,4 @@
-<span id="text-{{ element.id }}">{{ element.text }}</span>
+<span id="text-{{ element.id }}">{{ element.text|nl2br }}</span>
 {% if is_granted('ROLE_USER') %}
 <a class="edit-link" id="{{ element.id }}" href="{{ path('lfr_admin_text_add', {'id': element.id }) }}" style="font-size: 1rem;"><i class="fa fa-pencil-square-o"></i></a>
 {% endif %}
