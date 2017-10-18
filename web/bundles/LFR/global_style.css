@@ -386,6 +386,12 @@ button.navbar-toggler:hover {
 #display_icons .creation-icon {
   display: none;
 }
+.history-icon {
+  visibility: hidden;
+}
+#explore-page .creation-icon {
+  visibility: hidden;
+}
 .creation-icon a:hover {
   text-decoration: none;
 }

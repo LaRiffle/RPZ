@@ -144,7 +144,12 @@
       $('.vetement_filter').show();
     }
   }
-  icon_filter();
+  $(document).ready(function(){
+    setTimeout(function(){
+      $('.creation-icon').hide().css('visibility', 'visible').fadeIn();
+      icon_filter();
+    }, 400);
+  });
 
   var first_click = true;
   function reorganize(){
