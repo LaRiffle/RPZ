@@ -61,7 +61,7 @@
         slidesToShow: nb_slides,
         slidesToScroll: 1
       });
-      $('.collection-carousel').fadeIn();
+      $('.collection-carousel').css('visibility', 'hidden').show();
       var min_height = 100000;
       setTimeout(function(){
         $('.collection-img').each(function(){
@@ -73,7 +73,8 @@
           $(this).css('margin-top', -overflow/2+'px');
           $(this).css('margin-bottom', -overflow/2+'px');
         });
-      }, 0);
+        $('.collection-carousel').css('display', 'none').css('visibility', 'visible').fadeIn();
+      }, 400);
     });
 </script>
 
