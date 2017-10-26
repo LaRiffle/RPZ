@@ -4,8 +4,11 @@
 }
 @font-face {
     font-family: "HaloHandletter";
-    src: url('fonts/HaloHandletter.eot');
     src: url('fonts/HaloHandletter.otf');
+}
+@font-face {
+    font-family: "HaloHandletter_IE";
+    src: url('fonts/HaloHandletter.eot');
 }
 @font-face {
     font-family: "NellaSue";
@@ -95,17 +98,14 @@ h2.signature {
 h3 {
   font-size: 2.5rem;
 }
-.special-font {
-  font-family: "HaloHandletter";
+.special-font, .special-font2 {
+  font-family: "HaloHandletter", "HaloHandletter_IE";
 }
 .special-font span {
   transition:opacity 1s linear;
 }
 .special-font1 {
   font-family: "Antro_Vectra";
-}
-.special-font2 {
-  font-family: "HaloHandletter";
 }
 .special-font3 {
   font-family: "NellaSue";
