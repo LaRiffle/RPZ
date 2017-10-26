@@ -49,6 +49,9 @@
 <script type="text/javascript">
     $(document).ready(function(){
       var screen_width = $('body').width();
+      if(screen_width < 567){
+        $('.collection-description').css('color', 'white');
+      }
       if(screen_width >= 768){
         nb_slides = 3;
       } else if(screen_width >= 567){
@@ -65,6 +68,7 @@
       var min_height = 100000;
       setTimeout(function(){
         $('.collection-img').each(function(){
+          $(this).css('width', '100%');
           min_height = Math.min(min_height, $(this).height());
         });
         $('.collection-img').each(function(){

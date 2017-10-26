@@ -4,6 +4,7 @@
 }
 @font-face {
     font-family: "HaloHandletter";
+    src: url('fonts/HaloHandletter.eot');
     src: url('fonts/HaloHandletter.otf');
 }
 @font-face {
@@ -297,6 +298,11 @@ button.navbar-toggler:hover {
 }
 .double-large-icon img:hover {
   cursor: grab;
+}
+.over > .img-thumbnail, .under > .img-thumbnail {
+  -webkit-transition: opacity .2s ease-in-out;
+  -o-transition: opacity .2s ease-in-out;
+  transition: opacity .2s ease-in-out;
 }
 .over {
   position: absolute;
