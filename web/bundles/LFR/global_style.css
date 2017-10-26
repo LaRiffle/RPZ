@@ -38,8 +38,12 @@
     font-family: "Avenir-Light";
     src: url('fonts/Avenir-Light.ttf');
 }
+@font-face {
+    font-family: "Avenir-Light_IE";
+    src: url('fonts/Avenir-Light.eot');
+}
 body, button, input, optgroup, select, textarea {
-  font-family: "Avenir-Light";
+  font-family: "Avenir-Light", "Avenir-Light_IE", "-apple-system",system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
 }
 
 #front-page {
