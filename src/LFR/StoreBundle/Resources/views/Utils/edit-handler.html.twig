@@ -10,7 +10,7 @@
                   +'<h5 class="form-signin-heading">Modifier un contenu</h5>'
                   +'<div style="margin-top: 10px;">'
                     +'<textarea id="form_text" name="form[text]" required="required" class="form-control" placeholder="Texte">'
-                    + $('#text-'+id).html()
+                    + $('#text-'+id).html().replace(/<br>/g, '')
                     +'</textarea>'
                   +'</div>'
                   +'<div style="margin-top: 10px;">'
