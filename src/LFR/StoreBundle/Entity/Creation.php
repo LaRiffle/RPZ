@@ -19,6 +19,7 @@ class Creation
     {
         $this->types = new \Doctrine\Common\Collections\ArrayCollection();
         $this->images = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->sizes = new \Doctrine\Common\Collections\ArrayCollection();
         $this->onsold = false;
     }
     /**
@@ -103,6 +104,11 @@ class Creation
      */
     private $category;
 
+    /**
+     * Collection of Attributes
+     * @ORM\ManyToMany(targetEntity="LFR\StoreBundle\Entity\Attribute", cascade={"persist"})
+     */
+    private $attributes;
 
     /**
      * Get id
@@ -417,5 +423,44 @@ class Creation
     public function getCategory()
     {
         return $this->category;
+    }
+
+    public function emptyAttributes()
+    {
+        $this->attributes = [];
+    }
+
+    /**
+     * Add attribute
+     *
+     * @param \LFR\StoreBundle\Entity\Attribute $attribute
+     *
+     * @return Creation
+     */
+    public function addAttribute(\LFR\StoreBundle\Entity\Attribute $attribute)
+    {
+        $this->attributes[] = $attribute;
+
+        return $this;
+    }
+
+    /**
+     * Remove attribute
+     *
+     * @param \LFR\StoreBundle\Entity\Attribute $attribute
+     */
+    public function removeAttribute(\LFR\StoreBundle\Entity\Attribute $attribute)
+    {
+        $this->attributes->removeElement($attribute);
+    }
+
+    /**
+     * Get attributes
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getAttributes()
+    {
+        return $this->attributes;
     }
 }

@@ -78,3 +78,14 @@ lfr_admin_category_show:
 lfr_admin_category_remove:
     path:     /admin/category/remove/{id}
     defaults: { _controller: LFRStoreBundle:Category:remove}
+lfr_admin_creation_attributes:
+    path:     /admin/attributes/
+    defaults: { _controller: LFRStoreBundle:Attribute:index}
+lfr_admin_creation_attribute_add:
+    path:     /admin/attributes/add/{id}/{category}
+    defaults: { _controller: LFRStoreBundle:Attribute:add, id:0, category:0}
+    requirements:
+        id:   \d+
+lfr_admin_creation_attribute_remove:
+    path:     /admin/attributes/remove/{id}
+    defaults: { _controller: LFRStoreBundle:Attribute:remove}

@@ -1,7 +1,7 @@
 {% extends "LFRStoreBundle::layout.html.twig" %}
 {% block body %}
 
-<div id="explore-page">
+<div id="add-creation-page">
   {% set navbar = "LFRStoreBundle:Utils:nav.html.twig" %}
   {{ include(navbar, {'active': 'collection'}) }}
   <div class="container">
@@ -81,6 +81,44 @@
             {{ form_label(type) }}<br />
           {% endfor %}
         </div>
+        <hr />
+        <div style="margin-top: 10px;">
+          <h4>Déclinaisons du modèle</h4>
+          <a target="_blank" href="{{ path('lfr_admin_creation_attributes') }}">Modifier le choix de déclinaisons</a><br /><br />
+          <h5>{{ form_label(form.attributes, "Tailles disponibles") }}</h5>
+          {% set card="LFRStoreBundle:Attribute:card_attribute.html.twig" %}
+          {{ form_errors(form.attributes) }}
+          {% for attribute in form.attributes %}
+            {% set index = attribute.vars.value %}
+            {% set entity = form.attributes.vars.choices[index].data %}
+            {% if entity.category == 'size' %}
+            {{ include(card, {'attribute': entity, 'allow_modify': false, 'widget': form_widget(attribute) }) }}
+            {% endif %}
+          {% endfor %}
+          <div style="clear: both;"></div>
+          <h5 style="margin-top: 10px;">{{ form_label(form.attributes, "Couleurs disponibles") }}</h5>
+          {% set card="LFRStoreBundle:Attribute:card_attribute.html.twig" %}
+          {{ form_errors(form.attributes) }}
+          {% for attribute in form.attributes %}
+            {% set index = attribute.vars.value %}
+            {% set entity = form.attributes.vars.choices[index].data %}
+            {% if entity.category == 'color' %}
+            {{ include(card, {'attribute': entity, 'allow_modify': false, 'widget': form_widget(attribute) }) }}
+            {% endif %}
+          {% endfor %}
+          <div style="clear: both;"></div>
+          <h5 style="margin-top: 10px;">{{ form_label(form.attributes, "Attributs spéciaux") }}</h5>
+          {% set card="LFRStoreBundle:Attribute:card_attribute.html.twig" %}
+          {{ form_errors(form.attributes) }}
+          {% for attribute in form.attributes %}
+            {% set index = attribute.vars.value %}
+            {% set entity = form.attributes.vars.choices[index].data %}
+            {% if entity.category == 'other' %}
+            {{ include(card, {'attribute': entity, 'allow_modify': false, 'widget': form_widget(attribute) }) }}
+            {% endif %}
+          {% endfor %}
+        </div>
+        <div style="clear: both;"></div>
         {{ include(save_form, {'element': form.save, 'name':"Publier"}) }}
         <div style="display:none">
           {{ form_rest(form) }}

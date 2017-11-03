@@ -44,6 +44,19 @@ class  CreationController extends Controller
         $em = $this->getDoctrine()->getManager();
         $repository = $em->getRepository($this->entityNameSpace);
         $creation = $repository->find($id);
+        $attributes = $creation->getAttributes();
+        $creation->sizes = [];
+        $creation->colors = [];
+        $creation->others = [];
+        foreach ($attributes as $attribute) {
+          if($attribute->getCategory() == 'size'){
+            $creation->sizes[] = $attribute;
+          } elseif($attribute->getCategory() == 'color'){
+            $creation->colors[] = $attribute;
+          } else {
+            $creation->others[] = $attribute;
+          }
+        }
         return $this->render('LFRStoreBundle:Search:show.html.twig', array(
           'creation' => $creation,
         ));
@@ -78,6 +91,9 @@ class  CreationController extends Controller
             $new_creation->setCategory($creation->getCategory());
             foreach($creation->getTypes() as $type){
               $new_creation->addType($type);
+            }
+            foreach($creation->getAttributes() as $type){
+              $new_creation->addAttribute($type);
             }
         }
         $form = $this->get('form.factory')->createBuilder(FormType::class, ($id == 0 ? $creation : $new_creation))
@@ -126,6 +142,12 @@ class  CreationController extends Controller
         ))
         ->add('types', EntityType::class, array(
                 'class'        => 'LFRStoreBundle:Type',
+                'choice_label' => 'name',
+                'multiple'     => true,
+                'expanded'     => true,
+                'required'     => false))
+        ->add('attributes', EntityType::class, array(
+                'class'        => 'LFRStoreBundle:Attribute',
                 'choice_label' => 'name',
                 'multiple'     => true,
                 'expanded'     => true,
@@ -201,6 +223,10 @@ class  CreationController extends Controller
               $creation->emptyTypes();
               foreach($new_creation->getTypes() as $type){
                 $creation->addType($type);
+              }
+              $creation->emptyAttributes();
+              foreach($new_creation->getAttributes() as $type){
+                $creation->addAttribute($type);
               }
             }
             $em->persist($creation);

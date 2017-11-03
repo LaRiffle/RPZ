@@ -12,6 +12,10 @@
       <div class="col-sm-6">
         {% set carousel = "LFRStoreBundle:Search:carousel.html.twig" %}
         {{ include(carousel, {'url': creation.images}) }}
+        <div style="margin-top:20px;">
+          <h4>{{ creation.title2 }}</h4>
+          <p>{{ creation.text2 }}</p>
+        </div>
       </div>
       <div class="col-sm-4">
         {% if is_granted('ROLE_USER') %}
@@ -20,47 +24,44 @@
         {% endif %}
         <h3>{{ creation.name }}</h3>
         {% if creation.onsold %}
-          <h4>{{ creation.price }} €</h4>
+          <h4><span class="badge badge-primary badge-pill" style="padding: 16px;padding-top: 11px;padding-bottom: 9px;">{{ creation.price }} €</span></h4>
         {% endif %}
         <h4>{{ creation.title1 }}</h4>
         <p>{{ creation.text1 }}</p>
-         <ul id="notify" class="list-group" style="margin-bottom: 10px; display:none;">
-           <li class="list-group-item collapse-toggle justify-content-between">
+         <ul id="notify" class="list-group" style="margin-bottom: 10px;">
+           <!--<li class="list-group-item collapse-toggle justify-content-between">
              <h5 style="margin-bottom: 0px;">
                Modèles
              </h5>
-           </li>
-           <div id="menu_lateral" class="collapse show">
-               <li class="list-group-item justify-content-between">
-                 <h5 style="width: 100%;">Coloris</h5>
-                 <ul class="list-group list-gender">
-                   <li class="list-group-item justify-content-between">
-                     <a href="#" class=""><span class="color-choice" style="background-color: #AA1111;"></span>Rouge</a>
-                   </li>
-                   <li class="list-group-item justify-content-between">
-                     <a href="#" class=""><span class="color-choice" style="background-color: #11AAAA;"></span>Vert</a>
-                   </li>
-                   <li class="list-group-item justify-content-between">
-                     <a href="#" class=""><span class="color-choice" style="background-color: #1111AA;"></span>Cyan</a>
-                   </li>
-                 </ul>
+           </li>-->
+           <div id="creation_options" class="collapse show">
+               {% if creation.sizes|length > 0 %}
+               <li class="list-group-item" style="padding-right: 0px;" data-unique="1">
+                 <h5 style="width: 100%;">Tailles</h5>
+                 {% set card="LFRStoreBundle:Attribute:card_attribute.html.twig" %}
+                 {% for attribute in creation.sizes %}
+                   {{ include(card, {'attribute': attribute, 'allow_modify': false}) }}
+                 {% endfor %}
                </li>
-               <li class="list-group-item justify-content-between">
-                 <h5 style="width: 100%;">Taille</h5>
-                 <ul class="list-group list-gender">
-                   <li class="list-group-item justify-content-between">
-                     <a href="#" class="">34</a>
-                   </li>
-                   <li class="list-group-item justify-content-between">
-                     <a href="#" class="">36</a>
-                   </li>
-                   <li class="list-group-item justify-content-between">
-                     <a href="#" class="">38</a>
-                   </li>
-                   <li class="list-group-item justify-content-between">
-                     <a href="#" class="">40</a>
-                   </li>
-                 </ul>
+               {% endif %}
+               {% if creation.colors|length > 0 %}
+               <li class="list-group-item" style="padding-right: 0px;"  data-unique="1">
+                 <h5 style="width: 100%;">Couleurs</h5>
+                 {% set card="LFRStoreBundle:Attribute:card_attribute.html.twig" %}
+                 {% for attribute in creation.colors %}
+                   {{ include(card, {'attribute': attribute, 'allow_modify': false}) }}
+                 {% endfor %}
+               </li>
+               {% endif %}
+               {% if creation.others|length > 0 %}
+               <li class="list-group-item" style="padding-right: 0px;" data-unique="0">
+                 <h5 style="width: 100%;">Options</h5>
+                 {% set card="LFRStoreBundle:Attribute:card_attribute.html.twig" %}
+                 {% for attribute in creation.others %}
+                   {{ include(card, {'attribute': attribute, 'allow_modify': false}) }}
+                 {% endfor %}
+               </li>
+              {% endif %}
                </li>
              </div>
          </ul>
@@ -68,8 +69,7 @@
     </div>
     <div class="row">
       <div class="offset-sm-1 col-sm-10" style="margin-top: 15px;">
-        <h4>{{ creation.title2 }}</h4>
-        <p>{{ creation.text2 }}</p>
+
       </div>
     </div>
   </div>
@@ -77,11 +77,31 @@
 {% endblock %}
 {% block script %}
 <script>
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();
+});
+</script>
+<script>
   //$("#carousel .carousel-item").zoom({ on:'grab' });
   $('#carousel img')
     .wrap('<span style="display:inline-block"></span>')
     .css('display', 'block')
     .parent()
     .zoom({ on:'grab' });
+</script>
+<script>
+  $('.attribute-card').on('click', function(e){
+    var rule = $(this).closest('li').attr('data-unique');
+    if($(this).attr('data-selected') == '1'){
+      $(this).css('border-color', 'rgba(0,0,0,.125)');
+      $(this).attr('data-selected', 0);
+    } else {
+      if(rule == '1'){
+        $(this).closest('li').find('.attribute-card').css('border-color', 'rgba(0,0,0,.125)').attr('data-selected', 0);;
+      }
+      $(this).css('border-color', '#0275d8');
+      $(this).attr('data-selected', 1);
+    }
+  });
 </script>
 {% endblock %}
