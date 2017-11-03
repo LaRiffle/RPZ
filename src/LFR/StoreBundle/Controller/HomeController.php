@@ -19,6 +19,10 @@ class HomeController extends Controller
       $image->small_image = $path_small_image;
       return $image;
     }
+    public function workAction()
+    {
+        return $this->render('LFRStoreBundle:Home:work.html.twig');
+    }
     public function animationAction()
     {
         return $this->render('LFRStoreBundle:Home:animation.html.twig');

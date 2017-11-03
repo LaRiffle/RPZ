@@ -1,3 +1,7 @@
+lfr_store_work:
+    path:     /work
+    defaults: { _controller: LFRStoreBundle:Home:work }
+
 lfr_store_start:
     path:     /
     defaults: { _controller: LFRStoreBundle:Home:animation }

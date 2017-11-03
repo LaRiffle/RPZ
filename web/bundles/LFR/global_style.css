@@ -95,7 +95,7 @@ h2 {
 h2.signature {
   color: white;
   bottom: 3.5rem;
-  left: 0.5rem;
+  left: 0.75rem;
   transition:opacity 1s linear;
   font-size: 1.9rem;
 }
