@@ -14,7 +14,7 @@
         {{ include(carousel, {'url': creation.images}) }}
         <div style="margin-top:20px;">
           <h4>{{ creation.title2 }}</h4>
-          <p>{{ creation.text2 }}</p>
+          <p>{{ creation.text2|nl2br }}</p>
         </div>
       </div>
       <div class="col-sm-4">
@@ -27,7 +27,7 @@
           <h4><span class="badge badge-primary badge-pill" style="padding: 16px;padding-top: 11px;padding-bottom: 9px;">{{ creation.price }} €</span></h4>
         {% endif %}
         <h4>{{ creation.title1 }}</h4>
-        <p>{{ creation.text1 }}</p>
+        <p>{{ creation.text1|nl2br }}</p>
          <ul id="notify" class="list-group" style="margin-bottom: 10px;">
            <!--<li class="list-group-item collapse-toggle justify-content-between">
              <h5 style="margin-bottom: 0px;">

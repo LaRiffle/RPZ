@@ -408,6 +408,7 @@ button.navbar-toggler:hover {
 }
 #display_icons .creation-icon {
   display: none;
+  transition:opacity 0.4s linear;
 }
 .history-icon {
   visibility: hidden;
@@ -425,6 +426,11 @@ button.navbar-toggler:hover {
   position: absolute;
   bottom: 0px;
   width: 100%;
+  background-image: -webkit-linear-gradient(top,rgba(0,0,0,.0001) 0,rgba(0,0,0,.5) 100%);
+  background-image: -o-linear-gradient(top,rgba(0,0,0,.0001) 0,rgba(0,0,0,.5) 100%);
+  background-image: -webkit-gradient(linear,left top,left bottom,from(rgba(0,0,0,.0001)),to(rgba(0,0,0,.5)));
+  background-image: linear-gradient(to bottom,rgba(0,0,0,.0001) 0,rgba(0,0,0,.5) 100%);
+  padding-top: 30px;
 }
 .creation-icon .caption h4, .creation-icon .caption h5 {
   text-align: center;
