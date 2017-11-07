@@ -227,7 +227,7 @@ $(document).ready(function(){
         $(this).css('border-color','rgba(0,0,0,.125)');
       });
       $('.gender').each(function(){
-        $(this).find('input').each(function(){
+        $(this).find('input:checkbox').each(function(){
           var $input = $(this);
           $input.prop("checked", false);
           console.log($input.parent());
