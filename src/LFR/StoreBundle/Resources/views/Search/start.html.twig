@@ -174,11 +174,13 @@
     var type_id = Number(this.href.split('-')[1]);
     if($input.prop("checked")){
       filter.types.push(type_id);
+      $(this).find('i').removeClass('fa-circle-thin').addClass('fa-circle');
     } else {
       var index = filter.types.indexOf(type_id);
       if (index > -1) {
           filter.types.splice(index, 1);
       }
+      $(this).find('i').removeClass('fa-circle').addClass('fa-circle-thin');
     }
     icon_filter();
   });
@@ -193,5 +195,58 @@
     filter.category = $(this).val();
     icon_filter();
   });
+</script>
+<script>
+/* Put on top creation on which we hover with the mouse */
+
+  nb_creation = $('.creation-icon').length;
+  z_index = nb_creation;
+  $('.creation-icon').mouseenter(function(){
+    var $this = $(this)
+    $this.css('z-index', z_index);
+    /*
+    $this.css('opacity', 0);
+    setTimeout(function(){
+      $this.css('z-index', z_index).css('opacity', 1);
+    }, 400);*/
+    z_index += 1;
+  })
+
+</script>
+<script>
+$(document).ready(function(){
+  $('.toggler').on('click', function(e){
+    e.preventDefault();
+    id = $(this).attr('data-toggle');
+    console.log(id);
+    if($('#'+id).is(":visible")){
+      $('#'+id).slideUp();
+      $(this).css('border-color','rgba(0,0,0,.125)');
+    } else {
+      $('.toggler').each(function(){
+        $(this).css('border-color','rgba(0,0,0,.125)');
+      });
+      $('.gender').each(function(){
+        $(this).find('input').each(function(){
+          var $input = $(this);
+          $input.prop("checked", false);
+          console.log($input.parent());
+          var type_id = Number($input.parent().attr('href').split('-')[1]);
+          var index = filter.types.indexOf(type_id);
+          if (index > -1) {
+              filter.types.splice(index, 1);
+          }
+          $input.parent().find('i').removeClass('fa-circle').addClass('fa-circle-thin');
+        });
+        icon_filter();
+        if($(this).attr('id') != id){
+          $(this).hide();
+        }
+      });
+      $(this).css('border-color','rgb(2, 117, 216)');
+      $('#'+id).slideDown();
+    }
+  });
+});
 </script>
 {% endblock %}

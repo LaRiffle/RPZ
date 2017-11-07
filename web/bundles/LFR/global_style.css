@@ -45,6 +45,9 @@
 body, button, input, optgroup, select, textarea {
   font-family: "Avenir-Light", "Avenir-Light_IE", "-apple-system",system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
 }
+.hide {
+  display: none;
+}
 
 #front-page {
   height: 100vh;
@@ -286,6 +289,10 @@ button.navbar-toggler:hover {
     top: 56%;
     left: 0;
     width: 100%;
+}
+
+a.filter:hover, a.filter:focus  {
+  text-decoration: none;
 }
 /* EXPLORE */
 
@@ -540,6 +547,22 @@ ul.edition-btn li:after {
 }
 
 /* Attribute management */
+.horizontal-scroll {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+  padding: 2px;
+}
+.btn-lfr:hover {
+  border-color: rgba(40, 42, 201, 0.33) !important;
+}
+.btn-lfr {
+  border: 1px solid rgba(0,0,0,.125);
+  margin-right: 10px;
+  flex: 0 0 auto;
+}
 .slide-horizontal {
   position: absolute;
   bottom: 8px;

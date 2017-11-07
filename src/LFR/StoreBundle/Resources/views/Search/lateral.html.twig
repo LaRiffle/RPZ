@@ -21,34 +21,38 @@
           {% endfor %}
         </select>
       </li>
-      {% for gender in genders %}
-      <li class="list-group-item justify-content-between vetement_filter">
-        <h5 style="width: 100%;">
-          {{ gender.name }}
-          {% if is_granted('ROLE_USER') %}
-          <a class="remove" href="{{ path('lfr_admin_gender_remove', {'id': gender.id }) }}"><i class="fa fa-trash-o"></i></a>
-          {% endif %}
-        </h5>
-        <ul class="list-group list-gender">
-          {% for type in gender.types %}
-            <li class="list-group-item justify-content-between">
-              <a href="#type-{{ type.id }}" class="filter"><input id="" type="checkbox"> {{ type.name }}</a>
-              {% if is_granted('ROLE_USER') %}
-              <a class="remove" href="{{ path('lfr_admin_type_remove', {'id': type.id }) }}"><i class="fa fa-trash-o"></i></a>
-              {% endif %}
-            </li>
+      <li class="list-group-item" style="padding: 5px; padding-right:0px;">
+        <div class="horizontal-scroll">
+          {% for gender in genders %}
+          <a href="#" data-toggle="gender{{ gender.id }}" class="toggler btn btn-default btn-lfr">{{ gender.name }}</a>
           {% endfor %}
-          {% if is_granted('ROLE_USER') %}
-          <li class="list-group-item justify-content-between">
-            <a href="#" class="internal-link" data-target="#form-type{{ gender.id }}">+ Type d'habit</a>
-            <div id="form-type{{ gender.id }}" style="display:none">
-              {{ render(controller("LFRStoreBundle:Search:typeAdd", {'gender_id': gender.id })) }}
-            </div>
-          </li>
-          {% endif %}
-        </ul>
+        </div>
       </li>
-      {% endfor %}
+      <div>
+        {% for gender in genders %}
+        <div id="gender{{ gender.id }}" class="gender hide">
+        {% for type in gender.types %}
+          <li class="list-group-item justify-content-between">
+            <a href="#type-{{ type.id }}" class="filter">
+              <i class="fa fa-circle-thin" aria-hidden="true"></i>&nbsp;
+              <input id="" type="checkbox" style="display:none;"> {{ type.name }}
+            </a>
+            {% if is_granted('ROLE_USER') %}
+            <a class="remove" href="{{ path('lfr_admin_type_remove', {'id': type.id }) }}"><i class="fa fa-trash-o"></i></a>
+            {% endif %}
+          </li>
+        {% endfor %}
+        {% if is_granted('ROLE_USER') %}
+        <li class="list-group-item justify-content-between">
+          <a href="#" class="internal-link" data-target="#form-type{{ gender.id }}">+ Type d'habit</a>
+          <div id="form-type{{ gender.id }}" style="display:none">
+            {{ render(controller("LFRStoreBundle:Search:typeAdd", {'gender_id': gender.id })) }}
+          </div>
+        </li>
+        {% endif %}
+        </div>
+        {% endfor %}
+      </div>
       {% if is_granted('ROLE_USER') %}
       <li class="list-group-item justify-content-between vetement_filter">
         <a href="#" class="internal-link" data-target="#form-gender">Ajouter une catégorie</a>
