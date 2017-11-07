@@ -38,19 +38,33 @@
                {% if creation.sizes|length > 0 %}
                <li class="list-group-item" style="padding-right: 0px;" data-unique="1">
                  <h5 style="width: 100%;">Tailles</h5>
-                 {% set card="LFRStoreBundle:Attribute:card_attribute.html.twig" %}
-                 {% for attribute in creation.sizes %}
-                   {{ include(card, {'attribute': attribute, 'allow_modify': false}) }}
-                 {% endfor %}
+                 <div style="width: 100%; overflow: auto;" class="no-scroll-bar">
+                   <table><tr>
+                   {% set card="LFRStoreBundle:Attribute:card_attribute.html.twig" %}
+                   {% for attribute in creation.sizes %}
+                     <td>{{ include(card, {'attribute': attribute, 'allow_modify': false}) }}</td>
+                   {% endfor %}
+                   </tr></table>
+                   <div class="slide-horizontal">
+                     <div><i class="fa fa-2x fa-angle-right" aria-hidden="true"></i></div>
+                   </div>
+                 </div>
                </li>
                {% endif %}
                {% if creation.colors|length > 0 %}
                <li class="list-group-item" style="padding-right: 0px;"  data-unique="1">
                  <h5 style="width: 100%;">Couleurs</h5>
-                 {% set card="LFRStoreBundle:Attribute:card_attribute.html.twig" %}
-                 {% for attribute in creation.colors %}
-                   {{ include(card, {'attribute': attribute, 'allow_modify': false}) }}
-                 {% endfor %}
+                 <div style="width: 100%; overflow: auto;" class="no-scroll-bar">
+                   <table><tr>
+                   {% set card="LFRStoreBundle:Attribute:card_attribute.html.twig" %}
+                   {% for attribute in creation.colors %}
+                     <td>{{ include(card, {'attribute': attribute, 'allow_modify': false}) }}</td>
+                   {% endfor %}
+                   </tr></table>
+                   <div class="slide-horizontal">
+                     <div><i class="fa fa-2x fa-angle-right" aria-hidden="true"></i></div>
+                   </div>
+                 </div>
                </li>
                {% endif %}
                {% if creation.others|length > 0 %}
@@ -79,6 +93,11 @@
 <script>
 $(document).ready(function(){
     $('[data-toggle="tooltip"]').tooltip();
+    $('#creation_options table').each(function(){
+      if($(this).width() > $(this).parent().width()){
+        $(this).parent().find('.slide-horizontal').fadeIn();
+      }
+    })
 });
 </script>
 <script>

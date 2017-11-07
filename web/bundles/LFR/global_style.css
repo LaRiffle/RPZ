@@ -540,6 +540,18 @@ ul.edition-btn li:after {
 }
 
 /* Attribute management */
+.slide-horizontal {
+  position: absolute;
+  bottom: 8px;
+  height: 100px;
+  right: 0px;
+  display: none;
+}
+.slide-horizontal div {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
 #creation_options {
   border-top: 1px rgba(0,0,0,.125) solid;
   margin-top: 5px;
