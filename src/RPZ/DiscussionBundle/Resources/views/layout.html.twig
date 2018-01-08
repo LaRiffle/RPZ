@@ -80,6 +80,13 @@
               });
         });
     }
+    $('img').each(function(){
+      var src = $(this).attr('src');
+      if(src.indexOf('/rpz/web/rpz/web') >= 0){
+        src = src.replace('/rpz/web/rpz/web', '/rpz/web');
+        $(this).attr('src', src);
+      }
+    });
     </script>
   </body>
 </html>
