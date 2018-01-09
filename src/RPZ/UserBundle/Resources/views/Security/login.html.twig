@@ -28,6 +28,9 @@
 {% block script %}
 <script>
   var path = "url({{ asset('img/background.jpg') }})"
+  if(path.indexOf('/rpz/web/rpz/web') >= 0){
+      path = path.replace('/rpz/web/rpz/web', '/rpz/web');
+  }
   $('body').css('height', '100vh');
   $('body').css('background', path + ' no-repeat');
   $('body').css('background-size', 'cover');
