@@ -43,7 +43,7 @@ class LogController extends Controller
             }
         }
 
-        $print = ($count <= 1) ? $count.' '.$name : "$count {$name}s";
+        $print = ($count <= 1 || $name = 'mois') ? $count.' '.$name : "$count {$name}s";
         return $print;
     }
     public function indexAction() {
