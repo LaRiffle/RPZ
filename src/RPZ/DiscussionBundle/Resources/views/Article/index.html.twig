@@ -179,9 +179,11 @@ $('.new_message').on('click', function(e){
   var windowSize = $(window).width();
   if(windowSize >= MIN_SIZE) {
     $('#menu').collapse('show');
-    $('#activity_down').hide();
-    $('#menu2').collapse('show');
     $('#notif_down').hide();
+    $('#menu2').collapse('show');
+    $('#messages_down').hide();
+    $('#menu3').collapse('show');
+    $('#activity_down').hide();
   }
   $('#activity li.collapse-toggle').on('click', function () {
     var windowSize = $(window).width();
