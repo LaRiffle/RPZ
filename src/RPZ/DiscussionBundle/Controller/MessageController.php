@@ -175,8 +175,8 @@ class MessageController extends Controller
           'multiple'     => true,
           'expanded'     => true,
           'required'     => false))
-        ->add('title', TextType::class)
-        ->add('content', TextareaType::class)
+        ->add('title', TextType::class, array('required' => False))
+        ->add('content', TextareaType::class, array('required' => False))
         ->add('save',	SubmitType::class)
         ->getForm();
 
@@ -196,7 +196,9 @@ class MessageController extends Controller
             }
             $em = $this->getDoctrine()->getManager();
             $em->persist($article);
-            $em->persist($comment);
+            if($message != ''){
+              $em->persist($comment);
+            }
             $em->flush();
             $request->getSession()->getFlashBag()->add('success', 'Message bien envoyé.');
             return $this->redirect($this->generateUrl('rpz_discussion_article'));

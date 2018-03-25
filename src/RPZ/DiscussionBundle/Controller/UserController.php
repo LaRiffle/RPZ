@@ -46,9 +46,6 @@ class UserController extends Controller
         } else {
           $user = new User();
         }
-        $user->setUsername($username);
-        $user->setSalt($username);
-        $user->setPassword('');
 
         $form = $this->get('form.factory')->createBuilder(FormType::class, $user)
         ->add('firstname', TextType::class)
