@@ -1,7 +1,3 @@
-lfr_store:
-    resource: "@LFRStoreBundle/Resources/config/routing.yml"
-    prefix:   /lefilrouge/
-
 
 login:
     path: /login

@@ -13,6 +13,8 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
+use \Datetime;
+
 class CommentController extends Controller
 {
     public $entityNameSpace = 'RPZDiscussionBundle:Comment';
@@ -45,7 +47,7 @@ class CommentController extends Controller
           'commentId' => $article_id,
       ));
     }
-    public function addAction(Request $request, $article_id, $id = 0) {
+    public function addAction(Request $request, $article_id, $id = 0, $type = "article") {
         if (!$this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
           return $this->redirect($this->generateUrl('login'));
         }
@@ -70,6 +72,11 @@ class CommentController extends Controller
             $em = $this->getDoctrine()->getManager();
             $articleRepository = $em->getRepository('RPZDiscussionBundle:Article');
             $article = $articleRepository->find($article_id);
+            if($article->getType() == 'message'){
+                $date_now = new DateTime();
+                $article->setDate($date_now);
+                $em->persist($article);
+            }
             $comment->setArticle($article);
 
             $em->persist($comment);
@@ -80,7 +87,8 @@ class CommentController extends Controller
         return $this->render($this->entityNameSpace.':add.html.twig', array(
             'form' => $form->createView(),
             'articleId' => $article_id,
-            'commentId' => $id
+            'commentId' => $id,
+            'type' => $type,
         ));
 
     }

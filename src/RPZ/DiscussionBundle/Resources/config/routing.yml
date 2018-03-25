@@ -1,8 +1,13 @@
+rpz_discussion_register:
+  path:     /register
+  defaults: { _controller: RPZDiscussionBundle:Admin:register}
+
 rpz_discussion_article:
     path:     /{page}
     defaults: { _controller: RPZDiscussionBundle:Article:index, page: 1 }
     requirements:
         page:   \d+
+
 rpz_discussion_article_show:
     path:     /show/{id}
     defaults: { _controller: RPZDiscussionBundle:Article:show }
@@ -15,9 +20,17 @@ rpz_discussion_article_edit:
 rpz_discussion_article_remove:
     path:     /remove/{id}
     defaults: { _controller: RPZDiscussionBundle:Article:remove, id: 0 }
+
+rpz_discussion_message_add:
+    path:     /message/{id}
+    defaults: { _controller: RPZDiscussionBundle:Message:add, id: 0 }
+rpz_discussion_message_edit:
+    path:     /message/edit/{id}
+    defaults: { _controller: RPZDiscussionBundle:Message:edit, id: 0 }
+
 rpz_discussion_comment_add:
-    path:     /article/{article_id}/comment/{id}
-    defaults: { _controller: RPZDiscussionBundle:Comment:add, id: 0 }
+    path:     /article/{article_id}/comment/{id}/{type}
+    defaults: { _controller: RPZDiscussionBundle:Comment:add, id: 0, type: article }
 rpz_discussion_comment_edit:
     path:     /article/{article_id}/edit/{id}
     defaults: { _controller: RPZDiscussionBundle:Comment:edit, id: 0 }

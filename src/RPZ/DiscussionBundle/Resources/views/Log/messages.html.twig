@@ -1,0 +1,32 @@
+<ul id="messages" class="list-group" style="margin-bottom: 10px;">
+  <li class="list-group-item collapse-toggle justify-content-between">
+    <h5 style="margin-bottom: 0px;">
+      Messages
+      <span id="activity_down"><i class="fa fa-angle-down" aria-hidden="true"></i></span>
+    </h5>
+    <a href="#" class="new_message" style="float: right;">
+      <span class="badge badge-primary badge-pill">
+        <i class="fa fa-plus" aria-hidden="true"></i>
+        Nouveau
+      </span>
+    </a>
+  </li>
+  <div id="menu2" class="collapse">
+  {% for message in lastMessages %}
+      <li class="list-group-item justify-content-between">
+        <span style="font-weight: bold;">
+        <a href="#article{{ message.id  }}" title="{% for author in message.authors %}{% if not loop.last and not loop.first %}, {% elseif loop.last and not loop.first %} et {% endif %}{% if author.firstname != "" %}{{ author.firstname }}{% else %}{{ author.username }}{% endif %}{% endfor %}" class="sober_link">
+          {% if message.title != '' %}
+            {{ message.title }}
+          {% else %}
+            {% for author in message.authors %}{% if not loop.last and not loop.first %}, {% elseif loop.last and not loop.first %} et {% endif %}{% if author.firstname != "" %}{{ author.firstname }}{% else %}{{ author.username }}{% endif %}{% endfor %}
+          {% endif %}
+        </a>
+        </span>
+        <span class="badge badge-default badge-pill">{{ message.when }}</span></li>
+  {% endfor %}
+  <li class="list-group-item justify-content-between">
+    <a href="#" class="new_message"><i class="fa fa-plus" aria-hidden="true"></i> Écrire un nouveau message</a>
+  </li>
+  </div>
+</ul>

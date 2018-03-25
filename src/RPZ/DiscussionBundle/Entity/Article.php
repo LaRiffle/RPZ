@@ -30,6 +30,13 @@ class Article
     /**
      * @var string
      *
+     * @ORM\Column(name="type", type="string", length=255, options={"default" = "article"})
+     */
+    private $type;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="title", type="string", length=255)
      */
     private $title;
@@ -44,9 +51,14 @@ class Article
     /**
      * @var string
      *
-     * @ORM\Column(name="author", type="string", length=255)
+     * @ORM\Column(name="author", type="string", length=255, nullable=true)
      */
     private $author;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="RPZ\UserBundle\Entity\User", cascade={"persist"})
+     */
+    private $authors;
 
     /**
      * @var string
@@ -72,6 +84,30 @@ class Article
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set type
+     *
+     * @param string $type
+     *
+     * @return Article
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 
     /**
@@ -144,6 +180,45 @@ class Article
     public function getAuthor()
     {
         return $this->author;
+    }
+
+    /**
+     * Add author
+     *
+     * @param \RPZ\UserBundle\Entity\User $author
+     *
+     * @return Article
+     */
+    public function addAuthor(\RPZ\UserBundle\Entity\User $author)
+    {
+        $this->authors[] = $author;
+
+        return $this;
+    }
+
+    /**
+     * Remove author
+     *
+     * @param \RPZ\UserBundle\Entity\User $author
+     */
+    public function removeAuthor(\RPZ\UserBundle\Entity\User $author)
+    {
+        $this->authors->removeElement($author);
+    }
+
+    /**
+     * Get authors
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getAuthors()
+    {
+        return $this->authors;
+    }
+
+    public function emptyAuthors()
+    {
+        $this->authors = [];
     }
 
     /**

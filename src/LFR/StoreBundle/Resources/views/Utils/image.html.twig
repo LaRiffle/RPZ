@@ -1,9 +1,0 @@
-{% if element.small_image is defined %}
-{%   set src = element.small_image %}
-{% else %}
-{%   set src = element.image %}
-{% endif %}
-<img id="img-{{ element.id }}" src="{{ asset('uploads/img/' ~ src) }}" alt="" style="{{ style }}">
-{% if is_granted('ROLE_USER') %}
-<a  style="" class="edit-img" id="{{ element.id }}" href="{{ path('lfr_admin_image_add', {'id': element.id }) }}"><i class="fa fa-pencil-square-o"></i></a>
-{% endif %}

@@ -1,0 +1,34 @@
+<form name="form" class="form-signin" method="post" enctype="multipart/form-data" action="{{ path('rpz_discussion_message_add',{'id': articleId}) }}">
+  <h3 class="form-signin-heading">
+    {% if articleId == 0 %}
+    Écrire un message
+    {% else %}
+    Modifier une discussion
+    {% endif %}
+  </h3>
+  {% set input_form="RPZDiscussionBundle:Utils:form_input.html.twig" %}
+  {% set save_form="RPZDiscussionBundle:Utils:form_save.html.twig" %}
+  <h5 class="select_dest_box {% if articleId != 0 %}hide{% endif %}" style="margin-bottom: 0;">
+  {{ form_label(form.authors, "À:") }}
+  {{ form_errors(form.authors) }}
+  {% for author in form.authors %}
+    {% set index = author.vars.value %}
+    {% set entity = form.authors.vars.choices[index].data %}
+    <span class="badge badge-default badge-pill select_dest {% if entity == user %}hide{% endif %}">
+      <span class="hide">{{ form_widget(author) }}</span>
+      {{ entity.username }}
+    </span>
+  {% endfor %}
+  <span class="badge badge-success badge-pill select_dest"><span id="nb_dest">0</span></span>
+  </h5>
+  {{ include(input_form, {'element': form.authors, 'name':"Choisissez les destinataires"}) }}
+  {% if articleId == 0 %}<a href="#" id="add_message_title">Ajouter un nom à la discussion</a>{% endif %}
+  <div id="message_title" class="{% if articleId == 0 %}hide{% endif %}">
+    {{ include(input_form, {'element': form.title, 'name':"Nom de la discussion"}) }}
+  </div>
+  <div class="{% if articleId != 0 %}hide{% endif %}">
+    {{ include(input_form, {'element': form.content, 'name':"Lâche ton message"}) }}
+  </div>
+  {{ include(save_form, {'element': form.save, 'name':"Envoyer"}) }}
+  {{ form_rest(form) }}
+</form>

@@ -2,9 +2,13 @@
 {% set edition_buttons="RPZDiscussionBundle:Utils:edition.html.twig" %}
 {% block left_panel %}
 {{ render(controller("RPZDiscussionBundle:Log:notify")) }}
+{{ render(controller("RPZDiscussionBundle:Log:messages")) }}
 {{ render(controller("RPZDiscussionBundle:Log:show")) }}
 {% endblock %}
 {% block body %}
+<div id="form_message" class="card card-body hide" style="padding: 30px; margin-bottom: 15px;">
+  {{ render(controller("RPZDiscussionBundle:Message:add")) }}
+</div>
 <div class="card card-body" style="padding: 30px; margin-bottom: 15px;">
   {{ render(controller("RPZDiscussionBundle:Article:add")) }}
 </div>
@@ -17,22 +21,44 @@
     </div>
     {% endif %}
     <div class="rpz_box_icon">
-      <h4 class="card-title" {% if has_image %}style="color: white; position: relative; bottom: 20px;"{% endif %}>{{ article.title }}</h4>
-      {{ include(edition_buttons, {'edit': path('rpz_discussion_article_edit', {'id': article.id}), 'remove': path('rpz_discussion_article_remove', {'id': article.id}) }) }}
+      <h4 class="card-title" {% if has_image %}style="color: white; position: relative; bottom: 20px;"{% endif %}>
+        {% if article.type == 'message' %}
+          <i class="fa fa-comments"></i>
+          {% if article.title is not null and article.title != "" %}
+            {{ article.title }}
+          {% else %}
+            Discussion
+          {% endif %}
+        {% else %}
+          <i class="fa fa-bell"></i> {{ article.title }}
+        {% endif %}
+      </h4>
+      {% if article.type == 'message' %}
+        {{ include(edition_buttons, {'edit': path('rpz_discussion_message_edit', {'id': article.id}), 'remove': path('rpz_discussion_article_remove', {'id': article.id}) }) }}
+      {% else %}
+        {{ include(edition_buttons, {'edit': path('rpz_discussion_article_edit', {'id': article.id}), 'remove': path('rpz_discussion_article_remove', {'id': article.id}) }) }}
+      {% endif %}
     </div>
-    <h5><span class="author">{{ article.user }}</span>, <span class="date">il y a {{ article.time_since }}</span></h5>
+    <h5>
+      <span class="author">{% for user in article.users %}{% if not loop.last and not loop.first %}, {% elseif loop.last and not loop.first %} et {% endif %}{{ user }}{% endfor %}</span>,
+      <span class="date">{% if article.type == 'message' %}modifié {% endif %}il y a {{ article.time_since }}</span>
+    </h5>
+    {% if article.type != 'message' %}
     <p class="card-text">{{ article.content|nl2br }}</p>
+    {% endif %}
     {% for comment in article.comments %}
       <div class="hr"></div>
       <div class="rpz_box_icon">
         <h6><span class="author">{{ comment.user }}</span>, <span class="date">il y a {{ comment.time_since }}</span></h6>
         {{ include(edition_buttons, {'edit': path('rpz_discussion_comment_edit', {'article_id': article.id, 'id': comment.id}), 'remove': path('rpz_discussion_comment_remove', {'id': comment.id})}) }}
       </div>
-      <p class="card-text" style="font-size: 0.95em;">{{ comment.text|nl2br }}</p>
+      <p class="card-text" style="font-size: 0.95em; {% if article.type == 'message' %}margin-bottom: 0;{% endif %}">
+        {{ comment.text|nl2br }}
+      </p>
     {% endfor %}
     <div class="hr"></div>
     <div>
-      {{ render(controller("RPZDiscussionBundle:Comment:add", {'article_id': article.id})) }}
+      {{ render(controller("RPZDiscussionBundle:Comment:add", {'article_id': article.id, 'type': article.type})) }}
       <div style="clear:both"></div>
     </div>
   </div>
@@ -110,9 +136,38 @@ ul.rpz_icons a {
 ul.rpz_icons li:after {
   content: ' ';
 }
+.select_dest:hover {
+  cursor: pointer;
+}
 </style>
 {% endblock %}
 {% block script %}
+<script>
+$('#add_message_title').on('click', function(e){
+  e.preventDefault();
+  $('#message_title').fadeIn();
+  $(this).hide();
+});
+</script>
+<script>
+$('.select_dest').on('click', function(e){
+  e.preventDefault();
+  var checkbox = $(this).find('input');
+  checkbox.attr('checked', !checkbox.attr('checked'));
+  var nb_dest = $('.select_dest_box input:checked').length;
+  if($(this).hasClass('badge-default')){
+    $(this).addClass('badge-primary').removeClass('badge-default');
+  } else {
+    $(this).addClass('badge-default').removeClass('badge-primary');
+  }
+  $('#nb_dest').html(nb_dest);
+});
+$('.new_message').on('click', function(e){
+  e.preventDefault();
+  $('#form_message').removeClass('hide');
+  $('#form_message').hide().fadeIn('slow');
+});
+</script>
 <script>
   $('textarea').on('keyup', function(e){
     this.style.height = "1px";
@@ -134,10 +189,16 @@ ul.rpz_icons li:after {
       $('#menu').collapse('toggle');
     }
   });
-  $('#notify li.collapse-toggle').on('click', function () {
+  $('#messages li.collapse-toggle').on('click', function () {
     var windowSize = $(window).width();
     if(windowSize < MIN_SIZE) {
       $('#menu2').collapse('toggle');
+    }
+  });
+  $('#notify li.collapse-toggle').on('click', function () {
+    var windowSize = $(window).width();
+    if(windowSize < MIN_SIZE) {
+      $('#menu3').collapse('toggle');
     }
   });
   $(window).on('resize', function(){

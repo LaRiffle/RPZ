@@ -3,6 +3,7 @@
 namespace RPZ\DiscussionBundle\Controller;
 
 use RPZ\DiscussionBundle\Entity\Article;
+use RPZ\DiscussionBundle\Entity\Comment;
 use RPZ\DiscussionBundle\Entity\Log;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,12 +16,13 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 use RPZ\UserBundle\Entity\User;
 
 use \Datetime;
 
-class ArticleController extends Controller
+class MessageController extends Controller
 {
     public $entityNameSpace = 'RPZDiscussionBundle:Article';
     public function getAuthorName($username) {
@@ -57,20 +59,10 @@ class ArticleController extends Controller
         $print = ($count <= 1 || $name == 'mois') ? $count.' '.$name : "$count {$name}s";
         return $print;
     }
-    public function is_author($user, $article) {
-      $is_author = false;
-      foreach($article->getAuthors() as $author) {
-        if($user == $author){
-          $is_author = true;
-        }
-      }
-      return $is_author;
-    }
     public function indexAction($page = 1) {
         if (!$this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
           return $this->redirect($this->generateUrl('login'));
         }
-        $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
         // We save user activity
         $log = new Log();
@@ -95,15 +87,11 @@ class ArticleController extends Controller
         // And the comments
         $commentRepository = $em->getRepository('RPZDiscussionBundle:Comment');
         $date_now = new DateTime();
-        $relevant_articles = [];
         foreach ($articles as $article) {
             if($article->getAuthor()) {
-              $article->users = [$this->getAuthorName($article->getAuthor())];
+              $article->users = $this->getAuthorName($article->getAuthor());
             } else {
-              $article->users = [];
-              foreach($article->getAuthors() as $author){
-                $article->users[] = ($author->getFirstname() != '') ? $author->getFirstname() : $author->getUsername();
-              }
+              $article->users = $article->getAuthors()[0]->getUsername();
             }
             $id = $article->getId();
             $diff = $date_now->getTimestamp() - $article->getDate()->getTimestamp();
@@ -114,17 +102,10 @@ class ArticleController extends Controller
               $diff = $date_now->getTimestamp() - $comment->getDate()->getTimestamp();
               $comment->time_since = $this->time_since($diff);
             }
-            if($article->getType() == 'message'){
-              if($this->is_author($user, $article)){
-                $relevant_articles[] = $article;
-              }
-            } else {
-              $relevant_articles[] = $article;
-            }
         }
 
         return $this->render($this->entityNameSpace.':index.html.twig', array(
-                'articles' => $relevant_articles,
+                'articles' => $articles,
                 'page' => $page,
                 'nbPages' => $nbPages
         ));
@@ -142,7 +123,7 @@ class ArticleController extends Controller
     }
 
     public function editAction($id) {
-      return $this->render($this->entityNameSpace.':edit.html.twig', array(
+      return $this->render('RPZDiscussionBundle:Message:edit.html.twig', array(
           'articleId' => $id
       ));
     }
@@ -176,77 +157,54 @@ class ArticleController extends Controller
         if (!$this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
           return $this->redirect($this->generateUrl('login'));
         }
-        $oldFileName = null;
         if($id == 0) {
             $article = new Article();
-            $article->setType('article');
+            $article->setType('message');
         } else {
             $repository = $this->getDoctrine()
               ->getManager()
               ->getRepository($this->entityNameSpace)
             ;
             $article = $repository->find($id);
-            if($article->getImage() != ''){
-              $oldFileName = $article->getImage();
-              $article->setImage(
-                  new File($this->getParameter('img_dir').'/'.$article->getImage())
-              );
-            }
         }
-        if($oldFileName != null) {
-          $article_img_url = $oldFileName;
-        } else {
-          $article_img_url = '';
-        }
+        $user = $this->getUser();
         $form = $this->get('form.factory')->createBuilder(FormType::class, $article)
-        ->add('title', TextType::class, array('required' => False))
-        ->add('content', TextareaType::class, array('required' => False))
-        ->add('image', FileType::class, array('label' => 'Image', 'required' => False))
+        ->add('authors', EntityType::class, array(
+          'class'        => 'RPZUserBundle:User',
+          'choice_label' => 'username',
+          'multiple'     => true,
+          'expanded'     => true,
+          'required'     => false))
+        ->add('title', TextType::class)
+        ->add('content', TextareaType::class)
         ->add('save',	SubmitType::class)
         ->getForm();
 
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()) {
-            // $file stores the uploaded PDF file
-            /** @var Symfony\Component\HttpFoundation\File\UploadedFile $file */
-            $file = $article->getImage();
-            if($file != null) {
-              // Generate a unique name for the file before saving it
-              $fileName = md5(uniqid()).'.'.$file->guessExtension();
-
-              // Move the file to the directory where images are stored
-              $file->move(
-                  $this->getParameter('img_dir'),
-                  $fileName
-              );
-              // Check orientation
-              $path = $this->getParameter('img_dir').'/'.$fileName;
-              $this->image_fix_orientation($path);
-
-              // Update the 'image' property to store the file name
-              // instead of its contents
-              $article->setImage($fileName);
-            } elseif($oldFileName != null) {
-              $article->setImage($oldFileName);
-            } else {
-              $article->setImage('');
-            }
+            $message = $article->getContent();
+            $article->setContent('');
+            $article->setImage('');
             if($id == 0) {
-                $user = $this->getUser();
-                $article->setAuthor($user->getUsername());
                 $article->addAuthor($user);
             }
-
+            if($message != ''){
+                $comment = new Comment();
+                $comment->setText($message);
+                $comment->setAuthor($user->getUsername());
+                $comment->setArticle($article);
+            }
             $em = $this->getDoctrine()->getManager();
             $em->persist($article);
+            $em->persist($comment);
             $em->flush();
-            $request->getSession()->getFlashBag()->add('success', 'Article bien publié.');
+            $request->getSession()->getFlashBag()->add('success', 'Message bien envoyé.');
             return $this->redirect($this->generateUrl('rpz_discussion_article'));
         }
-        return $this->render($this->entityNameSpace.':add.html.twig', array(
+        return $this->render('RPZDiscussionBundle:Message:add.html.twig', array(
             'form' => $form->createView(),
+            'user' => $user,
             'articleId' => $id,
-            'img' => $article_img_url,
         ));
 
     }

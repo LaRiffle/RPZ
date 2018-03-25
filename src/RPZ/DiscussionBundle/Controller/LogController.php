@@ -18,7 +18,7 @@ class LogController extends Controller
       $users = $repository->findBy(array('username' => $username));
       if($users != null){
         $user = $users[0];
-        $authorName = $user->getFirstname();
+        $authorName = ($user->getFirstname() != '') ? $user->getFirstname() : $username;
       } else {
         $authorName = $username;
       }
@@ -43,8 +43,17 @@ class LogController extends Controller
             }
         }
 
-        $print = ($count <= 1 || $name = 'mois') ? $count.' '.$name : "$count {$name}s";
+        $print = ($count <= 1 || $name == 'mois') ? $count.' '.$name : "$count {$name}s";
         return $print;
+    }
+    public function is_author($user, $article) {
+      $is_author = false;
+      foreach($article->getAuthors() as $author) {
+        if($user == $author){
+          $is_author = true;
+        }
+      }
+      return $is_author;
     }
     public function indexAction() {
         if (!$this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
@@ -84,6 +93,32 @@ class LogController extends Controller
 
         return $this->render($this->entityNameSpace.':show.html.twig', array(
                 'lastActivity' => $lastActivity,
+        ));
+    }
+    public function messagesAction() {
+        /* Show last messages */
+        if (!$this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
+          return $this->redirect($this->generateUrl('login'));
+        }
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository("RPZDiscussionBundle:Article");
+
+        $messages = $repository->findBy(array('type' => 'message'), array('date' => 'desc'));
+
+        $user = $this->getUser();
+        $lastMessages = [];
+        foreach ($messages as $message) {
+          $date_now = new DateTime();
+          $date_log = $message->getDate();
+          $diff = $date_now->getTimestamp() - $date_log->getTimestamp();
+          $message->when = $this->time_since($diff);
+          if($this->is_author($user, $message)){
+            $lastMessages[] = $message;
+          }
+        }
+
+        return $this->render($this->entityNameSpace.':messages.html.twig', array(
+                'lastMessages' => $lastMessages,
         ));
     }
     public function notifyAction() {
@@ -165,7 +200,13 @@ class LogController extends Controller
                 $list_users = join(' et ', array_filter(array_merge(array(join(', ', array_slice($users, 0, -1))), array_slice($users, -1)), 'strlen'));
                 $text = $list_users.' ont commenté';
               }
-              $text = $text.' l\'article de '.$this->getAuthorName($article->getAuthor()).'.';
+              $author;
+              if($article->getAuthor()) {
+                $author = $this->getAuthorName($article->getAuthor());
+              } else {
+                $author = $article->getAuthors()[0]->getUsername();
+              }
+              $text = $text.' l\'article de '.$author.'.';
           }
           // Transform date to lapse
           $diff = $date_now->getTimestamp() - $notif_date->getTimestamp();

@@ -1,0 +1,7 @@
+{% extends "RPZDiscussionBundle::layout.html.twig" %}
+
+{% block body %}
+<div class="card card-body" style="padding: 30px; margin-bottom: 15px; margin-top: 10px;">
+  {{ render(controller("RPZDiscussionBundle:Message:add", { 'id': articleId })) }}
+</div>
+{% endblock %}
