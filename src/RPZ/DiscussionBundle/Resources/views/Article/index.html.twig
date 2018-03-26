@@ -47,14 +47,27 @@
     <p class="card-text">{{ article.content|nl2br }}</p>
     {% endif %}
     {% for comment in article.comments %}
-      <div class="hr"></div>
-      <div class="rpz_box_icon">
-        <h6><span class="author">{{ comment.user }}</span>, <span class="date">il y a {{ comment.time_since }}</span></h6>
-        {{ include(edition_buttons, {'edit': path('rpz_discussion_comment_edit', {'article_id': article.id, 'id': comment.id}), 'remove': path('rpz_discussion_comment_remove', {'id': comment.id})}) }}
-      </div>
-      <p class="card-text" style="font-size: 0.95em; {% if article.type == 'message' %}margin-bottom: 0;{% endif %}">
-        {{ comment.text|nl2br }}
-      </p>
+      {% if article.type == 'message' %}
+        {% if loop.first or last_author != comment.author or last_date.diff(comment.date).h > 1 %}
+          <div class="hr"></div>
+          <div class="rpz_box_icon">
+            <h6><span class="author">{{ comment.user }}</span>, <span class="date">il y a {{ comment.time_since }}</span></h6>
+            {{ include(edition_buttons, {'edit': path('rpz_discussion_comment_edit', {'article_id': article.id, 'id': comment.id}), 'remove': path('rpz_discussion_comment_remove', {'id': comment.id})}) }}
+          </div>
+          <p class="card-text" style="font-size: 0.95em; {% if article.type == 'message' %}margin-bottom: 0;{% endif %}">
+            {{ comment.text|nl2br }}
+          </p>
+        {% else %}
+          <div class="rpz_box_icon">
+            {{ include(edition_buttons, {'edit': path('rpz_discussion_comment_edit', {'article_id': article.id, 'id': comment.id}), 'remove': path('rpz_discussion_comment_remove', {'id': comment.id})}) }}
+            <p class="card-text" style="font-size: 0.95em; {% if article.type == 'message' %}margin-bottom: 0;{% endif %}">
+              {{ comment.text|nl2br }}
+            </p>
+          </div>
+        {% endif %}
+        {% set last_author = comment.author %}
+        {% set last_date = comment.date %}
+      {% endif %}
     {% endfor %}
     <div class="hr"></div>
     <div>

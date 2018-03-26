@@ -10,14 +10,22 @@ namespace RPZ\DiscussionBundle\Repository;
  */
 class CommentRepository extends \Doctrine\ORM\EntityRepository
 {
-  public function whereArticle($id) {
-    return $this->createQueryBuilder('e')
+  public function whereArticle($id, $limit = -1) {
+    $query = $this->createQueryBuilder('e')
         ->innerJoin('e.article', 'i')
         ->where('i.id = :id')
-        ->setParameter('id', $id)
-        ->getQuery()
-        ->getResult()
-    ;
+        ->setParameter('id', $id);
+    if($limit > 0){
+      $query->orderBy('e.id', 'DESC')
+            ->setMaxResults($limit);
+      $results = $query->getQuery()->getResult();
+      return array_reverse($results);
+    } else {
+      return $query
+          ->getQuery()
+          ->getResult()
+      ;
+    }
   }
   public function getLastComments($date_from, $username) {
     $results = $this

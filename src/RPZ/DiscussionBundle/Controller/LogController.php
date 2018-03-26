@@ -113,6 +113,20 @@ class LogController extends Controller
           $diff = $date_now->getTimestamp() - $date_log->getTimestamp();
           $message->when = $this->time_since($diff);
           if($this->is_author($user, $message)){
+            $commentRepository = $em->getRepository('RPZDiscussionBundle:Comment');
+            $comments = $commentRepository->whereArticle($message->getId(), $limit=50);
+            $nb_new = 0;
+            $username = $user->getUsername();
+            $info = [];
+            foreach ($comments as $comment) {
+              $info[] = $comment->getAuthor();
+              if($username != $comment->getAuthor()){
+                $nb_new++;
+              } else {
+                $nb_new = 0;
+              }
+            }
+            $message->nb_new = $nb_new;
             $lastMessages[] = $message;
           }
         }

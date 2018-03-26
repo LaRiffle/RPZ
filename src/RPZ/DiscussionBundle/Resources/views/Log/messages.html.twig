@@ -23,7 +23,13 @@
           {% endif %}
         </a>
         </span>
-        <span class="badge badge-default badge-pill">{{ message.when }}</span></li>
+        <span>
+        <span class="badge badge-default badge-pill">{{ message.when }}</span>
+        {% if message.nb_new > 0 %}
+          <span class="badge badge-primary badge-pill">{{ message.nb_new }}</span>
+        {% endif %}
+        </span>
+        </li>
   {% endfor %}
   <li class="list-group-item justify-content-between">
     <a href="#" class="new_message"><i class="fa fa-plus" aria-hidden="true"></i> Écrire un nouveau message</a>
