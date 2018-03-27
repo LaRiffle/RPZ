@@ -55,6 +55,32 @@ class Notifier {
     setInterval(function(){
       $this.publish_notifications();
     }, 500);
+    this.notif_auth = this.get_push_notif_auth();
+    console.log('auth'+this.notif_auth);
+  }
+  get_push_notif_auth(){
+    // Let's check if the browser supports notifications
+    if (!("Notification" in window)) {
+      console.log("This browser does not support desktop notification");
+      return false;
+    }
+    // Let's check whether notification permissions have already been granted
+    else if (Notification.permission === "granted") {
+      // If it's okay let's create a notification
+      return true;
+    }
+    // Otherwise, we need to ask the user for permission
+    else if (Notification.permission !== "denied") {
+      Notification.requestPermission(function (permission) {
+        // If the user accepts, let's create a notification
+        if (permission === "granted") {
+          return true;
+        } else {
+          return false;
+        }
+      });
+    }
+    return false;
   }
   add_notification(articleId) {
     if(this.notifs[articleId]){
@@ -84,6 +110,13 @@ class Notifier {
       sum += this.notifs[id];
     }
     if(this.sum != sum){
+      if(this.notif_auth && sum > this.sum){
+        var options = {
+          silent: true,
+          body: 'Ohlala ya des news !'
+        }
+        var notification = new Notification('Carnets de déroute', options);
+      }
       var title = $('title').first();
       if(sum > 0){
         title.html('('+sum+') Carnets de déroute');
