@@ -123,7 +123,7 @@ class LogController extends Controller
             $info = [];
             foreach ($comments as $comment) {
               $info[] = $comment->getAuthor();
-              if($username != $comment->getAuthor()){
+              if($username != $comment->getAuthor() && $this->getAuthorName($username) != $comment->getAuthor()){
                 $nb_new++;
               } else {
                 $nb_new = 0;

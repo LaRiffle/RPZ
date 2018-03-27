@@ -92,6 +92,11 @@ class ArticleController extends Controller
           $comment->setText($comment_data['content']);
           $article = $repository->find($articleId);
           $comment->setArticle($article);
+          if($article->getType() == 'message'){
+              $date_now = new DateTime();
+              $article->setDate($date_now);
+              $em->persist($article);
+          }
           $em->persist($comment);
         }
       }

@@ -48,6 +48,54 @@ function time_elapsed_since(date) {
 }
 
 var articles = {};
+class Notifier {
+  constructor() {
+    this.sum = 0;
+    this.notifs = {};
+    var $this = this
+    setInterval(function(){
+      $this.publish_notifications();
+    }, 500);
+  }
+  add_notification(articleId) {
+    if(this.notifs[articleId]){
+      this.notifs[articleId]++;
+    } else {
+      this.notifs[articleId] = 1;
+    }
+  }
+  clear_notifications(articleId) {
+    this.notifs[articleId] = 0;
+  }
+  publish_notifications() {
+    var sum = 0
+    for(var id in this.notifs) {
+      var notif = $('#notif-'+id);
+      if(notif.length > 0){
+        var nb_notifs = this.notifs[id];
+        console.log('update NOTIF');
+        if(notif.html() != (nb_notifs+'')){
+          notif.html(nb_notifs);
+          if(nb_notifs > 0){
+            notif.removeClass('hide')
+          } else {
+            notif.addClass('hide')
+          }
+        }
+      }
+      sum += this.notifs[id];
+    }
+    if(this.sum != sum){
+      var title = $('title').first();
+      if(sum > 0){
+        title.html('('+sum+') Carnets de déroute');
+      } else {
+        title.html('Carnets de déroute');
+      }
+    }
+    this.sum = sum;
+  }
+}
 class Server {
   constructor(bound = -1) {
     this.bound = bound;
@@ -120,6 +168,7 @@ class Server {
   }
 }
 var server = new Server(BOUND);
+var notifier = new Notifier();
 class Article {
   constructor(id, type) {
     this.id = id
@@ -132,6 +181,9 @@ class Article {
       form.submit(function(e){
         e.preventDefault();
         $this.send_comment();
+      });
+      form.find('textarea').focus(function(){
+        notifier.clear_notifications($this.id);
       });
       var see_more_link = article.find('.see_more').first();
       if(see_more_link){
@@ -186,6 +238,7 @@ class Article {
       this.pending.splice(idx, 1);
       $('#pending'+comment.date).remove();
     } else {
+      var article = $('#article'+this.id);
       var comment_date;
       if(!prepend){
         var date = new Date();
@@ -193,22 +246,40 @@ class Article {
       } else {
         comment_date = comment.date;
       }
-      var elem = $('#article'+this.id).find('.comments').first();
-      var node = `<div class="hr"></div>
+      var closest_author;
+      if(this.type == 'message'){
+        if(!prepend){
+          closest_author = article.find('.author').last().html();
+        } else {
+          closest_author = -1;// TODO
+        }
+      }
+      var merge_comments = (comment.author == closest_author);
+      var elem = article.find('.comments').first();
+      var node = '';
+      if(!merge_comments){
+      node += `<div class="hr"></div>
       <div class="rpz_box_icon">
         <h6>
             `+ (pending ? '<span id="pending'+comment.date+'"><i class="fa fa-spin fa-circle-o-notch"></i> </span>' : '')
            +`<span class="author">`+comment.author+`</span>,
             <span class="date" data-date="`+comment_date+`">`+comment.time_since+`</span>
         </h6>
-      </div>
-      <p class="card-text new-p" style="font-size: 0.95em;">
-        `+comment.content+`
+      </div>`
+      }
+      node +=
+      `<p class="card-text new-p" style="font-size: 0.95em;">
+        `+ ((pending && merge_comments)? '<span id="pending'+comment.date+'"><i class="fa fa-spin fa-circle-o-notch"></i> </span>' : '')
+        +comment.content+`
       </p>`;
       if(prepend){
         elem.prepend($(node));
       } else {
         elem.append($(node));
+        if(!pending){
+          console.log('SEND')
+          notifier.add_notification(this.id);
+        }
       }
     }
   }
