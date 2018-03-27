@@ -215,8 +215,19 @@ $('.new_message').on('click', function(e){
 </script>
 <script>
   $('textarea').on('keyup', function(e){
-    this.style.height = "1px";
-    this.style.height = (22+this.scrollHeight)+"px";
+    var new_height = this.scrollHeight;
+    var old_height;
+    if($(this).attr('data-height')) {
+      old_height = $(this).attr('data-height');
+    } else {
+      old_height = new_height;
+    }
+    if(new_height != old_height || e.keyCode == 8){
+      this.style.height = "1px";
+      height = this.scrollHeight + 12;
+      this.style.height = height+"px";
+    }
+    $(this).attr('data-height', new_height);
   });
 </script>
 <script>

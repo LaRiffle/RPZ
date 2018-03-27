@@ -11,8 +11,7 @@ function get_french_timestamp(date){
     ms = date.getTime() + (180 + date.getTimezoneOffset()) * 60000;
     timestamp = Math.floor(ms/1000);
   } else {
-    console.log('Error timestamp');
-    console.log(date);
+    console.log('Error timestamp:'+date);
     timestamp = date;
   }
   return timestamp;
@@ -73,7 +72,6 @@ class Notifier {
       var notif = $('#notif-'+id);
       if(notif.length > 0){
         var nb_notifs = this.notifs[id];
-        console.log('update NOTIF');
         if(notif.html() != (nb_notifs+'')){
           notif.html(nb_notifs);
           if(nb_notifs > 0){
@@ -101,9 +99,12 @@ class Server {
     this.bound = bound;
     this.push = [];
     this.pull = [];
+    this.last_sync = 0;
     var $this = this;
     setInterval(function(){
-      $this.synchronize();
+      if((new Date().getTime() - $this.last_sync) > 1000){
+          $this.synchronize();
+      }
     }, 5*1000);
   }
   process_new_comments(comments){
@@ -136,32 +137,40 @@ class Server {
     }
   }
   synchronize(){
-    console.log('bound: '+this.bound);
-    var this_pull = this.pull
+    this.last_sync = new Date().getTime();
+    var data = {
+      bound: this.bound,
+      push: this.push,
+      pull: this.pull
+    }
     this.pull = [];
+    this.push = [];
     var $this = this;
+    if($this.push.length > 0){
+      console.log('TO PUSH ')
+      console.log(data.push)
+    }
     $.ajax({
       url: SERVER_URL,
       type: "POST",
       dataType: "json",
-      data: {
-        bound: $this.bound,
-        push: $this.push,
-        pull: this_pull
-      },
+      data: data,
       async: true,
       success: function (response)
       {
-        console.log(response);
         $this.bound = response.bound;
         $this.process_new_comments(response.comments);
         $this.return_pull(response.responses);
-        $this.push = [];
+      },
+      error: function (response) {
+        console.log('Call to server failed, dropped calls:');
+        console.log(data.push);
       }
     });
   }
   add_push(data){
     this.push.push(data);
+    this.synchronize();
   }
   add_request(request){
     this.pull.push(request);
@@ -227,10 +236,10 @@ class Article {
       time_since: time_since,
       content: form.find('#form_text').val()
     }
-    form.find('#form_text').val('').focus();
     this.add_comment(comment, true);
-    server.add_push([this.id, comment]);
     this.pending.push(comment.date);
+    server.add_push([this.id, comment]);
+    form.find('#form_text').val('').css('height', '45px').focus();
   }
   add_comment(comment, pending=false, prepend=false) {
     if(this.pending.includes(comment.date)){
@@ -267,17 +276,17 @@ class Article {
         </h6>
       </div>`
       }
+      var escaped_text = $("<div>").text(comment.content).html();
       node +=
       `<p class="card-text new-p" style="font-size: 0.95em;">
         `+ ((pending && merge_comments)? '<span id="pending'+comment.date+'"><i class="fa fa-spin fa-circle-o-notch"></i> </span>' : '')
-        +comment.content+`
+        +escaped_text+`
       </p>`;
       if(prepend){
         elem.prepend($(node));
       } else {
         elem.append($(node));
         if(!pending){
-          console.log('SEND')
           notifier.add_notification(this.id);
         }
       }
