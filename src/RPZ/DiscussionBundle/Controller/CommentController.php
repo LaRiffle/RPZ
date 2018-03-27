@@ -63,7 +63,7 @@ class CommentController extends Controller
         $user = $this->getUser();
         $comment->setAuthor($user->getUsername());
         $form = $this->get('form.factory')->createBuilder(FormType::class, $comment)
-        ->add('text', TextareaType::class)
+        ->add('text', TextareaType::class, array('required' => False))
         ->add('save',	SubmitType::class)
         ->getForm();
 

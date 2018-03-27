@@ -41,34 +41,51 @@
     </div>
     <h5>
       <span class="author">{% for user in article.users %}{% if not loop.last and not loop.first %}, {% elseif loop.last and not loop.first %} et {% endif %}{{ user }}{% endfor %}</span>,
-      <span class="date">{% if article.type == 'message' %}modifié {% endif %}il y a {{ article.time_since }}</span>
+      <span class="date" data-date="{{ article.date|date('U') }}">{% if article.type == 'message' %}modifié {% endif %}{{ article.time_since }}</span>
     </h5>
     {% if article.type != 'message' %}
     <p class="card-text">{{ article.content|nl2br }}</p>
     {% endif %}
-    {% for comment in article.comments %}
-      {% if article.type == 'message' %}
-        {% if loop.first or last_author != comment.author or last_date.diff(comment.date).h > 1 %}
-          <div class="hr"></div>
-          <div class="rpz_box_icon">
-            <h6><span class="author">{{ comment.user }}</span>, <span class="date">il y a {{ comment.time_since }}</span></h6>
-            {{ include(edition_buttons, {'edit': path('rpz_discussion_comment_edit', {'article_id': article.id, 'id': comment.id}), 'remove': path('rpz_discussion_comment_remove', {'id': comment.id})}) }}
-          </div>
-          <p class="card-text" style="font-size: 0.95em; {% if article.type == 'message' %}margin-bottom: 0;{% endif %}">
-            {{ comment.text|nl2br }}
-          </p>
-        {% else %}
-          <div class="rpz_box_icon">
-            {{ include(edition_buttons, {'edit': path('rpz_discussion_comment_edit', {'article_id': article.id, 'id': comment.id}), 'remove': path('rpz_discussion_comment_remove', {'id': comment.id})}) }}
-            <p class="card-text" style="font-size: 0.95em; {% if article.type == 'message' %}margin-bottom: 0;{% endif %}">
+    {% if article.comments|length >= 10 %}
+      <div class="hr"></div>
+      <p class="card-text" style="font-size: 0.95em; margin-bottom: 0">
+        <a href="#" class="see_more">Voir les messages précédents</a>
+      </p>
+    {% endif %}
+    <div class="comments">
+      {% for comment in article.comments %}
+        {% if article.type == 'message' %}
+          {% if loop.first or last_author != comment.author or last_date.diff(comment.date).h > 0 %}
+            <div class="hr"></div>
+            <div class="rpz_box_icon">
+              <h6><span class="author">{{ comment.user }}</span>, <span class="date" data-date="{{ comment.date|date('U') }}">{{ comment.time_since }}</span></h6>
+              {{ include(edition_buttons, {'edit': path('rpz_discussion_comment_edit', {'article_id': article.id, 'id': comment.id}), 'remove': path('rpz_discussion_comment_remove', {'id': comment.id})}) }}
+            </div>
+            <p class="card-text" style="font-size: 0.95em; margin-bottom: 0.08rem;">
               {{ comment.text|nl2br }}
             </p>
-          </div>
+          {% else %}
+            <div class="rpz_box_icon">
+              {{ include(edition_buttons, {'edit': path('rpz_discussion_comment_edit', {'article_id': article.id, 'id': comment.id}), 'remove': path('rpz_discussion_comment_remove', {'id': comment.id})}) }}
+              <p class="card-text" style="font-size: 0.95em; margin-bottom: 0.08rem;">
+                {{ comment.text|nl2br }}
+              </p>
+            </div>
+          {% endif %}
+          {% set last_author = comment.author %}
+          {% set last_date = comment.date %}
+        {% else %}
+        <div class="hr"></div>
+        <div class="rpz_box_icon">
+          <h6><span class="author">{{ comment.user }}</span>, <span class="date">{{ comment.time_since }}</span></h6>
+          {{ include(edition_buttons, {'edit': path('rpz_discussion_comment_edit', {'article_id': article.id, 'id': comment.id}), 'remove': path('rpz_discussion_comment_remove', {'id': comment.id})}) }}
+        </div>
+        <p class="card-text" style="font-size: 0.95em;">
+          {{ comment.text|nl2br }}
+        </p>
         {% endif %}
-        {% set last_author = comment.author %}
-        {% set last_date = comment.date %}
-      {% endif %}
-    {% endfor %}
+      {% endfor %}
+    </div>
     <div class="hr"></div>
     <div>
       {{ render(controller("RPZDiscussionBundle:Comment:add", {'article_id': article.id, 'type': article.type})) }}
@@ -152,9 +169,24 @@ ul.rpz_icons li:after {
 .select_dest:hover {
   cursor: pointer;
 }
+.new-p {
+  border-left: 2px #C12103 solid;
+  padding-left: 5px;
+}
 </style>
 {% endblock %}
 {% block script %}
+<script>
+  var USERNAME = "{{ username }}";
+  var SERVER_URL = "{{ path('rpz_discussion_article_sync')}}";
+  var BOUND = "{{ bound }}";
+</script>
+<script src="{{ asset('server.js') }}"></script>
+<script>
+{% for article in articles %}
+  articles[{{ article.id }}] = new Article({{ article.id }}, '{{ article.type }}');
+{% endfor %}
+</script>
 <script>
 $('#add_message_title').on('click', function(e){
   e.preventDefault();

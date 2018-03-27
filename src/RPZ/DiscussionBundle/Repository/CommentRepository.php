@@ -10,11 +10,12 @@ namespace RPZ\DiscussionBundle\Repository;
  */
 class CommentRepository extends \Doctrine\ORM\EntityRepository
 {
-  public function whereArticle($id, $limit = -1) {
+  public function whereArticle($id, $limit = -1, $offset = 0) {
     $query = $this->createQueryBuilder('e')
         ->innerJoin('e.article', 'i')
         ->where('i.id = :id')
-        ->setParameter('id', $id);
+        ->setParameter('id', $id)
+        ->setFirstResult($offset);
     if($limit > 0){
       $query->orderBy('e.id', 'DESC')
             ->setMaxResults($limit);

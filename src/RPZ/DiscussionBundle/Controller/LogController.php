@@ -25,6 +25,9 @@ class LogController extends Controller
       return $authorName;
     }
     public function time_since($since) {
+        if($since < 60){
+          return "à l'instant";
+        }
         $chunks = array(
             array(60 * 60 * 24 * 365 , 'an'),
             array(60 * 60 * 24 * 30 , 'mois'),
@@ -44,7 +47,7 @@ class LogController extends Controller
         }
 
         $print = ($count <= 1 || $name == 'mois') ? $count.' '.$name : "$count {$name}s";
-        return $print;
+        return "il y a ".$print;
     }
     public function is_author($user, $article) {
       $is_author = false;

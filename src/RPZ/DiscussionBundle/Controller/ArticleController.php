@@ -3,10 +3,13 @@
 namespace RPZ\DiscussionBundle\Controller;
 
 use RPZ\DiscussionBundle\Entity\Article;
+use RPZ\DiscussionBundle\Entity\Comment;
 use RPZ\DiscussionBundle\Entity\Log;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\File\File;
+use \Doctrine\Common\Collections\Criteria;
 
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -36,6 +39,9 @@ class ArticleController extends Controller
       return $authorName;
     }
     public function time_since($since) {
+        if($since < 60){
+          return "à l'instant";
+        }
         $chunks = array(
             array(60 * 60 * 24 * 365 , 'an'),
             array(60 * 60 * 24 * 30 , 'mois'),
@@ -55,7 +61,7 @@ class ArticleController extends Controller
         }
 
         $print = ($count <= 1 || $name == 'mois') ? $count.' '.$name : "$count {$name}s";
-        return $print;
+        return "il y a ".$print;
     }
     public function is_author($user, $article) {
       $is_author = false;
@@ -65,6 +71,82 @@ class ArticleController extends Controller
         }
       }
       return $is_author;
+    }
+    public function syncAction(Request $request) {
+      if (!$this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
+        return $this->redirect($this->generateUrl('login'));
+      }
+      $em = $this->getDoctrine()->getManager();
+      $repository = $em->getRepository('RPZDiscussionBundle:Article');
+      $commentRepository = $em->getRepository('RPZDiscussionBundle:Comment');
+
+      $push = $request->request->get('push');
+      if(count($push) > 0){
+        foreach ($push as $data) {
+          $articleId = $data[0];
+          $comment_data = $data[1];
+          $date =  DateTime::createFromFormat('U', $comment_data['date']); //new DateTime($comment_data['date_format']);
+          $comment = new Comment();
+          $comment->setAuthor($comment_data['author']);
+          $comment->setDate($date);
+          $comment->setText($comment_data['content']);
+          $article = $repository->find($articleId);
+          $comment->setArticle($article);
+          $em->persist($comment);
+        }
+      }
+      $em->flush();
+
+      $pull = $request->request->get('pull');
+      $responses = [];
+      $date_now = new DateTime();
+      if(count($pull) > 0){
+        foreach ($pull as $data) {
+          $comments = $commentRepository->whereArticle($data['articleId'], $data['limit'], $data['offset']);
+          // There is no check if user has write to see these comment (can be of any message)
+          $response = [];
+          foreach ($comments as $comment) {
+            $diff = $date_now->getTimestamp() - $comment->getDate()->getTimestamp();
+            $response[] = array(
+              'articleId' => $data['articleId'],
+              'author' => $this->getAuthorName($comment->getAuthor()),
+              'date' => $comment->getDate()->getTimestamp(),
+              'time_since' => $this->time_since($diff),
+              'content' => $comment->getText(),
+            );
+          }
+          $responses[$data['articleId']] = $response;
+        }
+      }
+
+      $bound = $request->request->get('bound');
+      $criteria = new Criteria();
+      $criteria->where($criteria->expr()->gt('id', intval($bound)));
+      $comments = $commentRepository->matching($criteria);
+      $lastcomment = $commentRepository->findBy([], array('id'=>'DESC'),1)[0];
+      $bound = $lastcomment->getId();
+      $comments_data = [];
+      $date_now = new DateTime();
+      $user = $this->getUser();
+      foreach ($comments as $comment) {
+        $diff = $date_now->getTimestamp() - $comment->getDate()->getTimestamp();
+        $article = $comment->getArticle();
+        if($article->getType() != 'message' || $this->is_author($user, $article)){
+          $comments_data[] = array(
+            'articleId' => $article->getId(),
+            'author' => $this->getAuthorName($comment->getAuthor()),
+            'date' => $comment->getDate()->getTimestamp(),
+            'time_since' => $this->time_since($diff),
+            'content' => $comment->getText(),
+          );
+        }
+      }
+      $data = array(
+        'bound' => $bound,
+        'comments' => $comments_data,
+        'responses' => $responses,
+      );
+      return new JsonResponse($data);
     }
     public function indexAction($page = 1) {
         if (!$this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
@@ -82,7 +164,7 @@ class ArticleController extends Controller
 
         // Load articles
         $repository = $em->getRepository($this->entityNameSpace);
-        $nbPerPage = 10;
+        $nbPerPage = 5;
         $nbArticles = count($repository->findAll());
         $nbPages = ceil($nbArticles / $nbPerPage);
         $articles = $repository->findBy(
@@ -94,6 +176,8 @@ class ArticleController extends Controller
 
         // And the comments
         $commentRepository = $em->getRepository('RPZDiscussionBundle:Comment');
+        $lastcomment = $commentRepository->findBy([], array('id'=>'DESC'),1)[0];
+        $bound = $lastcomment->getId();
         $date_now = new DateTime();
         $relevant_articles = [];
         foreach ($articles as $article) {
@@ -108,7 +192,7 @@ class ArticleController extends Controller
             $id = $article->getId();
             $diff = $date_now->getTimestamp() - $article->getDate()->getTimestamp();
             $article->time_since = $this->time_since($diff);
-            $article->comments = $commentRepository->whereArticle($id);
+            $article->comments = $commentRepository->whereArticle($id, $limit=10);
             foreach ($article->comments as $comment) {
               $comment->user = $this->getAuthorName($comment->getAuthor());
               $diff = $date_now->getTimestamp() - $comment->getDate()->getTimestamp();
@@ -126,7 +210,9 @@ class ArticleController extends Controller
         return $this->render($this->entityNameSpace.':index.html.twig', array(
                 'articles' => $relevant_articles,
                 'page' => $page,
-                'nbPages' => $nbPages
+                'nbPages' => $nbPages,
+                'username' => $this->getAuthorName($user->getUsername()),
+                'bound' => $bound,
         ));
     }
     public function showAction($id) {

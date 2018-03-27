@@ -20,6 +20,9 @@ rpz_discussion_article_edit:
 rpz_discussion_article_remove:
     path:     /remove/{id}
     defaults: { _controller: RPZDiscussionBundle:Article:remove, id: 0 }
+rpz_discussion_article_sync:
+    path:     /sync
+    defaults: { _controller: RPZDiscussionBundle:Article:sync, id: 0 }
 
 rpz_discussion_message_add:
     path:     /message/{id}
