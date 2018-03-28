@@ -52,7 +52,7 @@ class LogController extends Controller
         }
 
         $print = ($count <= 1 || $name == 'mois') ? $count.' '.$name : "$count {$name}s";
-        return "il y a ".$print;
+        return $print;
     }
     public function is_author($user, $article) {
       $is_author = false;
@@ -92,6 +92,7 @@ class LogController extends Controller
           }
           $date_log = new DateTime($activity['date']);
           $diff = $date_now->getTimestamp() - $date_log->getTimestamp();
+          $lastActivity[$key]['date'] = $activity['date'];
           $lastActivity[$key]['when'] = $this->time_since($diff);
           $lastActivity[$key]['username'] = $this->getAuthorName($lastActivity[$key]['username']);
         }

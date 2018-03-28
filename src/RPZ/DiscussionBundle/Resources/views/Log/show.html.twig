@@ -7,7 +7,9 @@
   </li>
   <div id="menu" class="collapse">
   {% for log in lastActivity %}
-      <li class="list-group-item justify-content-between"><span style="font-weight: bold;">{{ log.username }}</span><span class="badge badge-default badge-pill">{{ log.when }}</span></li>
+      <li class="list-group-item justify-content-between">
+        <span style="font-weight: bold;">{{ log.username }}</span>
+        <span class="date badge badge-default badge-pill" data-date="{{ log.date|date('U') }}">{{ log.when }}</span></li>
   {% endfor %}
   </div>
 </ul>

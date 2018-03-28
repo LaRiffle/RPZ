@@ -37,12 +37,12 @@
     {% endblock %}
     <div class="container-fluid" style="padding-top: 10px;">
       <div class="row">
-        <div class="col-lg-3 col-md-4">
+        <div class="col-lg-3 col-md-4 notification-panel">
         {% block left_panel %}
 
         {% endblock %}
         </div>
-        <div class="col-lg-6 col-md-8">
+        <div class="col-lg-6 col-md-8 main-panel">
         {% for label, messages in app.flashes() %}
             {% for message in messages %}
                 <div class="alert alert-{{ label }}">

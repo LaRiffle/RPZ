@@ -16,7 +16,7 @@ function get_french_timestamp(date){
   }
   return timestamp;
 }
-function time_elapsed_since(date) {
+function time_elapsed_since(date, short=false) {
     var timestamp = get_french_timestamp(date)
     var now = new Date();
     var since = get_french_timestamp(now) - timestamp;
@@ -43,8 +43,16 @@ function time_elapsed_since(date) {
     }
 
     var print = (count <= 1 || name == 'mois') ? count+' '+name : count+' '+name+'s';
-    return 'il y a '+print;
+    return (short ? '':'il y a ')+print;
 }
+setInterval(function(){
+  $('.notification-panel').find('.date').each(function(){
+    var date = $(this).attr('data-date');
+    if(date){
+      $(this).html(time_elapsed_since(date, true));
+    }
+  });
+}, P_UPDATE_DATE_PERIOD);
 
 var articles = {};
 class Notifier {

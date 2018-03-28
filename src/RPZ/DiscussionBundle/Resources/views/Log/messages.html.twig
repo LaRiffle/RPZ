@@ -27,7 +27,7 @@
         </a>
         </span>
         <span>
-        <span class="badge badge-default badge-pill">{{ message.when }}</span>
+        <span class="date badge badge-default badge-pill" data-date="{{ message.date|date('U') }}">{{ message.when }}</span>
         <span id="notif-{{message.id}}" class="badge badge-primary badge-pill {% if message.nb_new <= 0 %}hide{% endif %}">{{ message.nb_new }}</span>
         </span>
         </li>
