@@ -2,6 +2,10 @@ rpz_discussion_register:
   path:     /register
   defaults: { _controller: RPZDiscussionBundle:Admin:register}
 
+rpz_discussion_user_ping:
+  path:     /ping
+  defaults: { _controller: RPZDiscussionBundle:User:activity }
+
 rpz_discussion_article:
     path:     /{page}
     defaults: { _controller: RPZDiscussionBundle:Article:index, page: 1 }

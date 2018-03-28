@@ -45,6 +45,7 @@ function time_elapsed_since(date, short=false) {
     var print = (count <= 1 || name == 'mois') ? count+' '+name : count+' '+name+'s';
     return (short ? '':'il y a ')+print;
 }
+
 setInterval(function(){
   $('.notification-panel').find('.date').each(function(){
     var date = $(this).attr('data-date');
@@ -53,6 +54,36 @@ setInterval(function(){
     }
   });
 }, P_UPDATE_DATE_PERIOD);
+
+setInterval(function(){
+  $.ajax({
+    url: SERVER_PING_URL,
+    type: "POST",
+    dataType: "json",
+    data: {},
+    async: true,
+    success: function (users_info)
+    {
+      var now_timestamp = Math.floor(new Date().getTime()/1000);
+      for (var username in users_info) {
+        // skip loop if the property is from prototype
+        if(!users_info.hasOwnProperty(username)) continue;
+        var timestamp = users_info[username];
+        $('#user-'+username+' .date').attr('data-date', timestamp);
+        var since = now_timestamp - timestamp;
+        if(since < P_ACTIVE_DELAY/1000) {
+          $('#user-'+username+' .date').removeClass('badge-default').addClass('badge-success');
+          $('#user-'+username+' .date').html(time_elapsed_since(timestamp, true));
+        } else {
+          $('#user-'+username+' .date').removeClass('badge-success').addClass('badge-default');
+        }
+      }
+    },
+    error: function (response) {
+      console.log('Ping to server failed.');
+    }
+  });
+}, P_UPDATE_PING_PERIOD);
 
 var articles = {};
 class Notifier {

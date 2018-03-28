@@ -80,7 +80,7 @@ class LogController extends Controller
         if (!$this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
           return $this->redirect($this->generateUrl('login'));
         }
-        $em = $this->getDoctrine()->getManager();
+        /*$em = $this->getDoctrine()->getManager();
         $repository = $em->getRepository($this->entityNameSpace);
         $lastActivity = $repository->lastActivity();
         $date_now = new DateTime();
@@ -98,6 +98,24 @@ class LogController extends Controller
         }
         if($username_index >= 0){
           unset($lastActivity[$username_index]);
+        }*/
+        $date_now = new DateTime();
+        $username = $this->getUser()->getUsername();
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository('RPZUserBundle:User');
+        $lastActivity = [];
+        $users = $repository->findAll();
+        foreach ($users as $user) {
+          $user_username = $user->getUsername();
+          $date_log = $user->getDate();
+          $diff = $date_now->getTimestamp() - $date_log->getTimestamp();
+          if($user_username != $username){
+            $lastActivity[] = array(
+              'username' => $user_username,
+              'date' => $date_log,
+              'when' => $this->time_since($diff)
+            );
+          }
         }
 
         return $this->render($this->entityNameSpace.':show.html.twig', array(
@@ -145,7 +163,7 @@ class LogController extends Controller
         ));
     }
     public function notifyAction() {
-        /* Show who was recently active */
+        /* Get last notifications */
         if (!$this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
           return $this->redirect($this->generateUrl('login'));
         }

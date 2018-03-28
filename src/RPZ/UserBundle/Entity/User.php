@@ -13,6 +13,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class User implements UserInterface
 {
+    public function __construct()
+    {
+      // Set automatically the date
+      $this->date = new \Datetime();
+    }
     /**
      * @var int
      *
@@ -63,6 +68,13 @@ class User implements UserInterface
      * @ORM\Column(name="roles", type="array")
      */
     private $roles = array();
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date", type="datetime", options={"default" = "2010-01-01 12:00:00"})
+     */
+    private $date;
 
 
     /**
@@ -217,6 +229,30 @@ class User implements UserInterface
     public function getRoles()
     {
         return $this->roles;
+    }
+
+    /**
+     * Set date
+     *
+     * @param \DateTime $date
+     *
+     * @return Log
+     */
+    public function setDate($date)
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    /**
+     * Get date
+     *
+     * @return \DateTime
+     */
+    public function getDate()
+    {
+        return $this->date;
     }
 
     public function eraseCredentials()
