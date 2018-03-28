@@ -9,7 +9,7 @@
   <div id="menu3" class="collapse">
   {% for notif in notifications %}
       <li class="list-group-item justify-content-between">
-        <a href="#article{{ notif.article_id  }}" class="sober_link">
+        <a href="#toarticle{{ notif.article_id  }}" class="sober_link">
         <span class="date badge badge-primary badge-pill" data-date="{{ notif.date|date('U') }}">{{ notif.time_since }}</span><br />
         {{ notif.text }}
         </a>

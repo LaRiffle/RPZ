@@ -18,7 +18,7 @@
   {% for message in lastMessages %}
       <li class="list-group-item justify-content-between">
         <span style="font-weight: bold;">
-        <a href="#article{{ message.id }}" title="{% for author in message.authors %}{% if not loop.last and not loop.first %}, {% elseif loop.last and not loop.first %} et {% endif %}{% if author.firstname != "" %}{{ author.firstname }}{% else %}{{ author.username }}{% endif %}{% endfor %}" class="sober_link">
+        <a href="#toarticle{{ message.id }}" title="{% for author in message.authors %}{% if not loop.last and not loop.first %}, {% elseif loop.last and not loop.first %} et {% endif %}{% if author.firstname != "" %}{{ author.firstname }}{% else %}{{ author.username }}{% endif %}{% endfor %}" class="sober_link">
           {% if message.title != '' %}
             {{ message.title }}
           {% else %}

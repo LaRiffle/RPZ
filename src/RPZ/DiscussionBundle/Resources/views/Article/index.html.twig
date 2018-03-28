@@ -91,6 +91,7 @@
       {{ render(controller("RPZDiscussionBundle:Comment:add", {'article_id': article.id, 'type': article.type})) }}
       <div style="clear:both"></div>
     </div>
+    <div class="anchor" id="toarticle{{ article.id }}"></div>
   </div>
 {% endfor %}
 
@@ -172,6 +173,15 @@ ul.rpz_icons li:after {
 .new-p {
   border-left: 2px #C12103 solid;
   padding-left: 5px;
+}
+.anchor {
+  position: relative;
+  bottom: 600px;
+}
+@media screen and (max-width: 768px) {
+  .anchor {
+    bottom: 600px;
+  }
 }
 </style>
 {% endblock %}

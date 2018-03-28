@@ -156,7 +156,7 @@ class Notifier {
           var menu = $('#menu3');
           var info = $(`
           <li class="list-group-item justify-content-between">
-            <a href="#article`+id+`" class="sober_link">
+            <a href="#toarticle`+id+`" class="sober_link">
             <span class="badge badge-primary badge-pill">Nouveau</span><br />
             Quelqu'un a publié commentaire.
             </a>
