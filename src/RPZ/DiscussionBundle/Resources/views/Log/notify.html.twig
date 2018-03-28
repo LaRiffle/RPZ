@@ -4,9 +4,7 @@
       Récemment
       <span id="notif_down"><i class="fa fa-angle-down" aria-hidden="true"></i></span>
     </h5>
-    {% if notifications|length > 0 %}
-    <span class="badge badge-primary badge-pill" style="font-size: 1rem;">{{ notifications|length }}</span>
-    {% endif %}
+    <span id="notif-article" class="badge badge-primary badge-pill {% if notifications|length <= 0 %}hide{% endif %}" style="font-size: 1rem;">{{ notifications|length }}</span>
   </li>
   <div id="menu3" class="collapse">
   {% for notif in notifications %}

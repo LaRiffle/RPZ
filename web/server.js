@@ -54,9 +54,8 @@ class Notifier {
     var $this = this
     setInterval(function(){
       $this.publish_notifications();
-    }, 500);
+    }, P_UPDATE_NOTIF_PERIOD);
     this.notif_auth = this.get_push_notif_auth();
-    console.log('auth'+this.notif_auth);
   }
   get_push_notif_auth(){
     // Let's check if the browser supports notifications
@@ -93,21 +92,51 @@ class Notifier {
     this.notifs[articleId] = 0;
   }
   publish_notifications() {
-    var sum = 0
+    var sum = 0;
+    var message_notif = 0;
+    var article_notif = 0;
     for(var id in this.notifs) {
-      var notif = $('#notif-'+id);
-      if(notif.length > 0){
-        var nb_notifs = this.notifs[id];
-        if(notif.html() != (nb_notifs+'')){
-          notif.html(nb_notifs);
-          if(nb_notifs > 0){
-            notif.removeClass('hide')
-          } else {
-            notif.addClass('hide')
+      sum += this.notifs[id];
+      if(articles[id].type == 'message') {
+        message_notif += this.notifs[id];
+        var notif = $('#notif-'+id)
+        if(notif.length > 0){
+          var nb_notifs = this.notifs[id];
+          if(notif.html() != (nb_notifs+'')){
+            notif.html(nb_notifs);
+            if(nb_notifs > 0){
+              notif.removeClass('hide')
+            } else {
+              notif.addClass('hide')
+            }
           }
         }
+      } else {
+        if(this.notifs[id] > 0){
+          article_notif += this.notifs[id];
+          var menu = $('#menu3');
+          var info = $(`
+          <li class="list-group-item justify-content-between">
+            <a href="#article`+id+`" class="sober_link">
+            <span class="badge badge-primary badge-pill">Nouveau</span><br />
+            Quelqu'un a publié commentaire.
+            </a>
+          </li>
+          `);
+          var old_nb_news = Number($('#notif-article').html());
+          var new_nb_news = $('#menu3 li.list-group-item').length + 1
+          if(new_nb_news != old_nb_news){
+            $('#notif-article').html(new_nb_news);
+            if(new_nb_news) {
+              $('#notif-article').removeClass('hide');
+            } else {
+              $('#notif-article').addClass('hide');
+            }
+          }
+          menu.prepend(info);
+        }
+        this.notifs[id] = 0;
       }
-      sum += this.notifs[id];
     }
     if(this.sum != sum){
       if(this.notif_auth && sum > this.sum){
@@ -124,6 +153,13 @@ class Notifier {
         title.html('Carnets de déroute');
       }
     }
+    var badge = $('#notif-message');
+    badge.html(message_notif);
+    if(message_notif > 0){
+      badge.removeClass('hide')
+    } else {
+      badge.addClass('hide')
+    }
     this.sum = sum;
   }
 }
@@ -138,7 +174,7 @@ class Server {
       if((new Date().getTime() - $this.last_sync) > 1000){
           $this.synchronize();
       }
-    }, 5*1000);
+    }, P_SYNC_PERIOD);
   }
   process_new_comments(comments){
     for(var i = 0; i < comments.length; i++){
@@ -164,6 +200,9 @@ class Server {
           article.add_comment(comment, false, true);
         }
         $('#article'+id).find('a.see_more .fa-spin').remove();
+        if(l < P_MAX_COMMENT_PER_PULL){
+          $('#article'+id).find('a.see_more').parent('p').remove();
+        }
       } else {
         console.log('Article not found: '+id);
       }
@@ -179,10 +218,6 @@ class Server {
     this.pull = [];
     this.push = [];
     var $this = this;
-    if($this.push.length > 0){
-      console.log('TO PUSH ')
-      console.log(data.push)
-    }
     $.ajax({
       url: SERVER_URL,
       type: "POST",
@@ -207,6 +242,7 @@ class Server {
   }
   add_request(request){
     this.pull.push(request);
+    this.synchronize();
   }
 }
 var server = new Server(BOUND);
@@ -229,16 +265,16 @@ class Article {
       });
       var see_more_link = article.find('.see_more').first();
       if(see_more_link){
-        $this.offset = 10;
+        $this.offset = P_MAX_COMMENT_PER_PULL;
         see_more_link.on('click', function(e){
           e.preventDefault();
           see_more_link.prepend('<i class="fa fa-spin fa-circle-o-notch"></i> ');
           server.add_request({
             articleId: $this.id,
             offset: $this.offset,
-            limit: 10
+            limit: P_MAX_COMMENT_PER_PULL
           });
-          $this.offset += 10;
+          $this.offset += P_MAX_COMMENT_PER_PULL;
         })
       } else {
         $this.offset = article.find('.comments p.card-text').length;
@@ -246,7 +282,7 @@ class Article {
     }
     setInterval(function(){
       $this.update_dates();
-    }, 10*1000);
+    }, P_UPDATE_DATE_PERIOD);
   }
   build(data){
     // set dom and listener
@@ -309,9 +345,9 @@ class Article {
         </h6>
       </div>`
       }
-      var escaped_text = $("<div>").text(comment.content).html();
+      var escaped_text = $("<div>").text(comment.content).html().replace(/(\r\n|\n|\r)/g,"<br />");
       node +=
-      `<p class="card-text new-p" style="font-size: 0.95em;">
+      `<p class="card-text new-p" style="font-size: 0.95em;`+ (merge_comments ? 'margin-bottom: 0.09rem;': '') +`">
         `+ ((pending && merge_comments)? '<span id="pending'+comment.date+'"><i class="fa fa-spin fa-circle-o-notch"></i> </span>' : '')
         +escaped_text+`
       </p>`;

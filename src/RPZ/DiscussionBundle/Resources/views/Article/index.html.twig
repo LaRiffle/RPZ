@@ -180,6 +180,11 @@ ul.rpz_icons li:after {
   var USERNAME = "{{ username }}";
   var SERVER_URL = "{{ path('rpz_discussion_article_sync')}}";
   var BOUND = "{{ bound }}";
+  // params
+  var P_SYNC_PERIOD = 5000; // (ms)
+  var P_UPDATE_DATE_PERIOD = 10000; // (ms)
+  var P_UPDATE_NOTIF_PERIOD = 1000; // (ms)
+  var P_MAX_COMMENT_PER_PULL = 10;
 </script>
 <script src="{{ asset('server.js') }}"></script>
 <script>
