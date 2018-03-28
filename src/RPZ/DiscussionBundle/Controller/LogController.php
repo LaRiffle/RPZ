@@ -12,7 +12,11 @@ use \Datetime;
 class LogController extends Controller
 {
     public $entityNameSpace = 'RPZDiscussionBundle:Log';
+    public $authorNames = [];
     public function getAuthorName($username) {
+      if(array_key_exists($username, $this->authorNames)){
+        return $this->authorNames[$username];
+      }
       $em = $this->getDoctrine()->getManager();
       $repository = $em->getRepository('RPZUserBundle:User');
       $users = $repository->findBy(array('username' => $username));
@@ -22,6 +26,7 @@ class LogController extends Controller
       } else {
         $authorName = $username;
       }
+      $this->authorNames[$username] = $authorName;
       return $authorName;
     }
     public function time_since($since) {

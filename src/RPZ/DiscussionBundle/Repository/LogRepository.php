@@ -11,8 +11,12 @@ namespace RPZ\DiscussionBundle\Repository;
 class LogRepository extends \Doctrine\ORM\EntityRepository
 {
   public function lastActivity() {
+    $threshold_date = new \DateTime();
+    $threshold_date->modify('-2 months');
     return $this->createQueryBuilder('log')
         ->select('log.username, MAX(log.date) as date')
+        ->andWhere('log.date > :threshold_date')
+        ->setParameter('threshold_date', $threshold_date)
         ->groupBy('log.username')
         ->orderBy('date', 'desc')
         ->getQuery()
@@ -22,12 +26,16 @@ class LogRepository extends \Doctrine\ORM\EntityRepository
   public function lastConnexionDate($username) {
     $current_date = new \DateTime();
     $current_date->modify('-30 minutes');
+    $threshold_date = new \DateTime();
+    $threshold_date->modify('-2 months');
     $results =  $this->createQueryBuilder('log')
         ->select('MAX(log.date) as date')
         ->where('log.username = :username')
         ->andWhere('log.date < :current_date')
+        ->andWhere('log.date > :threshold_date')
         ->setParameter('username', $username)
         ->setParameter('current_date', $current_date)
+        ->setParameter('threshold_date', $threshold_date)
         ->getQuery()
         ->getResult()
     ;

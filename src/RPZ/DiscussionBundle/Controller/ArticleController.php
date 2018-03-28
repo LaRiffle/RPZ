@@ -26,7 +26,12 @@ use \Datetime;
 class ArticleController extends Controller
 {
     public $entityNameSpace = 'RPZDiscussionBundle:Article';
+
+    public $authorNames = [];
     public function getAuthorName($username) {
+      if(array_key_exists($username, $this->authorNames)){
+        return $this->authorNames[$username];
+      }
       $em = $this->getDoctrine()->getManager();
       $repository = $em->getRepository('RPZUserBundle:User');
       $users = $repository->findBy(array('username' => $username));
@@ -36,6 +41,7 @@ class ArticleController extends Controller
       } else {
         $authorName = $username;
       }
+      $this->authorNames[$username] = $authorName;
       return $authorName;
     }
     public function time_since($since) {
@@ -59,7 +65,6 @@ class ArticleController extends Controller
                 break;
             }
         }
-
         $print = ($count <= 1 || $name == 'mois') ? $count.' '.$name : "$count {$name}s";
         return "il y a ".$print;
     }
@@ -169,8 +174,13 @@ class ArticleController extends Controller
 
         // Load articles
         $repository = $em->getRepository($this->entityNameSpace);
-        $nbPerPage = 5;
-        $nbArticles = count($repository->findAll());
+        $nbPerPage = 7;
+
+        $qb = $em->createQueryBuilder();
+        $qb->select('count(article.id)');
+        $qb->from($this->entityNameSpace,'article');
+        $nbArticles = $qb->getQuery()->getSingleScalarResult();
+
         $nbPages = ceil($nbArticles / $nbPerPage);
         $articles = $repository->findBy(
             array(),
