@@ -25,12 +25,12 @@
         {% if article.type == 'message' %}
           <i class="fa fa-comments"></i>
           {% if article.title is not null and article.title != "" %}
-            {{ article.title }}
+            <span class="title-article">{{ article.title }}</span>
           {% else %}
-            Discussion
+            <span class="title-article">Discussion</span>
           {% endif %}
         {% else %}
-          <i class="fa fa-bell"></i> {{ article.title }}
+          <i class="fa fa-bell"></i> <span class="title-article">{{ article.title }}</span>
         {% endif %}
       </h4>
       {% if article.type == 'message' %}
@@ -40,7 +40,7 @@
       {% endif %}
     </div>
     <h5>
-      <span class="author">{% for user in article.users %}{% if not loop.last and not loop.first %}, {% elseif loop.last and not loop.first %} et {% endif %}{{ user }}{% endfor %}</span>,
+      <span class="author author-article">{% for user in article.users %}{% if not loop.last and not loop.first %}, {% elseif loop.last and not loop.first %} et {% endif %}{{ user }}{% endfor %}</span>,
       <span class="date" data-date="{{ article.date|date('U') }}">{% if article.type == 'message' %}modifié {% endif %}{{ article.time_since }}</span>
     </h5>
     {% if article.type != 'message' %}

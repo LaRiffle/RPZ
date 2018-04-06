@@ -90,6 +90,7 @@ class Notifier {
   constructor() {
     this.sum = 0;
     this.notifs = {};
+    this.extended_notifs = {};
     var $this = this
     setInterval(function(){
       $this.publish_notifications();
@@ -120,11 +121,18 @@ class Notifier {
     }
     return false;
   }
-  add_notification(articleId) {
+  add_notification(articleId, data=null) {
     if(this.notifs[articleId]){
       this.notifs[articleId]++;
     } else {
       this.notifs[articleId] = 1;
+    }
+    if(data) {
+      if(this.extended_notifs[articleId]){
+        this.extended_notifs[articleId].push(data)
+      } else {
+        this.extended_notifs[articleId] = [data];
+      }
     }
   }
   clear_notifications(articleId) {
@@ -134,6 +142,7 @@ class Notifier {
     var sum = 0;
     var message_notif = 0;
     var article_notif = 0;
+    var extended_notifs = []
     for(var id in this.notifs) {
       sum += this.notifs[id];
       if(articles[id].type == 'message') {
@@ -142,6 +151,21 @@ class Notifier {
         if(notif.length > 0){
           var nb_notifs = this.notifs[id];
           if(notif.html() != (nb_notifs+'')){
+            if(nb_notifs != 0){
+              if(this.extended_notifs[id] && this.extended_notifs[id].length > 0){
+                for(var i = 0; i < this.extended_notifs[id].length; i++){
+                  extended_notifs.push({
+                    title: this.extended_notifs[id][i].user,
+                    content: this.extended_notifs[id][i].content
+                  });
+                }
+              } else {
+                extended_notifs.push({
+                  title: '',
+                  content: "Quelqu'un vous a envoyé un message"
+                });
+              }
+            }
             notif.html(nb_notifs);
             if(nb_notifs > 0){
               notif.removeClass('hide')
@@ -154,36 +178,68 @@ class Notifier {
         if(this.notifs[id] > 0){
           article_notif += this.notifs[id];
           var menu = $('#menu3');
-          var info = $(`
-          <li class="list-group-item justify-content-between">
-            <a href="#toarticle`+id+`" class="sober_link">
-            <span class="badge badge-primary badge-pill">Nouveau</span><br />
-            Quelqu'un a publié commentaire.
-            </a>
-          </li>
-          `);
-          var old_nb_news = Number($('#notif-article').html());
-          var new_nb_news = $('#menu3 li.list-group-item').length + 1
-          if(new_nb_news != old_nb_news){
-            $('#notif-article').html(new_nb_news);
-            if(new_nb_news) {
-              $('#notif-article').removeClass('hide');
-            } else {
-              $('#notif-article').addClass('hide');
+          var messages = [];
+          if(this.extended_notifs[id] && this.extended_notifs[id].length > 0){
+            for(var i = 0; i < this.extended_notifs[id].length; i++){
+              messages.push(this.extended_notifs[id][i].content);
+              extended_notifs.push({
+                title: this.extended_notifs[id][i].user,
+                content: this.extended_notifs[id][i].content
+              });
             }
+          } else {
+            messages = ["Quelqu'un a publié un commentaire."];
+            extended_notifs.push({
+              title: '',
+              content: messages[0]
+            })
           }
-          menu.prepend(info);
+          for(var i = 0; i < messages.length; i++){
+            var info = $(`
+            <li class="list-group-item justify-content-between">
+              <a href="#toarticle`+id+`" class="sober_link">
+              <span class="badge badge-primary badge-pill">Nouveau</span><br />
+              `+ messages[i] +`
+              </a>
+            </li>
+            `);
+            var old_nb_news = Number($('#notif-article').html());
+            var new_nb_news = $('#menu3 li.list-group-item').length + 1
+            if(new_nb_news != old_nb_news){
+              $('#notif-article').html(new_nb_news);
+              if(new_nb_news) {
+                $('#notif-article').removeClass('hide');
+              } else {
+                $('#notif-article').addClass('hide');
+              }
+            }
+            menu.prepend(info);
+          }
         }
         this.notifs[id] = 0;
+        this.extended_notifs[id] = [];
       }
     }
     if(this.sum != sum){
       if(this.notif_auth && sum > this.sum){
-        var options = {
-          silent: true,
-          body: 'Ohlala ya des news !'
+        if(extended_notifs.length > 0){
+          for(var i = 0; i < extended_notifs.length; i++){
+            var info = extended_notifs[i];
+            var options = {
+              silent: true,
+              body: info.content
+            }
+            var title = (info.title != '' ? info.title + ' @ ' : '') + 'Carnets de déroute';
+            var notification = new Notification(title, options);
+          }
+        } else {
+          console.log('Notification expected but not provided');
+          var options = {
+            silent: true,
+            body: 'Du nouveau sur les carnets.'
+          }
+          var notification = new Notification('Carnets de déroute', options);
         }
-        var notification = new Notification('Carnets de déroute', options);
       }
       var title = $('title').first();
       if(sum > 0){
@@ -395,7 +451,31 @@ class Article {
       } else {
         elem.append($(node));
         if(!pending){
-          notifier.add_notification(this.id);
+          if(this.type == 'message'){
+            var message_title = article.find('.title-article').first().html();
+            var content = comment.author + ' vous a envoyé un message sur «' + message_title + '»';
+            var data = {
+              user: comment.author,
+              content: content
+            };
+            notifier.add_notification(this.id, data);
+          } else {
+            var article_title = article.find('.title-article').first().html();
+            var article_author = article.find('.author-article').first().html();
+            var content;
+            if(comment.author != article_author){
+              content = comment.author + ' a commenté «' + article_title + '», de '+article_author;
+            } else {
+              content = comment.author + ' a commenté son article «' + article_title + '»';
+            }
+            var data = {
+              user: comment.author,
+              content: content,
+              title: article_title,
+              author: article_author
+            };
+            notifier.add_notification(this.id, data);
+          }
         }
       }
     }

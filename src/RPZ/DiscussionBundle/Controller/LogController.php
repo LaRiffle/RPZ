@@ -111,7 +111,7 @@ class LogController extends Controller
           $diff = $date_now->getTimestamp() - $date_log->getTimestamp();
           if($user_username != $username){
             $lastActivity[] = array(
-              'username' => $user_username,
+              'username' => $this->getAuthorName($user_username),
               'date' => $date_log,
               'when' => $this->time_since($diff)
             );
@@ -208,11 +208,11 @@ class LogController extends Controller
         foreach ($updatedArticles as $article_key => $article) {
           // Case : New article no new comments
           if(count($article->new_comments) == 0){
-              $text = $this->getAuthorName($article->getAuthor()). ' a publié un article';
+              $text = $this->getAuthorName($article->getAuthor()). ' a publié «'.$article->getTitle().'»';
               $notif_date = $article->getDate();
           // Case : New article and new comments
           } else if(in_array($article->getId(), $lastArticlesId)){
-              $text = $this->getAuthorName($article->getAuthor()). ' a publié un article. ';
+              $text = $this->getAuthorName($article->getAuthor()). ' a publié «'.$article->getTitle().'», ';
               $notif_date = $article->getDate();
               $users = [];
               foreach($article->new_comments as $comment){
@@ -247,7 +247,7 @@ class LogController extends Controller
               } else {
                 $author = $article->getAuthors()[0]->getUsername();
               }
-              $text = $text.' l\'article de '.$author.'.';
+              $text = $text.' l\'article de '.$author.', «'.$article->getTitle().'»';
           }
           // Transform date to lapse
           $diff = $date_now->getTimestamp() - $notif_date->getTimestamp();

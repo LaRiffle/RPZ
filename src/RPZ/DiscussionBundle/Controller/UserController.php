@@ -34,6 +34,8 @@ class UserController extends Controller
         ));
     }
     public function activityAction(Request $request) {
+        /* notify that the user is active with a ping system */
+
         $username = $this->getUser()->getUsername();
         $em = $this->getDoctrine()->getManager();
         $repository = $em->getRepository($this->entityNameSpace);

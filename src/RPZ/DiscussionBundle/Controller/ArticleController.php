@@ -169,6 +169,12 @@ class ArticleController extends Controller
         $username = $this->getUser()->getUsername();
         $log->setUsername($username);
         $em->persist($log);
+        // same we the new approach
+        $repository = $em->getRepository('RPZUserBundle:User');
+        $user = $repository->findOneBy(array('username' => $username));
+        $date_now = new DateTime();
+        $user->setDate($date_now);
+        $em->persist($user);
         $em->flush();
 
 
